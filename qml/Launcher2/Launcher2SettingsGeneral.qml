@@ -66,6 +66,14 @@ ColumnLayout {
         onCheckedChanged: launcherSettings.showNotifications = checked
     }
 
+    MCheckBox {
+        text: qsTr("Use new Experimental UI")
+        font.pointSize: parent.labelFontSize
+        Layout.columnSpan: 2
+        Component.onCompleted: checked = launcherSettings.useExperimentalUi
+        onCheckedChanged: launcherSettings.useExperimentalUi = checked
+    }
+
     MButton {
         Layout.topMargin: 15
         text: qsTr("Run troubleshooter")

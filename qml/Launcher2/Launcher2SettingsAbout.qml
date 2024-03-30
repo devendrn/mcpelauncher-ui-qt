@@ -9,9 +9,7 @@ ColumnLayout {
 
     TextEdit {
         textFormat: TextEdit.RichText
-        text: qsTr("This project allows you to launch Minecraft: Bedrock Edition (as in the edition w/o the Edition suffix, previously known as Minecraft: Pocket Edition). The launcher supports Linux and OS X.<br/><br/>Version %1 (build %2)<br/> © Copyright 2018-2022, MrARM & contributors").arg(
-                  LAUNCHER_VERSION_NAME || "Unknown").arg(LAUNCHER_VERSION_CODE
-                                                          || "Unknown")
+        text: qsTr("This project allows you to launch Minecraft: Bedrock Edition (as in the edition w/o the Edition suffix, previously known as Minecraft: Pocket Edition). The launcher supports Linux and OS X.<br/><br/>Version %1 (build %2)<br/> © Copyright 2018-2022, MrARM & contributors").arg(LAUNCHER_VERSION_NAME || "Unknown").arg(LAUNCHER_VERSION_CODE || "Unknown")
         readOnly: true
         color: "#fff"
         wrapMode: Text.WordWrap
@@ -60,19 +58,11 @@ ColumnLayout {
         onUpdateCheck: function (available) {
             updateCheckerConnectorSettings.enabled = false
             if (available) {
-                updateInfo.text = qsTr(
-                            "An Update of the Launcher is available for download") + "<br/>"
-                        + (columnlayout.updateUrl.length
-                           !== 0 ? qsTr("You can download the new Update here: %1").arg(
-                                       columnlayout.updateUrl) + "<br/>" : "") + qsTr(
-                            "Do you want to update now?")
+                updateInfo.text = qsTr("An Update of the Launcher is available for download") + "<br/>" + (columnlayout.updateUrl.length !== 0 ? qsTr("You can download the new Update here: %1").arg(columnlayout.updateUrl) + "<br/>" : "") + qsTr("Do you want to update now?")
                 updateInfo.standardButtons = StandardButton.Yes | StandardButton.No
             } else {
                 updateInfo.standardButtons = StandardButton.Ok
-                updateInfo.text = qsTr(
-                            "Your installed Launcher Version %1 (build %2) seems uptodate").arg(
-                            LAUNCHER_VERSION_NAME || '').arg(
-                            LAUNCHER_VERSION_CODE)
+                updateInfo.text = qsTr("Your installed Launcher Version %1 (build %2) seems uptodate").arg(LAUNCHER_VERSION_NAME || '').arg(LAUNCHER_VERSION_CODE)
             }
             updateInfo.open()
         }

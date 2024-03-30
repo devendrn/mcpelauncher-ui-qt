@@ -1,5 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Window 2.2
+import QtQuick.Layouts 1.3
 import QtQuick.Dialogs 1.2
 import QtQuick.Controls 2.1
 import io.mrarm.mcpelauncher 1.0
@@ -14,6 +15,7 @@ Window {
     property bool hasUpdate: false
     property string updateDownloadUrl: ""
     property bool isVersionsInitialized: false
+    property bool useNewUi: launcherSettings.useExperimentalUi
 
     StackView {
         id: stackView
@@ -46,18 +48,20 @@ Window {
 
     Component {
         id: panelMain
-        Launcher2Main {}
-
-        // LauncherMain {
-        //     googleLoginHelper: googleLoginHelperInstance
-        //     versionManager: versionManagerInstance
-        //     profileManager: profileManagerInstance
-        //     playApiInstance: playApi
-        //     hasUpdate: window.hasUpdate
-        //     updateDownloadUrl: window.updateDownloadUrl
-        //     isVersionsInitialized: window.isVersionsInitialized
-        //     playVerChannelInstance: playVerChannel
-        // }
+        StackLayout {
+            currentIndex: useNewUi ? 0 : 1
+            Launcher2Main {}
+            LauncherMain {
+                googleLoginHelper: googleLoginHelperInstance
+                versionManager: versionManagerInstance
+                profileManager: profileManagerInstance
+                playApiInstance: playApi
+                hasUpdate: window.hasUpdate
+                updateDownloadUrl: window.updateDownloadUrl
+                isVersionsInitialized: window.isVersionsInitialized
+                playVerChannelInstance: playVerChannel
+            }
+        }
     }
 
     Component {

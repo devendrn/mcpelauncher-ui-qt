@@ -22,6 +22,7 @@ class LauncherSettings : public QObject {
     Q_PROPERTY(QUrl gameDataDir READ gameDataDir)
     Q_PROPERTY(QString versionsFeedBaseUrl READ versionsFeedBaseUrl WRITE setVersionsFeedBaseUrl NOTIFY settingsChanged)
     Q_PROPERTY(bool showNotifications READ showNotifications WRITE setShowNotifications NOTIFY settingsChanged)
+    Q_PROPERTY(bool useExperimentalUi READ useExperimentalUi WRITE setUseExperimentalUi NOTIFY settingsChanged)
 
 private:
     QSettings settings;
@@ -70,6 +71,9 @@ public:
 
     QString versionsFeedBaseUrl() const { return !disableDevMode ? settings.value("versionsFeedBaseUrl", "").toString() : ""; }
     void setVersionsFeedBaseUrl(QString value) { settings.setValue("versionsFeedBaseUrl", value); emit settingsChanged(); }
+
+    bool useExperimentalUi() const { return settings.value("useExperimentalUi", false).toBool(); }
+    void setUseExperimentalUi(bool value) { settings.setValue("useExperimentalUi", value); emit settingsChanged(); }
 
 public slots:
     void resetSettings() {

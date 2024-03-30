@@ -14,20 +14,14 @@ ColumnLayout {
             onClicked: {
                 if (versions.currentIndex == -1)
                     return
-                versionManager.removeVersion(
-                            versions.model[versions.currentIndex])
+                versionManager.removeVersion(versions.model[versions.currentIndex])
             }
         }
 
         MButton {
-            text: (googleLoginHelper.account !== null
-                   && playVerChannel.hasVerifiedLicense
-                   || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) ? qsTr("Import .apk") : qsTr(
-                                                                        "<s>Import .apk</s> ( Unable to validate ownership )")
+            text: (googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) ? qsTr("Import .apk") : qsTr("<s>Import .apk</s> ( Unable to validate ownership )")
             onClicked: apkImportWindow.pickFile()
-            enabled: (googleLoginHelper.account !== null
-                      && playVerChannel.hasVerifiedLicense
-                      || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK)
+            enabled: (googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK)
         }
 
         MButton {
@@ -53,8 +47,7 @@ ColumnLayout {
                     if (!foundcompatible) {
                         versionManager.removeVersion(versions.model[i])
                     } else if (incompatible.length) {
-                        versionManager.removeVersion(versions.model[i],
-                                                     incompatible)
+                        versionManager.removeVersion(versions.model[i], incompatible)
                     }
                 }
             }
@@ -93,8 +86,7 @@ ColumnLayout {
                 width: parent.width - 8
                 height: 32
                 font.pointSize: 11
-                text: modelData.versionName + " (" + modelData.archs.join(
-                          ", ") + ")"
+                text: modelData.versionName + " (" + modelData.archs.join(", ") + ")"
                 onClicked: versions.currentIndex = index
                 highlighted: ListView.isCurrentItem
                 background: Rectangle {

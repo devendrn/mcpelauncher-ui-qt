@@ -133,9 +133,7 @@ ColumnLayout {
             Component.onCompleted: versionsFeedBaseUrl.text = launcherSettings.versionsFeedBaseUrl
             onEditingFinished: {
                 launcherSettings.versionsFeedBaseUrl = versionsFeedBaseUrl.text
-                versionManagerInstance.downloadLists(
-                            googleLoginHelperInstance.getAbis(true),
-                            launcherSettings.versionsFeedBaseUrl)
+                versionManagerInstance.downloadLists(googleLoginHelperInstance.getAbis(true), launcherSettings.versionsFeedBaseUrl)
             }
         }
     }
