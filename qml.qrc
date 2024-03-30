@@ -52,5 +52,23 @@
         <file>qml/GampadTool.qml</file>
         <file>qml/GamepadInputField.qml</file>
         <file>LICENSE</file>
+        <file>qml/Launcher2/ThemedControls/MSideBar.qml</file>
+        <file>qml/Launcher2/ThemedControls/MSideBarItem.qml</file>
+        <file>qml/Launcher2/Launcher2Main.qml</file>
+        <file>Resources/background.jpg</file>
+        <file>Resources/icon-home.png</file>
+        <file>Resources/icon-news.png</file>
+        <file>Resources/mcpelauncher-icon.icns</file>
+        <file>Resources/mcpelauncher-icon.svg</file>
+        <file>Resources/mcpelauncher-logo.svg</file>
+        <file>qml/Launcher2/ThemedControls/MTabButton.qml</file>
+        <file>qml/Launcher2/ThemedControls/BaseHeader.qml</file>
+        <file>qml/Launcher2/Launcher2Settings.qml</file>
+        <file>qml/Launcher2/Launcher2SettingsGeneral.qml</file>
+        <file>qml/Launcher2/ThemedControls/MButton.qml</file>
+        <file>qml/Launcher2/ThemedControls/MCheckBox.qml</file>
+        <file>qml/Launcher2/Launcher2SettingsStorage.qml</file>
+        <file>qml/Launcher2/Launcher2Home.qml</file>
+        <file>qml/Launcher2/Launcher2News.qml</file>
     </qresource>
 </RCC>
