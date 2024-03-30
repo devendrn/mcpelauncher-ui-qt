@@ -5,31 +5,32 @@ import "../"
 
 ColumnLayout {
     RowLayout {
-
+        id: googleAcountRow
+        property bool accountNotNull: googleLoginHelperInstance.account !== null
         Text {
             text: qsTr("Google Account")
             color: "#fff"
             font.pointSize: parent.labelFontSize
         }
+
         Text {
             id: googleAccountIdLabel
-            text: googleLoginHelper.account
-                  !== null ? googleLoginHelper.account.accountIdentifier : ""
+            text: googleAcountRow.accountNotNull ? googleLoginHelperInstance.account.accountIdentifier : ""
             color: "#fff"
             Layout.alignment: Qt.AlignRight
-            font.pointSize: 11
+            font.pointSize: parent.labelFontSize
         }
+
         MButton {
             id: googlesigninbtn
             Layout.alignment: Qt.AlignRight
             Layout.rightMargin: 20
-            text: googleLoginHelper.account !== null ? qsTr("Sign out") : qsTr(
-                                                           "Sign in")
+            text: googleAcountRow.accountNotNull ? qsTr("Sign out") : qsTr("Sign in")
             onClicked: {
-                if (googleLoginHelper.account !== null)
-                    googleLoginHelper.signOut()
+                if (googleAcountRow.accountNotNull)
+                    googleLoginHelperInstance.signOut()
                 else
-                    googleLoginHelper.acquireAccount(window)
+                    googleLoginHelperInstance.acquireAccount(window)
             }
         }
     }

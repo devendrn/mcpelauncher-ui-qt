@@ -72,53 +72,52 @@ ColumnLayout {
             Layout.columnSpan: 1
         }
 
-        // MComboBox {
-        //     Layout.columnSpan: 1
+        MComboBox {
+            Layout.columnSpan: 1
 
-        //     id: profileTexturePatch
-        //     Layout.fillWidth: true
+            id: profileTexturePatch
+            Layout.fillWidth: true
 
-        //     textRole: "name"
-        //     model: ListModel {
-        //         ListElement {
-        //             name: ""
-        //         }
+            textRole: "name"
+            model: ListModel {
+                ListElement {
+                    name: ""
+                }
 
-        //         ListElement {
-        //             name: "armeabi-v7a"
-        //         }
+                ListElement {
+                    name: "armeabi-v7a"
+                }
 
-        //         ListElement {
-        //             name: "arm64-v8a"
-        //         }
+                ListElement {
+                    name: "arm64-v8a"
+                }
 
-        //         ListElement {
-        //             name: "x86"
-        //         }
+                ListElement {
+                    name: "x86"
+                }
 
-        //         ListElement {
-        //             name: "x86_64"
-        //         }
-        //     }
+                ListElement {
+                    name: "x86_64"
+                }
+            }
 
-        //     Component.onCompleted: {
-        //         console.log("launcherSettings.singleArch " + launcherSettings.singleArch)
-        //         for (var i = 0; i < model.count; i++) {
-        //             if (launcherSettings.singleArch == model.get(i).name) {
-        //                 currentIndex = i
-        //                 break
-        //             }
-        //         }
-        //     }
+            Component.onCompleted: {
+                console.log("launcherSettings.singleArch " + launcherSettings.singleArch)
+                for (var i = 0; i < model.count; i++) {
+                    if (launcherSettings.singleArch == model.get(i).name) {
+                        currentIndex = i
+                        break
+                    }
+                }
+            }
 
-        //     onActivated: function (index) {
-        //         console.log("onActivated")
-        //         var val = model.get(index).name
-        //         console.log(val)
-        //         launcherSettings.singleArch = val
-        //     }
-        // }
-        Item {} // TEMP
+            onActivated: function (index) {
+                console.log("onActivated")
+                var val = model.get(index).name
+                console.log(val)
+                launcherSettings.singleArch = val
+            }
+        }
 
         Text {
             text: qsTr("Versions feed base url")

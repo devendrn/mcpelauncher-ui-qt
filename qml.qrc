@@ -73,5 +73,6 @@
         <file>qml/Launcher2/Launcher2SettingsAbout.qml</file>
         <file>qml/Launcher2/Launcher2SettingsDev.qml</file>
         <file>qml/Launcher2/Launcher2SettingsVersions.qml</file>
+        <file>qml/Launcher2/ThemedControls/MComboBox.qml</file>
     </qresource>
 </RCC>

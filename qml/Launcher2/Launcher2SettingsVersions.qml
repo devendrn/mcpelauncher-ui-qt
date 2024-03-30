@@ -5,29 +5,29 @@ import "ThemedControls"
 import "../"
 
 ColumnLayout {
-    Keys.forwardTo: children[1].children[0]
     Layout.fillWidth: true
-    ColumnLayout {
-
+    Flow {
+        spacing: 5
         MButton {
             text: qsTr("Delete selected")
             onClicked: {
                 if (versions.currentIndex == -1)
                     return
-                versionManager.removeVersion(versions.model[versions.currentIndex])
+                versionManagerInstance.removeVersion(versions.model[versions.currentIndex])
             }
         }
 
         MButton {
-            text: (googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) ? qsTr("Import .apk") : qsTr("<s>Import .apk</s> ( Unable to validate ownership )")
+            property bool enableApkImport: googleLoginHelperInstance.account !== null && playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK
+            text: enableApkImport ? qsTr("Import .apk") : qsTr("<s>Import .apk</s> ( Unable to validate ownership )")
             onClicked: apkImportWindow.pickFile()
-            enabled: (googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK)
+            enabled: enableApkImport
         }
 
         MButton {
             text: qsTr("Remove Incompatible Versions")
             onClicked: {
-                var abis = googleLoginHelper.getAbis(false)
+                var abis = googleLoginHelperInstance.getAbis(false)
                 for (var i = 0; i < versions.model.length; ++i) {
                     var foundcompatible = false
                     var incompatible = []
@@ -45,32 +45,19 @@ ColumnLayout {
                         }
                     }
                     if (!foundcompatible) {
-                        versionManager.removeVersion(versions.model[i])
+                        versionManagerInstance.removeVersion(versions.model[i])
                     } else if (incompatible.length) {
-                        versionManager.removeVersion(versions.model[i], incompatible)
+                        versionManagerInstance.removeVersion(versions.model[i], incompatible)
                     }
                 }
             }
         }
-
-        Item {
-            Layout.fillWidth: true
-        }
     }
 
-    BorderImage {
+    Rectangle {
         Layout.fillWidth: true
         Layout.fillHeight: true
-        source: "qrc:/Resources/dropdown-bg.png"
-        smooth: false
-        border {
-            left: 4
-            top: 4
-            right: 4
-            bottom: 4
-        }
-        horizontalTileMode: BorderImage.Stretch
-        verticalTileMode: BorderImage.Stretch
+        color: "#1e1e1e"
 
         ListView {
             id: versions
@@ -78,7 +65,7 @@ ColumnLayout {
             anchors.margins: 4
             clip: true
             flickableDirection: Flickable.VerticalFlick
-            model: versionManager.versions.getAll().sort(function (a, b) {
+            model: versionManagerInstance.versions.getAll().sort(function (a, b) {
                 return b.versionCode - a.versionCode
             })
             delegate: ItemDelegate {
@@ -90,7 +77,7 @@ ColumnLayout {
                 onClicked: versions.currentIndex = index
                 highlighted: ListView.isCurrentItem
                 background: Rectangle {
-                    color: control.highlighted ? "#C5CAE9" : (control.down ? "#dddedf" : "transparent")
+                    color: control.highlighted ? "#226322" : (control.down ? "#338833" : "transparent")
                 }
             }
             highlightResizeVelocity: -1
