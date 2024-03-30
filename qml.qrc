@@ -70,5 +70,8 @@
         <file>qml/Launcher2/Launcher2SettingsStorage.qml</file>
         <file>qml/Launcher2/Launcher2Home.qml</file>
         <file>qml/Launcher2/Launcher2News.qml</file>
+        <file>qml/Launcher2/Launcher2SettingsAbout.qml</file>
+        <file>qml/Launcher2/Launcher2SettingsDev.qml</file>
+        <file>qml/Launcher2/Launcher2SettingsVersions.qml</file>
     </qresource>
 </RCC>

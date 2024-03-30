@@ -35,15 +35,14 @@ ColumnLayout {
         id: content
         currentIndex: tabs.currentIndex
         Layout.fillHeight: true
-        Layout.fillWidth: true
         Layout.maximumWidth: 900
         Layout.margins: 15
 
         Launcher2SettingsGeneral {}
         Launcher2SettingsStorage {}
-        // LauncherSettingsVersions {}
-        // LauncherSettingsDev {}
-        // LauncherSettingsAbout {}
+        Launcher2SettingsVersions {}
+        Launcher2SettingsDev {}
+        Launcher2SettingsAbout {}
         // Keys.forwardTo: children[tabs.currentIndex]
     }
 }
