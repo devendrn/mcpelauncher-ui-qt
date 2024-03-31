@@ -29,5 +29,8 @@ ColumnLayout {
         Layout.fillWidth: true
         Layout.fillHeight: true
         currentIndex: tabs.currentIndex
+
+        Launcher2HomePlay {}
+        Launcher2HomeProfiles {}
     }
 }

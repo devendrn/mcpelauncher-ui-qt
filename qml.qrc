@@ -74,5 +74,11 @@
         <file>qml/Launcher2/Launcher2SettingsDev.qml</file>
         <file>qml/Launcher2/Launcher2SettingsVersions.qml</file>
         <file>qml/Launcher2/ThemedControls/MComboBox.qml</file>
+        <file>qml/Launcher2/Launcher2HomePlay.qml</file>
+        <file>qml/Launcher2/Launcher2HomeProfiles.qml</file>
+        <file>qml/Launcher2/ThemedControls/PlayButton.qml</file>
+        <file>qml/Main.qml</file>
+        <file>qml/Launcher2/Main2.qml</file>
+        <file>Resources/green-button-new.png</file>
     </qresource>
 </RCC>
