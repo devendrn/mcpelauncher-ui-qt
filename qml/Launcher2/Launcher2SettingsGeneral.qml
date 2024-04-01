@@ -4,27 +4,35 @@ import "ThemedControls"
 import "../"
 
 ColumnLayout {
+    spacing: 10
+
     RowLayout {
         id: googleAcountRow
+        property int labelFontSize: 10
         property bool accountNotNull: googleLoginHelperInstance.account !== null
-        Text {
-            text: qsTr("Google Account")
-            color: "#fff"
-            font.pointSize: parent.labelFontSize
+
+        ColumnLayout {
+            Text {
+                text: qsTr("Google Account")
+                color: "#fff"
+                font.bold: true
+                font.pointSize: parent.labelFontSize
+            }
+            Text {
+                id: googleAccountIdLabel
+                text: googleAcountRow.accountNotNull ? googleLoginHelperInstance.account.accountIdentifier : "..."
+                color: "#fff"
+                font.pointSize: parent.labelFontSize
+            }
         }
 
-        Text {
-            id: googleAccountIdLabel
-            text: googleAcountRow.accountNotNull ? googleLoginHelperInstance.account.accountIdentifier : ""
-            color: "#fff"
-            Layout.alignment: Qt.AlignRight
-            font.pointSize: parent.labelFontSize
+        Item {
+            Layout.fillWidth: true
         }
 
         MButton {
             id: googlesigninbtn
             Layout.alignment: Qt.AlignRight
-            Layout.rightMargin: 20
             text: googleAcountRow.accountNotNull ? qsTr("Sign out") : qsTr("Sign in")
             onClicked: {
                 if (googleAcountRow.accountNotNull)
@@ -35,8 +43,16 @@ ColumnLayout {
         }
     }
 
+    HorizontalDivider {}
+
+    Text {
+        text: qsTr("Launcher")
+        color: "#fff"
+        font.bold: true
+        font.pointSize: parent.labelFontSize
+    }
+
     MCheckBox {
-        Layout.topMargin: 15
         text: qsTr("Show log when starting the game")
         Component.onCompleted: checked = launcherSettings.startOpenLog
         onCheckedChanged: launcherSettings.startOpenLog = checked

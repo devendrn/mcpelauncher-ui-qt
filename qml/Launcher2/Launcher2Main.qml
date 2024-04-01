@@ -9,6 +9,7 @@ RowLayout {
     MSideBar {
         id: sidebar
         Layout.minimumWidth: 155
+
         MSideBarItem {
             text: qsTr("Home")
             iconSource: "qrc:/Resources/icon-home.png"

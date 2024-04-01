@@ -80,5 +80,10 @@
         <file>qml/Main.qml</file>
         <file>qml/Launcher2/Main2.qml</file>
         <file>Resources/green-button-new.png</file>
+        <file>qml/Launcher2/TroubleshooterWindow2.qml</file>
+        <file>qml/Launcher2/GameLogWindow2.qml</file>
+        <file>qml/Launcher2/Launcher2ChangeLog.qml</file>
+        <file>qml/Launcher2/ThemedControls/MProgressBar.qml</file>
+        <file>qml/Launcher2/ThemedControls/HorizontalDivider.qml</file>
     </qresource>
 </RCC>

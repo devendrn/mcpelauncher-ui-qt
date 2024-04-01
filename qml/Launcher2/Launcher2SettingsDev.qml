@@ -4,6 +4,7 @@ import QtQuick.Layouts 1.3
 import "ThemedControls"
 
 ColumnLayout {
+    spacing: 10
     property int labelFontSize: 10
     property color labelColor: "#fff"
 
@@ -29,13 +30,12 @@ ColumnLayout {
         font.pointSize: labelFontSize
         Component.onCompleted: checked = launcherSettings.showUnverified
         onCheckedChanged: launcherSettings.showUnverified = checked
-        Layout.bottomMargin: 20
+        Layout.bottomMargin: 10
     }
 
     MCheckBox {
         text: qsTr("Show incompatible versions")
         font.pointSize: parent.labelFontSize
-        Layout.columnSpan: 2
         Component.onCompleted: checked = launcherSettings.showUnsupported
         onCheckedChanged: launcherSettings.showUnsupported = checked
     }
@@ -45,13 +45,12 @@ ColumnLayout {
         font.pointSize: labelFontSize
         wrapMode: Text.WordWrap
         Layout.fillWidth: true
-        Layout.bottomMargin: 20
+        Layout.bottomMargin: 10
     }
 
     MCheckBox {
         text: qsTr("Show Beta Versions")
         font.pointSize: parent.labelFontSize
-        Layout.columnSpan: 2
         Component.onCompleted: checked = launcherSettings.showBetaVersions
         onCheckedChanged: launcherSettings.showBetaVersions = checked
         enabled: playVerChannel.latestVersionIsBeta
@@ -60,10 +59,9 @@ ColumnLayout {
     GridLayout {
         id: gridLayout12
         columns: 2
-        columnSpacing: 20
+        columnSpacing: 10
         rowSpacing: 8
         Layout.fillWidth: true
-        Layout.maximumWidth: 400
 
         Text {
             text: qsTr("Single arch mode")

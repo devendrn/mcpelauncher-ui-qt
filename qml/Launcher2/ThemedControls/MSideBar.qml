@@ -1,6 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Layouts 1.3
-import QtQuick.Templates 2.1 as T
+import QtQuick.Templates 2.2 as T
 
 T.TabBar {
     id: control

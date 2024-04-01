@@ -15,6 +15,7 @@ Window {
     width: 640
     height: 480
     title: qsTr("Linux Minecraft Launcher")
+    color: launcherSettings.useExperimentalUi ? "#333333" : "#fff"
 
     Item {
         anchors.fill: parent
@@ -76,5 +77,12 @@ Window {
     GoogleVersionChannel {
         id: playVerChannel
         playApi: playApi
+    }
+
+    function getCurrentGameDataDir() {
+        if (window.currentGameDataDir && window.currentGameDataDir.length > 0) {
+            return window.currentGameDataDir
+        }
+        return launcherSettings.gameDataDir
     }
 }

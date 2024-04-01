@@ -174,6 +174,14 @@ ColumnLayout {
         }
     }
 
+    MProgressBar {
+        id: downloadProgress
+        label: qsTr("Downloading..")
+        Layout.fillWidth: true
+        height: 30
+        visible: false
+    }
+
     GoogleApkDownloadTask {
         id: playDownloadTask
         playApi: playApiInstance

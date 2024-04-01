@@ -19,14 +19,30 @@ T.CheckBox {
         color: "#1e1e1e"
         border.color: control.down ? "#888" : (control.hovered ? "#666" : "#555")
 
-        Rectangle {
+        Canvas {
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
-            width: 10
-            height: 10
-            radius: 2
-            color: "#50a060"
+            width: 12
+            height: 12
             visible: control.checked
+            contextType: "2d"
+
+            Connections {
+                target: control
+                function onPressedChanged() {
+                    canvas.requestPaint()
+                }
+            }
+
+            onPaint: {
+                context.reset()
+                context.lineWidth = 3
+                context.strokeStyle = "#5a5"
+                context.moveTo(0, height / 2)
+                context.lineTo(width / 2.5, height)
+                context.lineTo(width, 0)
+                context.stroke()
+            }
         }
     }
 

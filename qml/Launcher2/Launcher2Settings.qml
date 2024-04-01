@@ -1,6 +1,6 @@
 import QtQuick 2.9
 import QtQuick.Layouts 1.3
-import QtQuick.Controls 2.1
+import QtQuick.Controls 2.2
 import "ThemedControls"
 
 ColumnLayout {
@@ -31,18 +31,24 @@ ColumnLayout {
         }
     }
 
-    StackLayout {
-        id: content
-        currentIndex: tabs.currentIndex
+    ScrollView {
         Layout.fillHeight: true
-        Layout.maximumWidth: 900
-        Layout.margins: 15
+        Layout.fillWidth: true
+        contentWidth: availableWidth
+        contentHeight: content.height + 30
 
-        Launcher2SettingsGeneral {}
-        Launcher2SettingsStorage {}
-        Launcher2SettingsVersions {}
-        Launcher2SettingsDev {}
-        Launcher2SettingsAbout {}
-        // Keys.forwardTo: children[tabs.currentIndex]
+        StackLayout {
+            id: content
+            currentIndex: tabs.currentIndex
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width > 800 + 30 ? 800 : parent.width - 30
+            y: 15
+
+            Launcher2SettingsGeneral {}
+            Launcher2SettingsStorage {}
+            Launcher2SettingsVersions {}
+            Launcher2SettingsDev {}
+            Launcher2SettingsAbout {}
+        }
     }
 }

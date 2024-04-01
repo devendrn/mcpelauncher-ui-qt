@@ -6,8 +6,10 @@ import "../"
 
 ColumnLayout {
     Layout.fillWidth: true
+    spacing: 10
+
     Flow {
-        spacing: 5
+        spacing: 10
         MButton {
             text: qsTr("Delete selected")
             onClicked: {
@@ -70,7 +72,7 @@ ColumnLayout {
             })
             delegate: ItemDelegate {
                 id: control
-                width: parent.width - 8
+                width: parent.width
                 height: 32
                 font.pointSize: 11
                 text: modelData.versionName + " (" + modelData.archs.join(", ") + ")"

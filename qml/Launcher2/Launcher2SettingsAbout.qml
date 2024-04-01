@@ -6,32 +6,35 @@ import "ThemedControls"
 
 ColumnLayout {
     Layout.fillWidth: true
+    spacing: 10
 
-    TextEdit {
-        textFormat: TextEdit.RichText
+    Text {
         text: qsTr("This project allows you to launch Minecraft: Bedrock Edition (as in the edition w/o the Edition suffix, previously known as Minecraft: Pocket Edition). The launcher supports Linux and OS X.<br/><br/>Version %1 (build %2)<br/> © Copyright 2018-2022, MrARM & contributors").arg(LAUNCHER_VERSION_NAME || "Unknown").arg(LAUNCHER_VERSION_CODE || "Unknown")
-        readOnly: true
         color: "#fff"
         wrapMode: Text.WordWrap
         font.pointSize: 10
-        selectByMouse: true
         Layout.fillWidth: true
-        Layout.bottomMargin: 10
     }
 
-    MButton {
-        text: qsTr("Check for Updates")
-        onClicked: {
-            updateCheckerConnectorSettings.enabled = true
-            updateChecker.checkForUpdates()
+    HorizontalDivider {}
+
+    RowLayout {
+        MButton {
+            text: qsTr("Check for Updates")
+            onClicked: {
+                updateCheckerConnectorSettings.enabled = true
+                updateChecker.checkForUpdates()
+            }
         }
-    }
-
-    MButton {
-        text: qsTr("Reset Launcher Settings")
-        onClicked: {
-            launcherSettings.resetSettings()
-            launcherreset.open()
+        Item {
+            Layout.fillWidth: true
+        }
+        MButton {
+            text: qsTr("Reset Launcher Settings")
+            onClicked: {
+                launcherSettings.resetSettings()
+                launcherreset.open()
+            }
         }
     }
 

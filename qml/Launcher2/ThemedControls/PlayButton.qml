@@ -6,33 +6,24 @@ T.Button {
     id: control
     property string subText: ""
 
-    padding: 18
-    implicitWidth: 10 / 9 * contentItem.implicitWidth + leftPadding + rightPadding
-    implicitHeight: 10 / 9 * contentItem.implicitHeight + topPadding + bottomPadding
-    Layout.minimumWidth: implicitHeight
-    Layout.minimumHeight: implicitHeight
-    baselineOffset: contentItem.y + contentItem.baselineOffset
+    // implicitWidth: 10 / 9 * contentItem.implicitWidth + leftPadding + rightPadding
+    // implicitHeight: 10 / 9 * contentItem.implicitHeight + topPadding + bottomPadding
+    implicitHeight: contentItem.implicitHeight + 25
+    implicitWidth: contentItem.implicitWidth + 30 < 200 ? 200 : contentItem + 30
 
+    // baselineOffset: contentItem.y + contentItem.baselineOffset
     background: BorderImage {
         id: buttonBackground
         source: "qrc:/Resources/green-button-new.png"
         smooth: false
         border {
-            left: 7
-            top: 7
-            right: 7
-            bottom: 7
+            left: 8
+            top: 8
+            right: 8
+            bottom: 8
         }
         horizontalTileMode: BorderImage.Stretch
         verticalTileMode: BorderImage.Stretch
-        scale: 0.9
-
-        Rectangle {
-            id: buttonBackgroundOverlay
-            anchors.fill: background
-            color: "#20000000"
-            opacity: 0
-        }
     }
 
     contentItem: Item {
@@ -40,7 +31,7 @@ T.Button {
         implicitHeight: content.implicitHeight
         ColumnLayout {
             id: content
-            spacing: 3
+            spacing: 0
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter
             Text {
@@ -59,7 +50,7 @@ T.Button {
                 id: subTextItem
                 visible: control.subText.length > 0
                 text: control.subText
-                font.pointSize: 10
+                font.pointSize: 9
                 opacity: enabled ? 1.0 : 0.3
                 color: "#fff"
                 horizontalAlignment: Text.AlignHCenter
@@ -82,10 +73,9 @@ T.Button {
                 target: buttonBackground
                 scale: 1.0
             }
-            PropertyChanges {
-                target: buttonBackgroundOverlay
-                opacity: 1
-            }
+            // PropertyChanges { target: buttonBackgroundOverlay
+            //     opacity: 1
+            // }
         }
     ]
 
@@ -99,12 +89,12 @@ T.Button {
                 duration: 100
                 easing.type: Easing.InSine
             }
-            PropertyAnimation {
-                target: buttonBackgroundOverlay
-                property: "opacity"
-                duration: 100
-                easing.type: Easing.InSine
-            }
+            // PropertyAnimation {
+            //     target: buttonBackgroundOverlay
+            //     property: "opacity"
+            //     duration: 100
+            //     easing.type: Easing.InSine
+            // }
         },
         Transition {
             from: "hovered"
@@ -115,12 +105,12 @@ T.Button {
                 duration: 100
                 easing.type: Easing.OutSine
             }
-            PropertyAnimation {
-                target: buttonBackgroundOverlay
-                property: "opacity"
-                duration: 100
-                easing.type: Easing.OutSine
-            }
+            // PropertyAnimation {
+            //     target: buttonBackgroundOverlay
+            //     property: "opacity"
+            //     duration: 100
+            //     easing.type: Easing.OutSine
+            // }
         }
     ]
 }

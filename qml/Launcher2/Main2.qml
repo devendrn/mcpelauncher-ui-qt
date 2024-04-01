@@ -47,13 +47,13 @@ Item {
     Component {
         id: panelChangelog
 
-        LauncherChangeLog {
+        Launcher2ChangeLog {
             onFinished: {
                 launcherSettings.lastVersion = LAUNCHER_VERSION_CODE
                 next()
             }
-            hasUpdate: window.hasUpdate
-            updateDownloadUrl: window.updateDownloadUrl
+            // hasUpdate: window.hasUpdate
+            // updateDownloadUrl: window.updateDownloadUrl
         }
     }
 
@@ -68,7 +68,7 @@ Item {
         versionManager: versionManagerInstance
     }
 
-    GameLogWindow {
+    GameLogWindow2 {
         id: gameLogWindow
         launcher: gameLauncher
 
@@ -78,7 +78,7 @@ Item {
         }
     }
 
-    TroubleshooterWindow {
+    TroubleshooterWindow2 {
         id: troubleshooterWindow
         googleLoginHelper: googleLoginHelperInstance
     }

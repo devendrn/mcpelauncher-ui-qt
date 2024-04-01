@@ -4,7 +4,7 @@ import QtQuick.Templates 2.1 as T
 T.Button {
     id: control
 
-    padding: 15
+    padding: 10
     width: 12 + contentItem.implicitWidth + leftPadding + rightPadding
     implicitHeight: 40
 
