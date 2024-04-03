@@ -6,10 +6,8 @@ T.Button {
     id: control
     property string subText: ""
 
-    // implicitWidth: 10 / 9 * contentItem.implicitWidth + leftPadding + rightPadding
-    // implicitHeight: 10 / 9 * contentItem.implicitHeight + topPadding + bottomPadding
     implicitHeight: contentItem.implicitHeight + 25
-    implicitWidth: contentItem.implicitWidth + 30 < 200 ? 200 : contentItem + 30
+    implicitWidth: contentItem.implicitWidth + 30 < 230 ? 230 : contentItem.implicitWidth + 30
 
     // baselineOffset: contentItem.y + contentItem.baselineOffset
     background: BorderImage {
@@ -61,56 +59,25 @@ T.Button {
         }
     }
 
-    states: [
-        State {
-            name: "normal"
-            when: !(control.hovered || control.activeFocus)
-        },
-        State {
-            name: "hovered"
-            when: (control.hovered || control.activeFocus)
-            PropertyChanges {
-                target: buttonBackground
-                scale: 1.0
-            }
-            // PropertyChanges { target: buttonBackgroundOverlay
-            //     opacity: 1
-            // }
+    states: State {
+        name: "hovered"
+        when: control.hovered && !control.down
+        PropertyChanges {
+            target: buttonBackground
+            scale: 1.05
         }
-    ]
+    }
 
     transitions: [
         Transition {
-            from: "normal"
             to: "hovered"
+            reversible: true
             PropertyAnimation {
                 target: buttonBackground
                 property: "scale"
                 duration: 100
-                easing.type: Easing.InSine
+                easing.type: Easing.InOutCubic
             }
-            // PropertyAnimation {
-            //     target: buttonBackgroundOverlay
-            //     property: "opacity"
-            //     duration: 100
-            //     easing.type: Easing.InSine
-            // }
-        },
-        Transition {
-            from: "hovered"
-            to: "normal"
-            PropertyAnimation {
-                target: buttonBackground
-                property: "scale"
-                duration: 100
-                easing.type: Easing.OutSine
-            }
-            // PropertyAnimation {
-            //     target: buttonBackgroundOverlay
-            //     property: "opacity"
-            //     duration: 100
-            //     easing.type: Easing.OutSine
-            // }
         }
     ]
 }

@@ -3,11 +3,11 @@ import QtQuick.Layouts 1.3
 import QtQuick.Controls 2.1
 import "ThemedControls"
 
-// import "../"
 ColumnLayout {
     Layout.fillWidth: true
     Layout.fillHeight: true
     spacing: 0
+
     BaseHeader {
         Layout.fillWidth: true
         title: qsTr("News")
@@ -15,7 +15,6 @@ ColumnLayout {
             id: tabs
             background: null
             anchors.fill: parent
-
             MTabButton {
                 text: qsTr("Minecraft")
             }
@@ -45,6 +44,7 @@ ColumnLayout {
                 Image {
                     id: newsImage
                     source: modelData.image
+                    smooth: false
                     width: parent.width
                     height: (width * sourceSize.height) / sourceSize.width
                     fillMode: Image.PreserveAspectCrop

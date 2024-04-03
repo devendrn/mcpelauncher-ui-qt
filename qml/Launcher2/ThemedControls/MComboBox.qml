@@ -7,7 +7,7 @@ T.ComboBox {
     id: control
 
     implicitWidth: contentItem.implicitWidth + leftPadding + rightPadding
-    implicitHeight: 36
+    implicitHeight: 35
     baselineOffset: contentItem.y + contentItem.baselineOffset
     leftPadding: 8
     rightPadding: 36
@@ -21,7 +21,7 @@ T.ComboBox {
         id: textItem
         text: control.displayText
         font.pointSize: 11
-        opacity: enabled ? 1.0 : 0.3
+        opacity: control.enabled ? 1.0 : 0.3
         color: "#fff"
         horizontalAlignment: Text.AlignLeft
         verticalAlignment: Text.AlignVCenter
@@ -69,7 +69,10 @@ T.ComboBox {
             context.lineTo(width, 0)
             context.stroke()
         }
+
+        opacity: control.enabled ? 1.0 : 0.3
     }
+
     popup: T.Popup {
         y: control.height
         width: control.width

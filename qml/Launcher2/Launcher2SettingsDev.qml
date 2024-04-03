@@ -123,7 +123,7 @@ ColumnLayout {
             color: labelColor
             Layout.columnSpan: 1
         }
-        TextField {
+        MTextField {
             id: versionsFeedBaseUrl
             Layout.columnSpan: 1
             Layout.fillWidth: true

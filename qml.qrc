@@ -85,5 +85,7 @@
         <file>qml/Launcher2/Launcher2ChangeLog.qml</file>
         <file>qml/Launcher2/ThemedControls/MProgressBar.qml</file>
         <file>qml/Launcher2/ThemedControls/HorizontalDivider.qml</file>
+        <file>qml/Launcher2/EditProfileWindow.qml</file>
+        <file>qml/Launcher2/ThemedControls/MTextField.qml</file>
     </qresource>
 </RCC>

@@ -125,7 +125,8 @@ ColumnLayout {
                 }
             }
 
-            // enabled: !(playDownloadTask.active || apkExtractionTask.active || gameLauncher.running)
+            enabled: !(playDownloadTask.active || apkExtractionTask.active || gameLauncher.running)
+
             function getProfile() {
                 return currentProfile
             }
@@ -156,7 +157,6 @@ ColumnLayout {
                 var ret = []
                 for (var i = 0; i < profiles.length; i++)
                     ret.push(profiles[i].name)
-                ret.push("Add new profile...")
                 return ret
             }
 
