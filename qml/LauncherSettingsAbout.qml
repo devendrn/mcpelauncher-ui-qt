@@ -30,7 +30,7 @@ ColumnLayout {
         Layout.bottomMargin: 10
         font.pointSize: 10
         color: "#fff"
-        text: qsTr("Version: %1<br/>Build: %2").arg(LAUNCHER_VERSION_NAME || "Unknown").arg(LAUNCHER_VERSION_CODE || "Unknown")
+        text: qsTr("Version: %1<br/>Build: %2").arg(LAUNCHER_VERSION_NAME || "Unknown").arg((LAUNCHER_VERSION_CODE || "Unknown").toString())
     }
 
     Flow {
@@ -120,7 +120,7 @@ ColumnLayout {
                 updateInfo.text = qsTr("An Update of the Launcher is available for download") + "<br/>" + (columnlayout.updateUrl.length !== 0 ? qsTr("You can download the new Update here: %1").arg(columnlayout.updateUrl) + "<br/>" : "") + qsTr("Do you want to update now?")
                 updateInfo.buttons = MessageDialog.Yes | MessageDialog.No
             } else {
-                updateInfo.text = qsTr("Your installed Launcher Version %1 (build %2) seems uptodate").arg(LAUNCHER_VERSION_NAME || '').arg(LAUNCHER_VERSION_CODE)
+                updateInfo.text = qsTr("Your installed Launcher Version %1 (build %2) seems uptodate").arg(LAUNCHER_VERSION_NAME || '').arg(LAUNCHER_VERSION_CODE.toString())
                 updateInfo.buttons = MessageDialog.Ok
             }
             updateInfo.open()

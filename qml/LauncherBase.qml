@@ -27,7 +27,7 @@ ColumnLayout {
         id: baseHeader
         Layout.fillWidth: true
         title: qsTr("Unofficial *nix launcher for Minecraft")
-        subtitle: LAUNCHER_VERSION_NAME ? qsTr("%1 (build %2)").arg(LAUNCHER_VERSION_NAME).arg(LAUNCHER_VERSION_CODE || "Unknown") : ""
+        subtitle: LAUNCHER_VERSION_NAME ? qsTr("%1 (build %2)").arg(LAUNCHER_VERSION_NAME).arg((LAUNCHER_VERSION_CODE || "Unknown").toString()) : ""
     }
 
     Rectangle {
