@@ -150,7 +150,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty("LAUNCHER_VERSION_NAME", QVariant(""));
 #endif
 #ifdef LAUNCHER_VERSION_CODE
-    engine.rootContext()->setContextProperty("LAUNCHER_VERSION_CODE", QVariant((long long)LAUNCHER_VERSION_CODE));
+    engine.rootContext()->setContextProperty("LAUNCHER_VERSION_CODE", QVariant(LAUNCHER_VERSION_CODE));
 #else
     engine.rootContext()->setContextProperty("LAUNCHER_VERSION_CODE", QVariant(0));
 #endif
