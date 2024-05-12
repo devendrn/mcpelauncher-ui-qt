@@ -49,7 +49,7 @@ Window {
             id: rectangle
             color: "#ffbb84"
             Layout.fillWidth: true
-            Layout.preferredHeight: children[0].height + verticalPadding * 2
+            Layout.preferredHeight: children[0].implicitHeight + verticalPadding * 2
             Layout.alignment: Qt.AlignTop
             visible: launcher.crashed
 
