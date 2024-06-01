@@ -54,12 +54,6 @@ ColumnLayout {
     }
 
     MCheckBox {
-        text: qsTr("Show log when starting the game")
-        Component.onCompleted: checked = launcherSettings.startOpenLog
-        onCheckedChanged: launcherSettings.startOpenLog = checked
-    }
-
-    MCheckBox {
         text: qsTr("Hide the launcher when starting the game")
         Component.onCompleted: checked = launcherSettings.startHideLauncher
         onCheckedChanged: launcherSettings.startHideLauncher = checked

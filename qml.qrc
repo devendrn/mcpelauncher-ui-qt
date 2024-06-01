@@ -13,6 +13,7 @@
         <file>qml/ThemedControls/HorizontalDivider.qml</file>
         <file>qml/ThemedControls/MSideBarItem.qml</file>
         <file>qml/ThemedControls/CenteredScrollView.qml</file>
+        <file>qml/ThemedControls/MScrollBar.qml</file>
         <file>qml/ThemedControls/AnimatedStackLayout.qml</file>
         <file>qml/ThemedControls/FocusBorder.qml</file>
         <file>qml/MinecraftNews.qml</file>
@@ -40,6 +41,7 @@
         <file>Resources/icon-copy.png</file>
         <file>Resources/icon-home.png</file>
         <file>Resources/icon-news.png</file>
+        <file>Resources/icon-log.png</file>
         <file>qml/ThemedControls/MTabButton.qml</file>
         <file>qml/LauncherSettingsGeneral.qml</file>
         <file>qml/TroubleshooterWindow.qml</file>

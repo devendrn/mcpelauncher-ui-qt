@@ -141,17 +141,14 @@ LauncherBase {
             width: Math.min(Math.max(Math.max(implicitWidth, 230), rowLayout.width / 4), 320)
             Layout.alignment: Qt.AlignHCenter
             text: (isVersionsInitialized && playVerChannel.licenseStatus > 1 /* Fail or Succeeded */
-                   ) ? ((googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) ? (gameLauncher.running ? qsTr("Open log") : (checkSupport() ? (needsDownload() ? (googleLoginHelper.account !== null ? (profileManager.activeProfile.versionType === ProfileInfo.LATEST_GOOGLE_PLAY && googleLoginHelper.hideLatest ? qsTr("Please sign in again") : qsTr("Download and play")) : qsTr("Sign in")) : qsTr("Play")) : qsTr("Unsupported Version"))).toUpperCase() : qsTr("Ask Google Again")) : qsTr("Please wait...")
+                   ) ? ((googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) ? (gameLauncher.running ? qsTr("Game is running") : (checkSupport() ? (needsDownload() ? (googleLoginHelper.account !== null ? (profileManager.activeProfile.versionType === ProfileInfo.LATEST_GOOGLE_PLAY && googleLoginHelper.hideLatest ? qsTr("Please sign in again") : qsTr("Download and play")) : qsTr("Sign in")) : qsTr("Play")) : qsTr("Unsupported Version"))).toUpperCase() : qsTr("Ask Google Again")) : qsTr("Please wait...")
             subText: (isVersionsInitialized && (googleLoginHelper.account == null || playVerChannel.licenseStatus > 1 /* Fail or Succeeded */
-                                                )) ? ((googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) ? (gameLauncher.running ? qsTr("Game is running") : (getDisplayedVersionName() ? ("Minecraft " + getDisplayedVersionName()).toUpperCase() : qsTr("Please wait..."))) : "Failed to obtain apk url") : "..."
-            enabled: (isVersionsInitialized && playVerChannel.licenseStatus > 1 /* Fail or Succeeded */
-                      ) && !(playDownloadTask.active || apkExtractionTask.active || updateChecker.active || !checkSupport()) && (gameLauncher.running || getDisplayedVersionName()) && (googleLoginHelper.account !== null || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK)
+                                                )) ? ((googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) ? (gameLauncher.running ? "" : (getDisplayedVersionName() ? ("Minecraft " + getDisplayedVersionName()).toUpperCase() : qsTr("Please wait..."))) : "Failed to obtain apk url") : "..."
+            enabled: !gameLauncher.running && (isVersionsInitialized && playVerChannel.licenseStatus > 1 /* Fail or Succeeded */
+                      ) && !(playDownloadTask.active || apkExtractionTask.active || updateChecker.active || !checkSupport()) && (getDisplayedVersionName()) && (googleLoginHelper.account !== null || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK)
 
             onClicked: {
-                if (gameLauncher.running) {
-                    gameLogWindow.show()
-                    gameLauncher.logAttached()
-                } else if (googleLoginHelper.account !== null && !playVerChannel.hasVerifiedLicense && LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) {
+                if (googleLoginHelper.account !== null && !playVerChannel.hasVerifiedLicense && LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) {
                     playVerChannel.playApi = null
                     playVerChannel.playApi = playApiInstance
                 } else {
@@ -459,11 +456,7 @@ LauncherBase {
         gameLauncher.gameDir = gameDir
         if (launcherSettings.startHideLauncher)
             window.hide()
-        if (launcherSettings.startOpenLog) {
-            gameLogWindow.show()
-            gameLauncher.logAttached()
-        }
-        if (launcherSettings.startHideLauncher && !launcherSettings.startOpenLog)
+        if (launcherSettings.startHideLauncher)
             application.setVisibleInDock(false)
         var profile = profileManager.activeProfile
         gameLauncher.start(launcherSettings.disableGameLog, profile.arch, true)

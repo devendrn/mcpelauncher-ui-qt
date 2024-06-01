@@ -36,11 +36,18 @@ RowLayout {
                 Layout.fillHeight: true
             }
             MSideBarItem {
-                text: qsTr("Settings")
-                iconSource: "qrc:/Resources/icon-settings.png"
+                text: qsTr("Game Log")
+                iconSource: "qrc:/Resources/icon-log.png"
                 showText: useWideLayout
                 onClicked: updateIndex(2)
                 checked: currentIndex == 2
+            }
+            MSideBarItem {
+                text: qsTr("Settings")
+                iconSource: "qrc:/Resources/icon-settings.png"
+                showText: useWideLayout
+                onClicked: updateIndex(3)
+                checked: currentIndex == 3
             }
         }
     }
@@ -73,6 +80,23 @@ RowLayout {
         MinecraftNews {}
     }
 
+    ListModel {
+        id: gameLog
+    }
+
+    Connections {
+        target: gameLauncher
+        onLogCleared: gameLog.clear()
+        onLogAppended: gameLog.append({ display: text.substring(0, text.length - 1) })
+    }
+
+    Component {
+        id: gameLogPage
+        GameLogWindow {
+            launcher: gameLauncher
+        }
+    }
+
     Component {
         id: launcherSettingsPage
         LauncherSettingsWindow {
@@ -91,6 +115,8 @@ RowLayout {
         if (index === 1) {
             mainStackView.push(launcherNewsPage)
         } else if (index === 2) {
+            mainStackView.push(gameLogPage)
+        } else if (index === 3) {
             mainStackView.push(launcherSettingsPage)
         }
 

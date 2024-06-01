@@ -6,6 +6,9 @@
 #include <QDir>
 #include <QStandardPaths>
 #include <QUrl>
+#include <QClipboard>
+#include <QApplication>
+
 
 class LauncherSettings : public QObject {
     Q_OBJECT
@@ -22,6 +25,7 @@ class LauncherSettings : public QObject {
     Q_PROPERTY(QUrl gameDataDir READ gameDataDir)
     Q_PROPERTY(QString versionsFeedBaseUrl READ versionsFeedBaseUrl WRITE setVersionsFeedBaseUrl NOTIFY settingsChanged)
     Q_PROPERTY(bool showNotifications READ showNotifications WRITE setShowNotifications NOTIFY settingsChanged)
+    Q_PROPERTY(QString clipboard READ clipboard WRITE setClipboard NOTIFY clipboardChanged)
 
 private:
     QSettings settings;
@@ -71,6 +75,13 @@ public:
     QString versionsFeedBaseUrl() const { return !disableDevMode ? settings.value("versionsFeedBaseUrl", "").toString() : ""; }
     void setVersionsFeedBaseUrl(QString value) { settings.setValue("versionsFeedBaseUrl", value); emit settingsChanged(); }
 
+    QString clipboard() const {
+        return QApplication::clipboard()->text();
+    }
+
+    void setClipboard(QString text) const {
+        return QApplication::clipboard()->setText(text);
+    }
 public slots:
     void resetSettings() {
         settings.clear();
@@ -78,6 +89,8 @@ public slots:
 
 signals:
     void settingsChanged();
+
+    void clipboardChanged();
 
 };
 
