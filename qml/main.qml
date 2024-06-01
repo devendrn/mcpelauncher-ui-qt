@@ -124,6 +124,11 @@ Window {
         title: qsTr("Connecting to Google Play failed")
     }
 
+    MessageDialog {
+        id: errorDialog
+        title: qsTr("Launcher Error")
+    }
+
     TroubleshooterWindow {
         id: troubleshooterWindow
         googleLoginHelper: googleLoginHelperInstance
