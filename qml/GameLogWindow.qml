@@ -19,6 +19,7 @@ ColumnLayout {
             anchors.rightMargin: 10
             width: height
             onClicked: {
+                var text = ""
                 for(var i = 0; i < gameLog.count; i++) {
                     text += gameLog.get(i).display + "\n"
                 }
