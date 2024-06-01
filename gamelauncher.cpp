@@ -28,6 +28,7 @@ void GameLauncher::start(bool disableGameLog, QString arch, bool hasVerifiedLice
     m_disableGameLog = disableGameLog;
     process.reset(new QProcess);
     QStringList args;
+    QStringList cargs;
     QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
     if (m_gameDir.length() > 0) {
         args.append("-dg");
@@ -69,8 +70,12 @@ void GameLauncher::start(bool disableGameLog, QString arch, bool hasVerifiedLice
                 switch (cur) {
                 case ' ':
                 case '\t':
+                case '\r':
+                case '\n':
                     if(quote == '\0') {
-                        args.append(QString::fromStdString(arg));
+                        if(!arg.empty()) {
+                            cargs.append(QString::fromStdString(arg));
+                        }
                         arg = "";
                     } else {
                         arg += cur;
@@ -115,7 +120,7 @@ void GameLauncher::start(bool disableGameLog, QString arch, bool hasVerifiedLice
                 }
             }
             if(!arg.empty()) { 
-                args.append(QString::fromStdString(arg));
+                cargs.append(QString::fromStdString(arg));
             }
         }
 
@@ -135,8 +140,7 @@ void GameLauncher::start(bool disableGameLog, QString arch, bool hasVerifiedLice
     }
     emit logCleared();
     
-    if (m_gamelogopen)
-        logAttached();
+    logAttached();
     connect(process.data(), QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &GameLauncher::handleFinished);
     connect(process.data(), &QProcess::errorOccurred, this, &GameLauncher::handleError);
     m_crashed = false;
@@ -144,10 +148,27 @@ void GameLauncher::start(bool disableGameLog, QString arch, bool hasVerifiedLice
     auto abis = SupportedAndroidAbis::getAbis();
     std::string launcherpath;
     auto _arch = arch.toStdString();
+
+    int64_t hasCustomInterpreter = cargs.indexOf("%command%");
+    QString customExecutable = "";
+    if(hasCustomInterpreter != -1) {
+        customExecutable = cargs.front();
+        cargs.pop_front();
+        cargs.append(args);
+        args.clear();
+        hasCustomInterpreter--;
+    }
+    args.append(cargs);
+
     for (auto&& abi : abis) {
         if((_arch.empty() || _arch == abi.first) && QFile(m_gameDir + "/lib/" + QString::fromStdString(abi.first) + "/libminecraftpe.so").exists()) {
             if(!(launcherpath = findLauncher(abi.second.launchername)).empty()) {
-                process->start(QString::fromStdString(launcherpath), args);
+                auto executable = QString::fromStdString(launcherpath);
+                if(hasCustomInterpreter != -1) {
+                    args[hasCustomInterpreter] = executable;
+                    executable = customExecutable;
+                }
+                process->start(executable, args);
                 emit stateChanged();
                 return;
             } else {
