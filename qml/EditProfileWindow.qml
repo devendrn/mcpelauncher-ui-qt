@@ -7,27 +7,87 @@ import Qt.labs.platform
 import "ThemedControls"
 import io.mrarm.mcpelauncher 1.0
 
-Window {
+Popup {
     property VersionManager versionManager
     property ProfileManager profileManager
     property GoogleVersionChannel playVerChannel
     property ProfileInfo profile: null
+    property int targetHeight: Math.min(contentHeight, window.height - 20)
+    id: popup
+    modal: true
+    clip: true
+    padding: 0
+    height: targetHeight
+    anchors.centerIn: Overlay.overlay
+    closePolicy: Popup.NoAutoClose
+    focus: true
 
-    id: editProfileWindow
-    width: 500
-    height: layout.implicitHeight
-    minimumWidth: 500
-    minimumHeight: layout.implicitHeight
-    flags: Qt.Dialog
-    title: qsTr("Edit profile")
-    color: "#333333"
+    background: Rectangle {
+        color: "#333"
+    }
+
+    Overlay.modal: Rectangle {
+        id: popupOverlay
+        color: "#8f181818"
+    }
+
+    enter: Transition {
+        NumberAnimation {
+            property: "height"
+            from: popup.targetHeight / 2
+            to: popup.targetHeight
+            duration: 150
+            easing.type: Easing.OutQuad
+        }
+        NumberAnimation {
+            property: "opacity"
+            from: 0.0
+            to: 1.0
+            duration: 150
+            easing.type: Easing.OutCubic
+        }
+        NumberAnimation {
+            target: popupOverlay
+            property: "opacity"
+            from: 0.0
+            to: 1.0
+            duration: 150
+            easing.type: Easing.OutCubic
+        }
+    }
+
+    exit: Transition {
+        NumberAnimation {
+            property: "height"
+            to: popup.contentHeight / 2
+            duration: 150
+            easing.type: Easing.OutCubic
+        }
+        NumberAnimation {
+            property: "opacity"
+            to: 0
+            duration: 150
+            easing.type: Easing.OutCubic
+        }
+    }
+
+    onClosed: {
+        advancedColumn.visible = false
+    }
+
+    Behavior on height {
+        PropertyAnimation {
+            duration: 150
+            easing.type: Easing.OutCubic
+        }
+    }
 
     ColumnLayout {
         id: layout
-        anchors.fill: parent
-        spacing: 20
+        spacing: 0
         BaseHeader {
-            title: editProfileWindow.title
+            id: baseHeader
+            title: profile == null ? qsTr("Create profile") : qsTr("Edit profile")
             MButton {
                 text: qsTr("Delete profile")
                 anchors.verticalCenter: parent.verticalCenter
@@ -41,385 +101,417 @@ Window {
             }
         }
 
-        GridLayout {
-            columns: 2
-            Layout.fillWidth: true
-            Layout.leftMargin: 20
-            Layout.rightMargin: 20
-            Layout.alignment: Qt.AlignTop
-            columnSpacing: 20
-            rowSpacing: 8
+        ScrollView {
+            id: scrollView
+            implicitWidth: contentWidth
+            implicitHeight: Math.min(contentHeight, window.height - baseHeader.height - 20)
+            contentHeight: settings.implicitHeight + 40
+            contentWidth: Math.min(560, window.width - 30)
 
-            property int labelFontSize: 10
+            ColumnLayout {
+                id: settings
+                anchors.centerIn: parent
+                width: scrollView.contentWidth - 40
 
-            Text {
-                text: qsTr("Profile Name")
-                color: "#fff"
-                font.pointSize: parent.labelFontSize
-            }
-            MTextField {
-                id: profileName
-                Layout.fillWidth: true
-            }
-
-            Text {
-                text: qsTr("Version")
-                color: "#fff"
-                font.pointSize: parent.labelFontSize
-            }
-            MComboBox {
-                property var versions: versionManager.versions.getAll().sort(function (a, b) {
-                    return b.versionCode - a.versionCode
-                })
-                property var archivalVersions: excludeInstalledVersions(versionManager.archivalVersions.versions)
-                property var extraVersionName: null
-                property var hideLatest: googleLoginHelper.hideLatest
-                property var data: []
-                property var update: () => {
-                                         data = []
-                                         versionsmodel.clear()
-                                         var abis = googleLoginHelper.getAbis(launcherSettings.showUnsupported)
-                                         var append = function (obj) {
-                                             data.push(obj)
-                                             versionsmodel.append({
-                                                                      "name": obj.name
-                                                                  })
-                                         }
-                                         if (!hideLatest && googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense) {
-                                             var support = checkGooglePlayLatestSupport()
-                                             var latest = support ? playVerChannel.latestVersion : launcherLatestVersion().versionName
-                                             append({
-                                                        "name": qsTr("Latest %1 (%2)").arg((latest.length === 0 ? qsTr("version") : latest)).arg((support ? qsTr("Google Play") : qsTr("compatible"))),
-                                                        "versionType": ProfileInfo.LATEST_GOOGLE_PLAY
-                                                    })
-                                         }
-                                         for (var i = 0; i < versions.length; i++) {
-                                             for (var j = 0; j < abis.length; j++) {
-                                                 for (var k = 0; k < versions[i].archs.length; k++) {
-                                                     if (versions[i].archs[k] == abis[j]) {
-                                                         append({
-                                                                    "name": qsTr("%1 (installed, %2)").arg(versions[i].versionName).arg(versions[i].archs[k]),
-                                                                    "versionType": ProfileInfo.LOCKED_CODE,
-                                                                    "obj": versions[i],
-                                                                    "arch": versions[i].archs[k]
-                                                                })
-                                                         break
-                                                     }
-                                                 }
-                                             }
-                                         }
-                                         if (!hideLatest && googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense) {
-                                             for (i = 0; i < archivalVersions.length; i++) {
-                                                 for (var j = 0; j < abis.length; j++) {
-                                                     if (archivalVersions[i].abi == abis[j]) {
-                                                         append({
-                                                                    "name": qsTr("%1 (%2%3)").arg(archivalVersions[i].versionName).arg(archivalVersions[i].abi).arg((archivalVersions[i].isBeta ? (qsTr(", ") + qsTr("beta")) : "")),
-                                                                    "versionType": ProfileInfo.LOCKED_CODE,
-                                                                    "obj": archivalVersions[i],
-                                                                    "arch": archivalVersions[i].abi
-                                                                })
-                                                         break
-                                                     }
-                                                 }
-                                             }
-                                         }
-                                         if (extraVersionName != null) {
-                                             append({
-                                                        "name": extraVersionName,
-                                                        "versionType": ProfileInfo.LOCKED_NAME
-                                                    })
-                                         }
-                                     }
-
-                ListModel {
-                    id: versionsmodel
-                }
-
-                function contains(arr, el) {
-                    for (var i = 0; i < arr.length; ++i) {
-                        if (arr[i] === el) {
-                            return true
+                RowLayout {
+                    spacing: 15
+                    Layout.fillWidth: true
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        MText {
+                            text: qsTr("Name")
+                            font.bold: true
+                        }
+                        MTextField {
+                            id: profileName
+                            Layout.fillWidth: true
+                            placeholderText: "unamed"
                         }
                     }
-                    return false
-                }
 
-                function excludeInstalledVersions(arr) {
-                    var ret = []
-                    var installed = {}
-                    for (var i = 0; i < versions.length; i++)
-                        installed[versions[i].versionName] = versions[i].archs
-                    for (i = 0; i < arr.length; i++) {
-                        // Show Beta in versionslist if in Beta program and allow showUnsupported or allow Beta
-                        if (arr[i].versionName in installed && contains(installed[arr[i].versionName], arr[i].abi) || arr[i].isBeta && (!playVerChannel.latestVersionIsBeta || !(launcherSettings.showUnsupported || launcherSettings.showBetaVersions)))
-                            continue
-                        ret.push(arr[i])
-                    }
-                    return ret
-                }
-
-                id: profileVersion
-                Layout.fillWidth: true
-
-                textRole: "name"
-                model: versionsmodel
-            }
-
-            Item {
-                height: 8
-                Layout.columnSpan: 2
-            }
-
-            Text {
-                text: qsTr("Texture Patch")
-                color: "#fff"
-                font.pointSize: parent.labelFontSize
-            }
-            MComboBox {
-                ListModel {
-                    id: texturePatchModel
-
-                    ListElement {
-                        name: "Auto"
-                    }
-                    ListElement {
-                        name: "Enable"
-                    }
-                    ListElement {
-                        name: "Disable"
-                    }
-                }
-
-                id: profileTexturePatch
-                Layout.fillWidth: true
-
-                textRole: "name"
-                model: texturePatchModel
-            }
-
-            Text {
-                visible: SHOW_ANGLEBACKEND
-                text: "ANGLE backend"
-                color: "#fff"
-                font.pointSize: parent.labelFontSize
-            }
-
-            MComboBox {
-                visible: SHOW_ANGLEBACKEND
-                ListModel {
-                    id: graphicsAPIModel
-                    ListElement {
-                        name: "Default"
-                    }
-                    ListElement {
-                        name: "Metal"
-                    }
-                    ListElement {
-                        name: "OpenGL"
-                    }
-                }
-
-                id: profileGraphicsAPI
-                Layout.fillWidth: true
-
-                textRole: "name"
-                model: graphicsAPIModel
-            }
-
-            MCheckBox {
-                id: dataDirCheck
-                text: qsTr("Data directory")
-                font.pointSize: parent.labelFontSize
-            }
-            RowLayout {
-                Layout.fillWidth: true
-                spacing: 2
-                MTextField {
-                    id: dataDirPath
-                    enabled: dataDirCheck.checked
-                    Layout.fillWidth: true
-                }
-                MButton {
-                    text: "..."
-                    enabled: dataDirCheck.checked
-                    Layout.preferredHeight: dataDirPath.height
-                    onClicked: {
-                        if (dataDirPath.text !== null && dataDirPath.text.length > 0)
-                            dataDirPathDialog.folder = QmlUrlUtils.localFileToUrl(dataDirPath.text)
-                        dataDirPathDialog.open()
-                    }
-                }
-                FolderDialog {
-                    id: dataDirPathDialog
-                    onAccepted: {
-                        dataDirPath.text = QmlUrlUtils.urlToLocalFile(dataDirPathDialog.folder)
-                    }
-                }
-            }
-
-            MCheckBox {
-                id: windowSizeCheck
-                text: qsTr("Window size")
-                font.pointSize: parent.labelFontSize
-            }
-            RowLayout {
-                Layout.fillWidth: true
-                MTextField {
-                    id: windowWidth
-                    enabled: windowSizeCheck.checked
-                    Layout.fillWidth: true
-                    validator: IntValidator {
-                        bottom: 0
-                        top: 3840
-                    }
-                }
-                Text {
-                    text: "x"
-                    color: "#fff"
-                    font.pointSize: 11
-                    opacity: windowSizeCheck.checked ? 1.0 : 0.3
-                }
-                MTextField {
-                    id: windowHeight
-                    enabled: windowSizeCheck.checked
-                    Layout.fillWidth: true
-                    validator: IntValidator {
-                        bottom: 0
-                        top: 2160
-                    }
-                }
-            }
-
-            Text {
-                text: qsTr("Commandline")
-                color: "#fff"
-                font.pointSize: parent.labelFontSize
-            }
-
-            MTextField {
-                id: commandline
-                Layout.fillWidth: true
-            }
-
-            Text {
-                text: qsTr("Env Variables")
-                color: "#fff"
-                font.pointSize: parent.labelFontSize
-            }
-
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.fillHeight: true
-                Layout.minimumHeight: 150
-                color: "#1e1e1e"
-
-                ListView {
-                    id: envs
-                    anchors.fill: parent
-                    anchors.margins: 4
-                    clip: true
-                    flickableDirection: Flickable.VerticalFlick
-                    model: ListModel {
-                    }
-                    Component.onCompleted: {
-                        envs.model.append({ key: "", value: "", add: true })
-                    }
-
-                    delegate:
-                        Rectangle  {
-                            width: parent.width
-                            height: del.implicitHeight
-                            MTextField {
-                                visible: !add
-                                text: key
-                                width: (parent.width - del.implicitWidth) / 2
-                                anchors.left: parent.left
-                                anchors.leftMargin: 0
-                                height: del.implicitHeight
-                                onEditingFinished: {
-                                    envs.model.set(index, { key: text, value: value })
-                                }
-                            }
-                            MTextField {
-                                visible: !add
-                                text: value
-                                width: (parent.width - del.implicitWidth) / 2
-                                anchors.right: parent.right
-                                anchors.rightMargin: 0 + del.implicitWidth
-                                height: del.implicitHeight
-                                onEditingFinished: {
-                                    envs.model.set(index, { key: key, value: text })
-                                }
-                            }
-                            MButton {
-                                visible: !add
-                                id: del
-                                anchors.right: parent.right
-                                anchors.rightMargin: 0
-                                Image {
-                                    anchors.centerIn: parent
-                                    source: "qrc:/Resources/icon-delete.png"
-                                    smooth: false
-                                }
-                                onClicked: {
-                                    console.log(index)
-                                    envs.model.remove(index, 1)
-                                }
-                            }
-                            MButton {
-                                visible: !!add
-                                anchors.right: parent.right
-                                anchors.rightMargin: 0
-                                anchors.left: parent.left
-                                anchors.leftMargin: 0
-                                text: qsTr("New Environment Variable")
-                                onClicked: {
-                                    console.log(index)
-                                    envs.model.insert(envs.model.count - 1, { key: "", value: "" })
-                                }
-                            }
-
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        MText {
+                            text: qsTr("Version")
+                            font.bold: true
                         }
-                    highlightResizeVelocity: -1
-                    highlightMoveVelocity: -1
-                    currentIndex: -1
-                    ScrollBar.vertical: ScrollBar {}
-                }
-            }
-        }
+                        MComboBox {
+                            id: profileVersion
+                            textRole: "name"
+                            model: versionsmodel
+                            property var versions: versionManager.versions.getAll().sort(function (a, b) {
+                                return b.versionCode - a.versionCode
+                            })
+                            property var archivalVersions: excludeInstalledVersions(versionManager.archivalVersions.versions)
+                            property var extraVersionName: null
+                            property var hideLatest: googleLoginHelper.hideLatest
+                            property var data: []
+                            property var update: () => {
+                                                     data = []
+                                                     versionsmodel.clear()
+                                                     var abis = googleLoginHelper.getAbis(launcherSettings.showUnsupported)
+                                                     var append = function (obj) {
+                                                         data.push(obj)
+                                                         versionsmodel.append({
+                                                                                  "name": obj.name
+                                                                              })
+                                                     }
+                                                     if (!hideLatest && googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense) {
+                                                         var support = checkGooglePlayLatestSupport()
+                                                         var latest = support ? playVerChannel.latestVersion : launcherLatestVersion().versionName
+                                                         append({
+                                                                    "name": qsTr("Latest %1 (%2)").arg((latest.length === 0 ? qsTr("version") : latest)).arg((support ? qsTr("Google Play") : qsTr("compatible"))),
+                                                                    "versionType": ProfileInfo.LATEST_GOOGLE_PLAY
+                                                                })
+                                                     }
+                                                     for (var i = 0; i < versions.length; i++) {
+                                                         for (var j = 0; j < abis.length; j++) {
+                                                             for (var k = 0; k < versions[i].archs.length; k++) {
+                                                                 if (versions[i].archs[k] == abis[j]) {
+                                                                     append({
+                                                                                "name": qsTr("%1 (installed, %2)").arg(versions[i].versionName).arg(versions[i].archs[k]),
+                                                                                "versionType": ProfileInfo.LOCKED_CODE,
+                                                                                "obj": versions[i],
+                                                                                "arch": versions[i].archs[k]
+                                                                            })
+                                                                     break
+                                                                 }
+                                                             }
+                                                         }
+                                                     }
+                                                     if (!hideLatest && googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense) {
+                                                         for (i = 0; i < archivalVersions.length; i++) {
+                                                             for (var j = 0; j < abis.length; j++) {
+                                                                 if (archivalVersions[i].abi == abis[j]) {
+                                                                     append({
+                                                                                "name": qsTr("%1 (%2%3)").arg(archivalVersions[i].versionName).arg(archivalVersions[i].abi).arg((archivalVersions[i].isBeta ? (qsTr(", ") + qsTr("beta")) : "")),
+                                                                                "versionType": ProfileInfo.LOCKED_CODE,
+                                                                                "obj": archivalVersions[i],
+                                                                                "arch": archivalVersions[i].abi
+                                                                            })
+                                                                     break
+                                                                 }
+                                                             }
+                                                         }
+                                                     }
+                                                     if (extraVersionName != null) {
+                                                         append({
+                                                                    "name": extraVersionName,
+                                                                    "versionType": ProfileInfo.LOCKED_NAME
+                                                                })
+                                                     }
+                                                 }
 
-        Item {
-            Layout.fillHeight: true
-        }
+                            ListModel {
+                                id: versionsmodel
+                            }
 
-        Rectangle {
-            id: buttons
-            color: "#242424"
-            Layout.fillWidth: true
-            Layout.preferredHeight: 60
-            RowLayout {
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.right: parent.right
-                anchors.rightMargin: 10
-                spacing: 10
-                MButton {
-                    text: qsTr("Cancel")
-                    onClicked: close()
-                }
-                MButton {
-                    text: qsTr("Save As")
-                    enabled: !profileName.enabled || profileName.text.length > 0 && profileName.text !== profile.name
-                    onClicked: {
-                        saveProfile(true)
-                        close()
+                            function contains(arr, el) {
+                                for (var i = 0; i < arr.length; ++i) {
+                                    if (arr[i] === el) {
+                                        return true
+                                    }
+                                }
+                                return false
+                            }
+
+                            function excludeInstalledVersions(arr) {
+                                var ret = []
+                                var installed = {}
+                                for (var i = 0; i < versions.length; i++)
+                                    installed[versions[i].versionName] = versions[i].archs
+                                for (i = 0; i < arr.length; i++) {
+                                    // Show Beta in versionslist if in Beta program and allow showUnsupported or allow Beta
+                                    if (arr[i].versionName in installed && contains(installed[arr[i].versionName], arr[i].abi) || arr[i].isBeta && (!playVerChannel.latestVersionIsBeta || !(launcherSettings.showUnsupported || launcherSettings.showBetaVersions)))
+                                        continue
+                                    ret.push(arr[i])
+                                }
+                                return ret
+                            }
+                        }
                     }
                 }
-                MButton {
-                    text: qsTr("Save")
-                    enabled: !profileName.enabled || profileName.text.length > 0
-                    onClicked: {
-                        saveProfile()
-                        close()
+
+                HorizontalDivider {
+                    Layout.topMargin: 10
+                    visible: advancedColumn.visible
+                }
+
+                ColumnLayout {
+                    id: advancedColumn
+                    visible: false
+                    Layout.fillWidth: true
+                    spacing: 5
+
+                    MCheckBox {
+                        id: dataDirCheck
+                        Layout.topMargin: 10
+                        text: qsTr("Data directory")
+                        font.pointSize: parent.labelFontSize
+                        font.bold: true
+                    }
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 2
+                        MTextField {
+                            id: dataDirPath
+                            enabled: dataDirCheck.checked
+                            Layout.fillWidth: true
+                        }
+                        MButton {
+                            text: "..."
+                            enabled: dataDirCheck.checked
+                            Layout.preferredHeight: dataDirPath.height
+                            onClicked: {
+                                if (dataDirPath.text !== null && dataDirPath.text.length > 0)
+                                    dataDirPathDialog.folder = QmlUrlUtils.localFileToUrl(dataDirPath.text)
+                                dataDirPathDialog.open()
+                            }
+                        }
+                        FolderDialog {
+                            id: dataDirPathDialog
+                            onAccepted: {
+                                dataDirPath.text = QmlUrlUtils.urlToLocalFile(dataDirPathDialog.folder)
+                            }
+                        }
+                    }
+
+                    RowLayout {
+                        spacing: 15
+                        Layout.topMargin: 10
+                        Layout.fillWidth: true
+
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            MText {
+                                text: qsTr("Texture Patch")
+                                font.bold: true
+                            }
+                            MComboBox {
+                                id: profileTexturePatch
+                                Layout.fillWidth: true
+                                textRole: "name"
+                                ListModel {
+                                    id: texturePatchModel
+                                    ListElement {
+                                        name: "Auto"
+                                    }
+                                    ListElement {
+                                        name: "Enable"
+                                    }
+                                    ListElement {
+                                        name: "Disable"
+                                    }
+                                }
+                                model: texturePatchModel
+                            }
+                        }
+
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            visible: SHOW_ANGLEBACKEND
+                            MText {
+                                text: "ANGLE backend"
+                                font.bold: true
+                            }
+                            MComboBox {
+                                id: profileGraphicsAPI
+                                Layout.fillWidth: true
+                                textRole: "name"
+                                model: graphicsAPIModel
+                                ListModel {
+                                    id: graphicsAPIModel
+                                    ListElement {
+                                        name: "Default"
+                                    }
+                                    ListElement {
+                                        name: "Metal"
+                                    }
+                                    ListElement {
+                                        name: "OpenGL"
+                                    }
+                                }
+                            }
+                        }
+
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            MCheckBox {
+                                id: windowSizeCheck
+                                text: qsTr("Window size")
+                                font.bold: true
+                                font.pointSize: parent.labelFontSize
+                            }
+                            RowLayout {
+                                Layout.fillWidth: true
+                                MTextField {
+                                    id: windowWidth
+                                    enabled: windowSizeCheck.checked
+                                    Layout.fillWidth: true
+                                    validator: IntValidator {
+                                        bottom: 0
+                                        top: 3840
+                                    }
+                                }
+                                MText {
+                                    text: "x"
+                                    font.pointSize: 11
+                                    opacity: windowSizeCheck.checked ? 1.0 : 0.3
+                                }
+                                MTextField {
+                                    id: windowHeight
+                                    enabled: windowSizeCheck.checked
+                                    Layout.fillWidth: true
+                                    validator: IntValidator {
+                                        bottom: 0
+                                        top: 2160
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    MText {
+                        text: qsTr("Commandline")
+                        Layout.topMargin: 10
+                        font.bold: true
+                    }
+                    MTextField {
+                        id: commandline
+                        Layout.fillWidth: true
+                    }
+
+                    MText {
+                        text: qsTr("Environment Variables")
+                        font.bold: true
+                        Layout.topMargin: 10
+                        verticalAlignment: Text.AlignTop
+                    }
+                    Rectangle {
+                        color: "#222"
+                        Layout.preferredHeight: 120
+                        Layout.fillWidth: true
+                        ListView {
+                            id: envs
+                            clip: true
+                            anchors.fill: parent
+                            flickableDirection: Flickable.VerticalFlick
+                            model: ListModel {}
+                            Component.onCompleted: {
+                                envs.model.append({
+                                                      "key": "",
+                                                      "value": "",
+                                                      "add": true
+                                                  })
+                            }
+                            delegate: Rectangle {
+                                color: "#222"
+                                width: parent.width
+                                height: keyField.implicitHeight
+                                MTextField {
+                                    id: keyField
+                                    visible: !add
+                                    text: key
+                                    width: (parent.width - del.implicitWidth) / 2
+                                    anchors.left: parent.left
+                                    placeholderText: "KEY"
+                                    onEditingFinished: {
+                                        envs.model.set(index, {
+                                                           "key": text,
+                                                           "value": value
+                                                       })
+                                    }
+                                }
+                                MTextField {
+                                    visible: !add
+                                    text: value
+                                    anchors.left: keyField.right
+                                    anchors.right: del.left
+                                    placeholderText: "VALUE"
+                                    onEditingFinished: {
+                                        envs.model.set(index, {
+                                                           "key": key,
+                                                           "value": text
+                                                       })
+                                    }
+                                }
+                                MButton {
+                                    visible: !add
+                                    id: del
+                                    height: parent.height
+                                    anchors.right: parent.right
+                                    Image {
+                                        height: 3
+                                        width: 3
+                                        anchors.centerIn: parent
+                                        source: "qrc:/Resources/icon-delete.png"
+                                        smooth: false
+                                    }
+                                    onClicked: {
+                                        console.log(index)
+                                        envs.model.remove(index, 1)
+                                    }
+                                }
+                                MButton {
+                                    visible: !!add
+                                    width: parent.width
+                                    text: qsTr("Add New Variable")
+                                    onClicked: {
+                                        console.log(index)
+                                        envs.model.insert(envs.model.count - 1, {
+                                                              "key": "",
+                                                              "value": ""
+                                                          })
+                                    }
+                                }
+                            }
+                            highlightResizeVelocity: -1
+                            highlightMoveVelocity: -1
+                            currentIndex: -1
+                            ScrollBar.vertical: ScrollBar {}
+                        }
+                    }
+                }
+
+                RowLayout {
+                    id: buttons
+                    Layout.topMargin: 15
+                    TransparentButton {
+                        Layout.alignment: Qt.AlignVCenter
+                        text: advancedColumn.visible ? qsTr("Collapse advanced  🞁") : qsTr("Expand advanced  🞃")
+                        textColor: hovered ? "#ccc" : "#888"
+                        font.bold: true
+                        onClicked: {
+                            advancedColumn.visible = !advancedColumn.visible
+                            advancedColumn.Layout.preferredHeight = advancedColumn.height
+                        }
+                    }
+                    Item {
+                        Layout.fillWidth: true
+                    }
+                    RowLayout {
+                        spacing: 10
+                        MButton {
+                            text: qsTr("Cancel")
+                            onClicked: close()
+                        }
+                        MButton {
+                            text: qsTr("Save As")
+                            enabled: profileName.text.length > 0 && profileName.text !== profile.name
+                            visible: profile !== null && profileName.enabled
+                            onClicked: {
+                                saveProfile(true)
+                                close()
+                            }
+                        }
+                        MButton {
+                            text: qsTr("Save")
+                            enabled: !profileName.enabled || profileName.text.length > 0
+                            onClicked: {
+                                saveProfile()
+                                close()
+                            }
+                        }
                     }
                 }
             }
@@ -442,7 +534,7 @@ Window {
         windowSizeCheck.checked = false
         windowWidth.text = "720"
         windowHeight.text = "480"
-        if(envs.model.count > 1) {
+        if (envs.model.count > 1) {
             envs.model.remove(0, envs.model.count - 1)
         }
         commandline.text = ""
@@ -520,7 +612,11 @@ Window {
         }
         var keys = profile.env.keys()
         for (var i = 0; i < keys.length; i++) {
-            envs.model.insert(envs.model.count - 1, { key: keys[i], value: profile.env[keys[i]], add: false })
+            envs.model.insert(envs.model.count - 1, {
+                                  "key": keys[i],
+                                  "value": profile.env[keys[i]],
+                                  "add": false
+                              })
         }
         commandline.text = profile.commandline
     }
@@ -565,8 +661,8 @@ Window {
         profile.windowWidth = parseInt(windowWidth.text) || profile.windowWidth
         profile.windowHeight = parseInt(windowHeight.text) || profile.windowHeight
         profile.clearEnv()
-        for(var i = 0; i < envs.model.count - 1; i++) {
-            profile.env[envs.model.get(i).key] = envs.model.get(i).value;
+        for (var i = 0; i < envs.model.count - 1; i++) {
+            profile.env[envs.model.get(i).key] = envs.model.get(i).value
         }
         profile.commandline = commandline.text
         profile.save()

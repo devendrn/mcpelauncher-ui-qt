@@ -13,8 +13,7 @@ T.Button {
 
     background: Rectangle {
         id: buttonBackground
-        color: "#08FFFFFF"
-        visible: control.hovered && !control.down
+        color: control.hovered && !control.down ? "#09FFFFFF" : "#00FFFFFF"
         FocusBorder {
             visible: control.visualFocus
         }
@@ -28,5 +27,6 @@ T.Button {
         color: textColor
         horizontalAlignment: Text.AlignHCenter
         verticalAlignment: Text.AlignVCenter
+        topPadding: control.padding / 2
     }
 }

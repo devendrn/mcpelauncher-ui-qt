@@ -55,28 +55,18 @@ T.ComboBox {
         anchors.right: parent.right
         anchors.verticalCenter: parent.verticalCenter
         anchors.rightMargin: 10
+        opacity: control.enabled ? 1.0 : 0.3
         width: 13
         height: 6
-        contextType: "2d"
-
-        Connections {
-            target: control
-            function onPressedChanged() {
-                canvas.requestPaint()
-            }
-        }
-
         onPaint: {
-            context.reset()
-            context.lineWidth = 1.5
-            context.strokeStyle = "#bbb"
-            context.moveTo(0, 0)
-            context.lineTo(width / 2, height)
-            context.lineTo(width, 0)
-            context.stroke()
+            var ctx = getContext("2d")
+            ctx.lineWidth = 1.5
+            ctx.strokeStyle = "#bbb"
+            ctx.moveTo(0, 0)
+            ctx.lineTo(width / 2, height)
+            ctx.lineTo(width, 0)
+            ctx.stroke()
         }
-
-        opacity: control.enabled ? 1.0 : 0.3
     }
 
     popup: T.Popup {

@@ -3,7 +3,6 @@ import QtQuick.Templates as T
 
 T.CheckBox {
     id: control
-
     padding: 8
     implicitWidth: contentItem.implicitWidth + leftPadding + rightPadding
     implicitHeight: Math.max(contentItem.implicitHeight, indicator.implicitHeight)
@@ -22,23 +21,14 @@ T.CheckBox {
             width: 10
             height: 10
             visible: control.checked
-            contextType: "2d"
-
-            Connections {
-                target: control
-                function onPressedChanged() {
-                    canvas.requestPaint()
-                }
-            }
-
             onPaint: {
-                context.reset()
-                context.lineWidth = 2
-                context.strokeStyle = "#fff"
-                context.moveTo(0, height / 1.6)
-                context.lineTo(width / 2.5, height)
-                context.lineTo(width, 0)
-                context.stroke()
+                var ctx = getContext("2d")
+                ctx.lineWidth = 2
+                ctx.strokeStyle = "#fff"
+                ctx.moveTo(0, height / 1.6)
+                ctx.lineTo(width / 2.5, height)
+                ctx.lineTo(width, 0)
+                ctx.stroke()
             }
         }
 
@@ -50,7 +40,7 @@ T.CheckBox {
     contentItem: Text {
         id: textItem
         text: control.text
-        font.pointSize: parent.font.pointSize
+        font: parent.font
         opacity: enabled ? 1.0 : 0.3
         color: "#fff"
         horizontalAlignment: Text.AlignLeft

@@ -1,9 +1,8 @@
 import QtQuick
-import QtQuick.Templates as T
+import QtQuick.Controls
 
-T.TextField {
+TextField {
     id: control
-
     padding: 8
     implicitWidth: contentItem.implicitWidth + leftPadding + rightPadding
     implicitHeight: 35
@@ -12,6 +11,7 @@ T.TextField {
     selectByMouse: true
     selectionColor: "#51a063"
     color: "#fff"
+    placeholderTextColor: "#666"
     opacity: control.enabled ? 1.0 : 0.3
 
     background: Rectangle {
@@ -20,7 +20,7 @@ T.TextField {
         radius: 2
 
         FocusBorder {
-            visible: control.focus ? control.focusReason !== Qt.MouseFocusReason : false
+            visible: control.focus ? control.focusReason == Qt.TabFocusReason || control.focusReason == Qt.BacktabFocusReason : false
         }
     }
 }

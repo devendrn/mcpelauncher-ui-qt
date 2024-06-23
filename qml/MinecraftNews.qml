@@ -21,6 +21,7 @@ ColumnLayout {
     }
 
     ScrollView {
+        id: scrollView
         Layout.fillWidth: true
         Layout.fillHeight: true
         contentHeight: Math.max(gridLayout.height + 2 * gridLayout.padding, availableHeight)
@@ -51,29 +52,41 @@ ColumnLayout {
                     Image {
                         id: newsImage
                         property real ratio: sourceSize.width / sourceSize.height
-                        anchors.fill: parent
+                        anchors.top: parent.top
+                        anchors.bottom: descriptionBox.top
+                        width: parent.width
                         fillMode: Image.PreserveAspectCrop
                         source: modelData.image
                         smooth: false
-                        anchors.bottom: parent.bottom
                     }
 
                     Rectangle {
                         id: descriptionBox
                         width: parent.width
-                        height: 40
+                        height: descriptionContent.height
                         anchors.bottom: parent.bottom
-                        color: "#B0000000"
-                        Text {
-                            anchors.fill: parent
-                            text: modelData.name
-                            color: "#fff"
-                            font.pointSize: 10
-                            font.weight: Font.Bold
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                            elide: Text.ElideRight
-                            padding: 8
+                        color: "#111"
+                        Column {
+                            id: descriptionContent
+                            width: parent.width
+                            padding: 15
+                            spacing: 5
+
+                            Text {
+                                text: modelData.name
+                                width: parent.width - 2 * parent.padding
+                                color: "#fff"
+                                font.pointSize: 13
+                                font.weight: Font.Bold
+                                wrapMode: Text.WordWrap
+                            }
+                            Text {
+                                text: modelData.description
+                                width: parent.width - 2 * parent.padding
+                                color: "#bbb"
+                                font.pointSize: 10
+                                wrapMode: Text.WordWrap
+                            }
                         }
                     }
 
@@ -132,6 +145,15 @@ ColumnLayout {
                     }
                 }
             }
+
+            MButton {
+                Layout.columnSpan: parent.columns
+                Layout.alignment: Qt.AlignHCenter
+                text: qsTr("Load more articles")
+                onClicked: loadNews()
+                visible: articlesCount > 0 && articlesOffset < articlesCount
+                enabled: !articlesLoading
+            }
         }
 
         MBusyIndicator {
@@ -140,24 +162,42 @@ ColumnLayout {
         }
     }
 
+    property int articlesCount: 0
+    property int articlesOffset: 0
+    property int articlesPerPage: 20
+    property bool articlesLoading: false
+
     function loadNews() {
+        articlesLoading = true
+        var offset = articlesOffset
+        if (articlesCount > 0) {
+            offset += articlesPerPage
+        }
         var req = new XMLHttpRequest()
-        req.open("GET", "https://www.minecraft.net/content/minecraft-net/_jcr_content.articles.grid?tileselection=auto&tagsPath=minecraft:article/news,minecraft:article/insider,minecraft:article/culture,minecraft:article/merch,minecraft:stockholm/news,minecraft:stockholm/guides,minecraft:stockholm/events,minecraft:stockholm/minecraft-builds,minecraft:stockholm/marketplace,minecraft:stockholm/deep-dives,minecraft:stockholm/merch,minecraft:stockholm/earth,minecraft:stockholm/dungeons,minecraft:stockholm/realms-plus,minecraft:stockholm/minecraft,minecraft:stockholm/realms-java,minecraft:stockholm/nether&propResPath=/content/minecraft-net/language-masters/en-us/jcr:content/root/generic-container/par/bleeding_page_sectio_1278766118/page-section-par/grid&count=2000&pageSize=20&lang=/content/minecraft-net/language-masters/en-us", true)
+        var url = "https://www.minecraft.net/content/minecraft-net/_jcr_content.articles.grid?tileselection=auto&tagsPath=minecraft:stockholm/news,minecraft:stockholm/guides,minecraft:stockholm/events,minecraft:stockholm/minecraft-builds,minecraft:stockholm/marketplace,minecraft:stockholm/deep-dives,minecraft:stockholm/merch,minecraft:article/culture,minecraft:article/insider,minecraft:article/merch,minecraft:article/news&propResPath=/content/minecraft-net/language-masters/en-us/jcr:content/root/generic-container/par/bleeding_page_sectio_1278766118/page-section-par/grid"
+        url += `&offset=${offset}&count=2000&pageSize=${articlesPerPage}&lang=/content/minecraft-net/language-masters/en-us`
+
+        req.open("GET", url, true)
         req.onerror = function () {
             console.log("Failed to load news")
+            articlesLoading = false
         }
         req.onreadystatechange = function () {
             if (req.readyState === XMLHttpRequest.DONE) {
-                if (req.status === 200)
+                if (req.status === 200) {
                     parseNewsResponse(JSON.parse(req.responseText))
-                else
+                    articlesOffset = offset
+                } else {
                     req.onerror()
+                }
             }
+            articlesLoading = false
         }
         req.send()
     }
 
     function parseNewsResponse(resp) {
+        articlesCount = resp.article_count
         var entries = []
         for (var i = 0; i < resp.article_grid.length; i++) {
             var e = resp.article_grid[i]
@@ -166,12 +206,17 @@ ColumnLayout {
                 continue
             entries.push({
                              "name": t.title || t.text,
+                             "description": t.sub_header,
                              "image": "https://www.minecraft.net/" + t.image.imageURL,
                              "url": "https://minecraft.net/" + e.article_url.substr(1)
                          })
             console.log(t.title)
         }
-        newsGrid.model = entries
+        if (newsGrid.model === null) {
+            newsGrid.model = entries
+        } else {
+            newsGrid.model.push(...entries)
+        }
     }
 
     Component.onCompleted: loadNews()
