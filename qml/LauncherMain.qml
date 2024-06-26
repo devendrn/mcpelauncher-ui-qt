@@ -42,16 +42,6 @@ LauncherBase {
         source: wallpaperFolderModel.getRandomImage()
         smooth: true
         fillMode: Image.PreserveAspectCrop
-        Image {
-            id: launcherLogo
-            source: "qrc:/Resources/mcpelauncher-logo.svg"
-            smooth: false
-            y: 30
-            width: parent.width
-            height: 90
-            fillMode: Image.PreserveAspectFit
-            visible: parent.height > 150
-        }
         FolderListModel {
             id: wallpaperFolderModel
             nameFilters: ["*.jpg", "*.jpeg", "*.png"]
