@@ -8,7 +8,7 @@ class GooglePlayApi;
 
 class GoogleVersionChannel : public QObject {
     Q_OBJECT
-    Q_PROPERTY(GooglePlayApi* playApi WRITE setPlayApi)
+    Q_PROPERTY(GooglePlayApi* playApi MEMBER m_playApi WRITE setPlayApi)
     Q_PROPERTY(QString latestVersion READ latestVersion NOTIFY latestVersionChanged)
     Q_PROPERTY(qint32 latestVersionCode READ latestVersionCode NOTIFY latestVersionChanged)
     Q_PROPERTY(bool latestVersionIsBeta READ latestVersionIsBeta NOTIFY latestVersionChanged)
@@ -22,7 +22,7 @@ public:
     };
     Q_ENUM(GoogleVersionChannelStatus)
     enum class GoogleVersionChannelLicenceStatus {
-        NOT_READY, PENDING, FAILED, SUCCEDED
+        NOT_READY, PENDING, FAILED, SUCCEDED, OFFLINE
     };
     Q_ENUM(GoogleVersionChannelLicenceStatus)
 private:
@@ -38,7 +38,7 @@ private:
     void onApiReady();
 
     void onAppInfoReceived(QString const& packageName, QString const& version, int versionCode, bool isBeta);
-    void onAppInfoFailed(const QString &errorMessage);
+    void onAppInfoFailed(QString const& packageName, const QString &errorMessage);
     void setStatus(GoogleVersionChannelStatus status) {
         if (this->status != status) {
             this->status = status;

@@ -6,10 +6,6 @@ GoogleVersionChannel::GoogleVersionChannel() {
     m_latestVersion = m_settings.value("latest_version").toString();
     m_latestVersionCode = m_settings.value("latest_version_code").toInt();
     m_latestVersionIsBeta = m_settings.value("latest_version_isbeta").toBool();
-    if (m_settings.value("latest_version_id").toString() == (m_latestVersion + QChar((char)m_latestVersionCode) + QChar(m_latestVersionIsBeta))) {
-        m_hasVerifiedLicense = true;
-        licenseStatus = GoogleVersionChannelLicenceStatus::SUCCEDED;
-    }
 }
 
 void GoogleVersionChannel::setPlayApi(GooglePlayApi *value) {
@@ -55,7 +51,14 @@ void GoogleVersionChannel::onAppInfoReceived(const QString &packageName, const Q
     }
 }
 
-void GoogleVersionChannel::onAppInfoFailed(const QString &errorMessage) {
-    licenseStatus = GoogleVersionChannelLicenceStatus::FAILED;
+void GoogleVersionChannel::onAppInfoFailed(QString const& packageName, const QString &errorMessage) {
+    if(errorMessage.contains("401") || errorMessage.contains("403")) {
+        licenseStatus = GoogleVersionChannelLicenceStatus::FAILED;
+        m_hasVerifiedLicense = false;
+        m_settings.setValue("latest_version_id", "");
+    } else if(m_settings.value("latest_version_id").toString() == (m_latestVersion + QChar((char)m_latestVersionCode) + QChar(m_latestVersionIsBeta))) {
+        m_hasVerifiedLicense = true;
+        licenseStatus = GoogleVersionChannelLicenceStatus::OFFLINE;
+    }
     setStatus(GoogleVersionChannelStatus::FAILED);
 }

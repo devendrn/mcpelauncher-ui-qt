@@ -97,4 +97,13 @@ ColumnLayout {
     GampadTool {
         id: gamepadTool
     }
+
+    MButton {
+        text: qsTr("Refresh Google Play Version Channel")
+        onClicked: {
+            var api = playVerChannel.playApi
+            playVerChannel.playApi = null
+            playVerChannel.playApi = api
+        }
+    }
 }
