@@ -2,13 +2,126 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import "ThemedControls"
+import io.mrarm.mcpelauncher 1.0
 
 ColumnLayout {
     width: parent.width
     spacing: 10
     Keys.forwardTo: versions
+    id: layout
+
+    Popup {
+       id: downloadApk
+       background: Rectangle {
+           color: "#333"
+       }
+       height: layout.height
+       width: layout.width
+       modal: true
+       clip: true
+
+
+       Overlay.modal: Rectangle {
+           id: popupOverlay
+           color: "#8f181818"
+       }
+       ColumnLayout {
+           id: scope
+
+           MComboBox {
+               id: versionBox
+               property var codes: []
+               model: {
+                   var ret = []
+                   var ncodes = []
+                   for (var i = 0; i < versionManager.archivalVersions.versions.length; i++) {
+                       var ver = versionManager.archivalVersions.versions[i]
+                       if (playVerChannel.latestVersionIsBeta && launcherSettings.showBetaVersions || !ver.isBeta) {
+                            ret.push(ver.versionName + " (" + ver.abi + ")")
+                            ncodes.push(ver.versionCode)
+                       }
+                   }
+                   codes = ncodes
+                   return ret
+               }
+           }
+
+           MCheckBox {
+                id: isChromeOS
+                text: qsTr("IsChromeOS")
+                Layout.bottomMargin: 10
+           }
+
+           GoogleLoginHelper {
+               id: manualgoogleLoginHelperInstance
+               includeIncompatible: true
+               singleArch: ""
+               unlockkey: googleLoginHelperInstance.unlockkey
+               chromeOS: isChromeOS.checked
+           }
+
+           GooglePlayApi {
+               id: manualplayApi
+               login: manualgoogleLoginHelperInstance
+
+               onInitError: function (err) {
+                   console.log("Failed " + err)
+               }
+           }
+
+           property var apkUrls: ""
+
+           GoogleApkDownloadTask {
+               id: manualPlayDownloadTask
+               playApi: manualplayApi
+               packageName: "com.mojang.minecraftpe"
+               keepApks: false
+               dryrun: true
+               versionCode: versionBox.codes[versionBox.currentIndex]
+               onActiveChanged: {
+               }
+               onDownloadInfo: function (url) {
+                   scope.apkUrls = url
+               }
+               onError: function (err) {
+                   console.log(err)
+               }
+               onFinished: {
+                   console.log("done")
+               }
+           }
+
+            GoogleVersionChannel {
+                id: manualplayVerChannelInstance
+                playApi: manualplayApi
+            }
+
+           MButton {
+               text: qsTr("Get Download Info")
+               onClicked: manualPlayDownloadTask.start()
+           }
+
+
+           TextEdit {
+               visible: scope.apkUrls && scope.apkUrls.length > 0
+               text: "<style type=\"text/css\">a { color: lightblue; }</style>" +scope.apkUrls
+               color: "white"
+               textFormat: Text.RichText
+               readOnly: true
+               selectByMouse: true
+               onLinkActivated: Qt.openUrlExternally(link)
+
+               MouseArea {
+                   anchors.fill: parent
+                   cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+                   acceptedButtons: Qt.NoButton
+               }
+           }
+       }
+    }
 
     Flow {
+        Layout.fillWidth: true
         spacing: 10
 
         MButton {
@@ -23,7 +136,14 @@ ColumnLayout {
 
         MButton {
             Layout.fillWidth: true
-            text: (googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) ? qsTr("Import .apk") : qsTr("<s>Import .apk</s> ( Unable to validate ownership )")
+            text: (googleLoginHelper.account !== null) ? qsTr("Download .apk") : "<s>" + qsTr("Download .apk") + "</s>"
+            onClicked: downloadApk.open()
+            enabled: (googleLoginHelper.account !== null)
+        }
+
+        MButton {
+            Layout.fillWidth: true
+            text: (googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) ? qsTr("Import .apk") : "<s>" + qsTr("Import .apk") + "</s>"
             onClicked: apkImportWindow.pickFile()
             enabled: (googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK)
         }

@@ -135,6 +135,19 @@ void GoogleLoginHelper::onLoginFinished(int code) {
 }
 
 void GoogleLoginHelper::updateDevice() {
+    device = playapi::device_info {};
+    if(chromeOS) {
+        const char* features[] = { "android.hardware.faketouch", "android.software.backup", "org.chromium.arc.device_management", "android.software.print", "android.software.activities_on_secondary_displays", "com.google.android.feature.PIXEL_2017_EXPERIENCE", "android.software.voice_recognizers", "android.software.picture_in_picture", "android.software.cant_save_state", "com.google.android.feature.PIXEL_2018_EXPERIENCE", "android.hardware.opengles.aep", "android.hardware.type.pc", "android.hardware.bluetooth", "com.google.android.feature.GOOGLE_BUILD", "org.chromium.arc", "android.hardware.audio.output", "android.software.verified_boot", "android.hardware.camera.front", "android.hardware.screen.portrait", "com.google.android.feature.TURBO_PRELOAD", "android.hardware.microphone", "android.software.autofill", "com.google.android.feature.PIXEL_EXPERIENCE", "android.hardware.bluetooth_le", "android.software.input_methods", "android.software.companion_device_setup", "com.google.android.feature.WELLBEING", "android.hardware.wifi.passpoint", "android.hardware.screen.landscape", "android.hardware.ram.normal", "android.software.webview", "android.hardware.camera.any", "android.hardware.location.network", "android.software.cts", "com.google.android.apps.dialer.SUPPORTED", "com.google.android.feature.GOOGLE_EXPERIENCE", "com.google.android.feature.EXCHANGE_6_2", "android.software.freeform_window_management", "android.software.midi", "android.hardware.wifi", "android.hardware.location", "org.chromium.arc.video.encode_dynamic_bitrate" };
+        device.config_system_features.clear();
+        for(auto && feature : features) {
+            device.config_system_features.push_back({feature, 0});
+        }
+        const char* sharedlibs[] = { "android.test.base", "android.test.mock", "com.google.android.chromeos", "com.google.android.media.effects", "org.chromium.arc.bridge", "org.chromium.arc", "com.android.location.provider", "android.ext.shared", "javax.obex", "com.google.android.gms", "android.ext.services", "android.test.runner", "org.chromium.arc.mojom", "com.google.android.dialer.support", "com.google.android.maps", "org.apache.http.legacy", "com.android.media.remotedisplay", "com.android.mediadrm.signer" };
+        device.config_system_shared_libraries.clear();
+        for(auto && lib : sharedlibs) {
+            device.config_system_shared_libraries.push_back(lib);
+        }
+    }
     device.config_native_platforms = {};
     if(!singleArch.isEmpty()) {
         device.config_native_platforms.push_back(singleArch.toStdString());

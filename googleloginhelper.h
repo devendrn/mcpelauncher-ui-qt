@@ -19,6 +19,7 @@ class GoogleLoginHelper : public QObject {
     Q_PROPERTY(bool hideLatest READ hideLatest NOTIFY accountInfoChanged)
     Q_PROPERTY(bool hasEncryptedCredentials READ gethasEncryptedCredentials NOTIFY accountInfoChanged)
     Q_PROPERTY(QString unlockkey READ getUnlockkey WRITE setUnlockkey NOTIFY accountInfoChanged)
+    Q_PROPERTY(bool chromeOS MEMBER chromeOS WRITE setChromeOS)
 
 private:
     QSettings settings;
@@ -32,6 +33,7 @@ private:
     bool hasEncryptedCredentials = false;
     QString singleArch;
     QString unlockkey;
+    bool chromeOS = false;
 
     static std::string getTokenCachePath();
 
@@ -79,8 +81,15 @@ private:
             loadAccount();
         }
     }
+    void setChromeOS(bool isChromeOS) {
+        chromeOS = isChromeOS;
+        updateDevice();
+    }
 
 public:
+    bool isChromeOS() {
+        return chromeOS;
+    }
     GoogleLoginHelper();
 
     ~GoogleLoginHelper();

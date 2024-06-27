@@ -24,6 +24,7 @@ class GoogleApkDownloadTask : public QObject {
     Q_PROPERTY(bool active READ active NOTIFY activeChanged)
     Q_PROPERTY(QStringList filePaths READ filePaths)
     Q_PROPERTY(bool keepApks READ keepApks WRITE setKeepApks)
+    Q_PROPERTY(bool dryrun MEMBER m_dryrun)
 
 private:
     GooglePlayApi* m_playApi = nullptr;
@@ -33,6 +34,7 @@ private:
     std::vector<std::shared_ptr<QTemporaryFile>> files;
     std::atomic_bool m_active;
     bool m_keepApks = false;
+    bool m_dryrun = false;
 
     void startDownload(playapi::proto::finsky::download::AndroidAppDeliveryData const &dd, bool skipMainApk = false);
 
@@ -67,6 +69,8 @@ signals:
     void activeChanged();
 
     void queueDownload(playapi::proto::finsky::download::AndroidAppDeliveryData dd, bool skipMainApk);
+
+    void downloadInfo(QString const& url);
 
 public slots:
     void start(bool skipMainApk = false);

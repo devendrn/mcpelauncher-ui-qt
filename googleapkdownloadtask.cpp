@@ -36,8 +36,9 @@ void GoogleApkDownloadTask::start(bool skipMainApk) {
     emit activeChanged();
     m_playApi->getApi()->delivery(m_packageName.toStdString(), m_versionCode, std::string())->call([this, skipMainApk](playapi::proto::finsky::response::ResponseWrapper&& resp) {
         auto dd = resp.payload().deliveryresponse().appdeliverydata();
-        if((dd.has_gzippeddownloadurl() ? dd.gzippeddownloadurl() : dd.downloadurl()) == "") {
-            throw std::runtime_error(QObject::tr("To use the download feature, <a href=\"https://play.google.com/store/apps/details?id=com.mojang.minecraftpe\">Minecraft: Bedrock Edition has to be purchased on the Google Play Store</a>.<br>If you are trying to download a beta version, please make sure you are in the <a href=\"https://play.google.com/apps/testing/com.mojang.minecraftpe\">Minecraft beta program on Google Play.</a> and then try again after a while (joining the program might take a while).").toStdString());
+        auto apkUrl = dd.has_gzippeddownloadurl() ? dd.gzippeddownloadurl() : dd.downloadurl();
+        if(apkUrl == "") {
+            throw std::runtime_error(QObject::tr("Cannot find %1 with version %2 on Google Play").arg(m_packageName).arg(m_versionCode).toStdString());
         }
 #ifdef GOOGLEPLAYDOWNLOADER_USEQT
         emit queueDownload(dd, skipMainApk);
@@ -74,6 +75,12 @@ bool GoogleApkDownloadTask::curlDoZlibInflate(z_stream &zs, int file, char *data
 }
 
 template<class T, class U> void GoogleApkDownloadTask::downloadFile(T const&dd, U cookie, std::function<void()> success, std::function<void()> _error, std::shared_ptr<DownloadProgress> _progress, size_t id) {
+    auto apkUrl = dd.has_gzippeddownloadurl() ? dd.gzippeddownloadurl() : dd.downloadurl();
+    emit downloadInfo(QString::fromStdString(apkUrl));
+    if(m_dryrun) {
+        std::thread(success).detach();
+        return;
+    }
     auto apksdir = QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)).filePath("mcpelauncher/apks");
     QDir().mkpath(apksdir);
     auto file = std::make_shared<QTemporaryFile>(QDir(apksdir).filePath("temp-XXXXXX.apk"));
@@ -220,6 +227,21 @@ template<class T, class U> void GoogleApkDownloadTask::downloadFile(T const&dd, 
 }
 
 void GoogleApkDownloadTask::startDownload(playapi::proto::finsky::download::AndroidAppDeliveryData const &dd, bool skipMainApk) {
+    if(m_dryrun) {
+        QString allUrls;
+        if (!skipMainApk || dd.splitdeliverydata().empty() /* Old Minecraft versions < 1.15.y needs a full download */) {
+            //allUrls += (dd.has_gzippeddownloadurl() ? dd.gzippeddownloadurl() : dd.downloadurl()) + "<br/>";
+            auto url = /*dd.has_gzippeddownloadurl() ? dd.gzippeddownloadurl() :*/ dd.downloadurl();
+            allUrls += QObject::tr("<a href=\"%2\">%1</a>: %2<br/>").arg("main").arg(QString::fromStdString(url));
+        }
+        for(auto && data : dd.splitdeliverydata()) {
+            auto url = /*data.has_gzippeddownloadurl() ? data.gzippeddownloadurl() :*/ data.downloadurl();
+            allUrls += QObject::tr("<a href=\"%2\">%1</a>: %2<br/>").arg(QString::fromStdString(data.id())).arg(QString::fromStdString(url));
+        }
+        emit downloadInfo(allUrls);
+        return;
+    }
+
     auto cookie = dd.downloadauthcookie(0);
     auto progress = std::make_shared<DownloadProgress>();
     std::lock_guard<std::mutex> guard(progress->mtx);

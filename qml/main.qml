@@ -27,6 +27,7 @@ Window {
         id: googleLoginHelperInstance
         includeIncompatible: launcherSettings.showUnsupported
         singleArch: launcherSettings.singleArch
+        chromeOS: launcherSettings.chromeOSMode
     }
 
     VersionManager {

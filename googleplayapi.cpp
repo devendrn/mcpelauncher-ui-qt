@@ -45,6 +45,9 @@ QString GooglePlayApi::CheckinInfoGroup() {
     for (auto&& abi : loginHelper->getDevice().config_native_platforms) {
         ss << "__" << abi;
     }
+    if(loginHelper->isChromeOS()) {
+        ss << "__chromeos";
+    }
     return QString::fromStdString(ss.str());
 }
 

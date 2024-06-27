@@ -26,6 +26,7 @@ class LauncherSettings : public QObject {
     Q_PROPERTY(QString versionsFeedBaseUrl READ versionsFeedBaseUrl WRITE setVersionsFeedBaseUrl NOTIFY settingsChanged)
     Q_PROPERTY(bool showNotifications READ showNotifications WRITE setShowNotifications NOTIFY settingsChanged)
     Q_PROPERTY(QString clipboard READ clipboard WRITE setClipboard NOTIFY clipboardChanged)
+    Q_PROPERTY(bool chromeOSMode READ chromeOSMode WRITE setChromeOSMode NOTIFY settingsChanged)
 
 private:
     QSettings settings;
@@ -82,6 +83,10 @@ public:
     void setClipboard(QString text) const {
         return QApplication::clipboard()->setText(text);
     }
+
+    bool chromeOSMode() const { return settings.value("chromeOSMode", false).toBool(); }
+    void setChromeOSMode(bool value) { settings.setValue("chromeOSMode", value); emit settingsChanged(); }
+
 public slots:
     void resetSettings() {
         settings.clear();

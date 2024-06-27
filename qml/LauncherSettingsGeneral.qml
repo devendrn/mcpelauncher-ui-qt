@@ -78,6 +78,12 @@ ColumnLayout {
         onCheckedChanged: launcherSettings.showNotifications = checked
     }
 
+    MCheckBox {
+        text: qsTr("ChromeOS Mode")
+        Component.onCompleted: checked = launcherSettings.chromeOSMode
+        onCheckedChanged: launcherSettings.chromeOSMode = checked
+    }
+
     MButton {
         Layout.topMargin: 15
         text: qsTr("Run troubleshooter")
