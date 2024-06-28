@@ -72,7 +72,7 @@ LauncherBase {
         height: 66
 
         RowLayout {
-            spacing: -2
+            spacing: -1
             anchors.verticalCenter: parent.verticalCenter
             height: 44
             x: 10
@@ -130,11 +130,11 @@ LauncherBase {
             Layout.alignment: Qt.AlignHCenter
             property bool canDownload: googleLoginHelper.account !== null && playVerChannel.licenseStatus == 3
 
-            text: (isVersionsInitialized && playVerChannel.licenseStatus > 1 /* Fail or Succeeded */
+            text: (isVersionsInitialized && (playVerChannel.licenseStatus !== 0 && playVerChannel.licenseStatus !== 1) /* Fail or Succeeded */
                    ) ? ((googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) && (canDownload || !needsDownload()) ? (gameLauncher.running ? qsTr("Game is running") : (checkSupport() ? (needsDownload() ? (googleLoginHelper.account !== null ? (profileManager.activeProfile.versionType === ProfileInfo.LATEST_GOOGLE_PLAY && googleLoginHelper.hideLatest ? qsTr("Please sign in again") : qsTr("Download and play")) : qsTr("Sign in")) : qsTr("Play")) : qsTr("Unsupported Version"))).toUpperCase() : qsTr("Ask Google Again")) : qsTr("Please wait...")
-            subText: (isVersionsInitialized && (googleLoginHelper.account == null || playVerChannel.licenseStatus > 1 /* Fail or Succeeded */
+            subText: (isVersionsInitialized && (googleLoginHelper.account == null || (playVerChannel.licenseStatus !== 0 && playVerChannel.licenseStatus !== 1) /* Fail or Succeeded */
                                                 )) ? ((googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) ? (gameLauncher.running ? "" : (getDisplayedVersionName() ? ("Minecraft " + getDisplayedVersionName()).toUpperCase() : qsTr("Please wait..."))) : "Failed to obtain apk url") : "..."
-            enabled: !gameLauncher.running && (isVersionsInitialized && playVerChannel.licenseStatus > 1 /* Fail or Succeeded */
+            enabled: !gameLauncher.running && (isVersionsInitialized && (playVerChannel.licenseStatus !== 0 && playVerChannel.licenseStatus !== 1) /* Fail or Succeeded */
                                                ) && !(playDownloadTask.active || apkExtractionTask.active || updateChecker.active || !checkSupport()) && (getDisplayedVersionName()) && (googleLoginHelper.account !== null || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK)
 
             onClicked: {
@@ -353,7 +353,7 @@ LauncherBase {
         return false
     }
 
-    // Tests for raw Google Play latest (previous default, allways true)
+    // Tests for raw Google Play latest (previous default, always true)
     function checkGooglePlayLatestSupport() {
         if (versionManager.archivalVersions.versions.length == 0) {
             console.log("Bug errata 1")

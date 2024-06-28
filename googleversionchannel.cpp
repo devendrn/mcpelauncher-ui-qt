@@ -1,5 +1,6 @@
 #include "googleversionchannel.h"
 #include "googleplayapi.h"
+#include "googleloginhelper.h"
 
 GoogleVersionChannel::GoogleVersionChannel() {
     m_settings.beginGroup("googleversionchannel");
@@ -9,6 +10,7 @@ GoogleVersionChannel::GoogleVersionChannel() {
 }
 
 void GoogleVersionChannel::setPlayApi(GooglePlayApi *value) {
+    licenseStatus = GoogleVersionChannelLicenceStatus::NOT_READY;
     setStatus(GoogleVersionChannelStatus::NOT_READY);
     if (m_playApi != nullptr) {
         disconnect(m_playApi, &GooglePlayApi::ready, this, &GoogleVersionChannel::onApiReady);
@@ -43,8 +45,14 @@ void GoogleVersionChannel::onAppInfoReceived(const QString &packageName, const Q
         licenseStatus = GoogleVersionChannelLicenceStatus::PENDING;
         setStatus(GoogleVersionChannelStatus::SUCCEDED);
         m_playApi->validateLicense("com.mojang.minecraftpe", versionCode, [this](bool hasVerifiedLicense) {
+            if(m_playApi->getLogin()->isChromeOS() && !hasVerifiedLicense) {
+                m_playApi->getLogin()->setChromeOS(false);
+                licenseStatus = GoogleVersionChannelLicenceStatus::NOT_READY;
+                setStatus(GoogleVersionChannelStatus::NOT_READY);
+                return;
+            }
             this->m_hasVerifiedLicense |= hasVerifiedLicense;
-            licenseStatus = GoogleVersionChannelLicenceStatus::SUCCEDED;
+            licenseStatus = hasVerifiedLicense ? GoogleVersionChannelLicenceStatus::SUCCEDED : GoogleVersionChannelLicenceStatus::FAILED;
             m_settings.setValue("latest_version_id", hasVerifiedLicense ? (m_latestVersion + QChar((char)m_latestVersionCode) + QChar(m_latestVersionIsBeta)) : "");
             statusChanged();
         });

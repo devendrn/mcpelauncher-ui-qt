@@ -81,12 +81,12 @@ private:
             loadAccount();
         }
     }
+
+public:
     void setChromeOS(bool isChromeOS) {
         chromeOS = isChromeOS;
         updateDevice();
     }
-
-public:
     bool isChromeOS() {
         return chromeOS;
     }

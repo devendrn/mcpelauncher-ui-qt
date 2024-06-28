@@ -552,7 +552,8 @@ Popup {
             var index = -1
             for (var i = 0; i < versionsmodel.count; i++) {
                 var entry = profileVersion.data[i]
-                if (entry && entry.obj && entry.obj.versionCode === profile.versionCode && profile.arch === entry.arch) {
+                var diff = googleLoginHelperInstance.chromeOS ? 1000000000 : 0
+                if (entry && entry.obj && (profile.versionCode ? (entry.obj.versionCode === profile.versionCode) : (entry.obj.versionCode === profile.versionCode - diff)) && profile.arch === entry.arch) {
                     index = i
                     break
                 }
@@ -665,6 +666,9 @@ Popup {
             profile.env[envs.model.get(i).key] = envs.model.get(i).value
         }
         profile.commandline = commandline.text
+        if(googleLoginHelperInstance.chromeOS && (profile.versionCode > 982000000 && profile.versionCode < 990000000 || profile.versionCode > 972000000 && profile.versionCode < 980000000)) {
+            profile.versionCode = profile.versionCode + 1000000000
+        }
         profile.save()
     }
 

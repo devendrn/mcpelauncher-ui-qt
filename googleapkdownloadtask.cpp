@@ -38,7 +38,7 @@ void GoogleApkDownloadTask::start(bool skipMainApk) {
         auto dd = resp.payload().deliveryresponse().appdeliverydata();
         auto apkUrl = dd.has_gzippeddownloadurl() ? dd.gzippeddownloadurl() : dd.downloadurl();
         if(apkUrl == "") {
-            throw std::runtime_error(QObject::tr("Cannot find %1 with version %2 on Google Play").arg(m_packageName).arg(m_versionCode).toStdString());
+            throw std::runtime_error(QObject::tr("Cannot find <a href=\"https://play.google.com/store/apps/details?id=%1\">%1</a> with version %2 on Google Play,<br/><a href=\"https://play.google.com/apps/testing/%1\">Beta Versions requires sign up</a>%3").arg(m_packageName).arg(m_versionCode).arg(m_playApi->getLogin()->isChromeOS() ? QObject::tr(",<br/>you might want to try disabling ChromeOS mode to fix this") : "").toStdString());
         }
 #ifdef GOOGLEPLAYDOWNLOADER_USEQT
         emit queueDownload(dd, skipMainApk);

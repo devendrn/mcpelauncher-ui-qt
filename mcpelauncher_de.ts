@@ -20,125 +20,144 @@
 <context>
     <name>EditProfileWindow</name>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="22"/>
+        <location filename="qml/EditProfileWindow.qml" line="90"/>
         <source>Edit profile</source>
         <translation>Profil bearbeiten</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="32"/>
+        <location filename="qml/EditProfileWindow.qml" line="92"/>
         <source>Delete profile</source>
         <translation>Profil löschen</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="56"/>
         <source>Profile Name</source>
-        <translation>Profil Name</translation>
+        <translation type="vanished">Profil Name</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="66"/>
+        <location filename="qml/EditProfileWindow.qml" line="135"/>
         <source>Version</source>
         <translation>Version</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="92"/>
+        <location filename="qml/EditProfileWindow.qml" line="163"/>
         <source>Latest %1 (%2)</source>
         <oldsource>Latest</oldsource>
         <translation>Neuste %1 (%2)</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="92"/>
+        <location filename="qml/EditProfileWindow.qml" line="163"/>
         <source>compatible</source>
         <translation>verwendbar</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="92"/>
+        <location filename="qml/EditProfileWindow.qml" line="163"/>
         <source>version</source>
         <translation>version</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="92"/>
+        <location filename="qml/EditProfileWindow.qml" line="163"/>
         <source>Google Play</source>
         <translation>Google Play</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="101"/>
+        <location filename="qml/EditProfileWindow.qml" line="172"/>
         <source>%1 (installed, %2)</source>
         <oldsource>installed</oldsource>
         <translation>%1 (installiert, %2)</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="116"/>
+        <location filename="qml/EditProfileWindow.qml" line="187"/>
         <source>%1 (%2%3)</source>
         <translation>%1 (%2%3)</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="116"/>
+        <location filename="qml/EditProfileWindow.qml" line="187"/>
         <source>, </source>
         <translation>, </translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="116"/>
+        <location filename="qml/EditProfileWindow.qml" line="187"/>
         <source>beta</source>
         <translation>beta</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="174"/>
+        <location filename="qml/EditProfileWindow.qml" line="287"/>
         <source>Texture Patch</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="231"/>
+        <location filename="qml/EditProfileWindow.qml" line="249"/>
         <source>Data directory</source>
         <translation>Speicher Ordner</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="262"/>
+        <location filename="qml/EditProfileWindow.qml" line="341"/>
         <source>Window size</source>
         <translation>Fenstergröße</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="294"/>
+        <location filename="qml/EditProfileWindow.qml" line="375"/>
         <source>Commandline</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="305"/>
-        <source>Env Variables</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/EditProfileWindow.qml" line="375"/>
-        <source>New Environment Variable</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/EditProfileWindow.qml" line="410"/>
+        <location filename="qml/EditProfileWindow.qml" line="499"/>
         <source>Save As</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="418"/>
+        <location filename="qml/EditProfileWindow.qml" line="508"/>
         <source>Save</source>
         <translation>Speichern</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="406"/>
+        <location filename="qml/EditProfileWindow.qml" line="495"/>
         <source>Cancel</source>
         <translation>Abbrechen</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="577"/>
+        <location filename="qml/EditProfileWindow.qml" line="90"/>
+        <source>Create profile</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qml/EditProfileWindow.qml" line="122"/>
+        <source>Name</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qml/EditProfileWindow.qml" line="385"/>
+        <source>Environment Variables</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qml/EditProfileWindow.qml" line="458"/>
+        <source>Add New Variable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qml/EditProfileWindow.qml" line="481"/>
+        <source>Collapse advanced  🞁</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qml/EditProfileWindow.qml" line="481"/>
+        <source>Expand advanced  🞃</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qml/EditProfileWindow.qml" line="677"/>
         <source>A profile with the specified name already exists</source>
         <translation>Ein Profil mit diesen Namen existiert bereits</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="578"/>
-        <location filename="qml/EditProfileWindow.qml" line="584"/>
+        <location filename="qml/EditProfileWindow.qml" line="678"/>
+        <location filename="qml/EditProfileWindow.qml" line="684"/>
         <source>Profile Edit Error</source>
         <translation>Fehler beim bearbeiten des Profils</translation>
     </message>
     <message>
-        <location filename="qml/EditProfileWindow.qml" line="583"/>
+        <location filename="qml/EditProfileWindow.qml" line="683"/>
         <source>The specified profile name is not valid</source>
         <translation>Der Name des Profils ist ungültig</translation>
     </message>
@@ -194,27 +213,27 @@ missing Symbols expected to be provided by this Launcher via updates
         <translation>Spiel Log</translation>
     </message>
     <message>
-        <location filename="qml/GameLogWindow.qml" line="54"/>
+        <location filename="qml/GameLogWindow.qml" line="55"/>
         <source>Minecraft stopped working</source>
         <translation>Minecraft funktioniert nicht mehr</translation>
     </message>
     <message>
-        <location filename="qml/GameLogWindow.qml" line="68"/>
+        <location filename="qml/GameLogWindow.qml" line="69"/>
         <source>Please don&apos;t report this error. Reenable Gamelog in Settings and reopen the Game to report an error</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/GameLogWindow.qml" line="74"/>
+        <location filename="qml/GameLogWindow.qml" line="75"/>
         <source>Please don&apos;t report this error. Disable show incompatible Versions and reopen the Game to report an error, because you may ran an incompatible version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/GameLogWindow.qml" line="80"/>
+        <location filename="qml/GameLogWindow.qml" line="81"/>
         <source>Please don&apos;t report this error. Disable show unverified Versions and reopen the Game to report an error, because you may ran an incompatible version</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/GameLogWindow.qml" line="86"/>
+        <location filename="qml/GameLogWindow.qml" line="87"/>
         <source>Please don&apos;t report this error. Disable show beta Versions and reopen the Game to report an error, because you may ran an incompatible version</source>
         <translation type="unfinished"></translation>
     </message>
@@ -252,17 +271,17 @@ missing Symbols expected to be provided by this Launcher via updates
 <context>
     <name>GoogleLoginHelper</name>
     <message>
-        <location filename="googleloginhelper.cpp" line="177"/>
+        <location filename="googleloginhelper.cpp" line="190"/>
         <source>&lt;b&gt;%1&lt;/b&gt; is %2%3&lt;br/&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="googleloginhelper.cpp" line="177"/>
+        <location filename="googleloginhelper.cpp" line="190"/>
         <source>Compatible</source>
         <translation>Kompatibel</translation>
     </message>
     <message>
-        <location filename="googleloginhelper.cpp" line="177"/>
+        <location filename="googleloginhelper.cpp" line="190"/>
         <source>Incompatible</source>
         <translation>Inkompatibel</translation>
     </message>
@@ -275,12 +294,12 @@ missing Symbols expected to be provided by this Launcher via updates
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="googleplayapi.cpp" line="111"/>
+        <location filename="googleplayapi.cpp" line="114"/>
         <source>&lt;b&gt;Please report this error&lt;/b&gt;&lt;br&gt;GooglePlayApi already in progress status reporting not working status=%1</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="googleplayapi.cpp" line="117"/>
+        <location filename="googleplayapi.cpp" line="120"/>
         <source>&lt;b&gt;Please report this error&lt;/b&gt;&lt;br&gt;GooglePlayApi needs the loginHelper</source>
         <translation type="unfinished"></translation>
     </message>
@@ -318,7 +337,7 @@ missing Symbols expected to be provided by this Launcher via updates
         <location filename="qml/LauncherBase.qml" line="29"/>
         <source>Unofficial *nix launcher for Minecraft</source>
         <oldsource>Minecraft: Unofficial *nix launcher</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Inoffizielle *nix Launcher für Minecraft</translation>
     </message>
     <message>
         <location filename="qml/LauncherBase.qml" line="30"/>
@@ -341,7 +360,30 @@ missing Symbols expected to be provided by this Launcher via updates
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/LauncherBase.qml" line="121"/>
+        <location filename="qml/LauncherBase.qml" line="120"/>
+        <source>&lt;b&gt;Cannot initialize Google Play Access&lt;/b&gt;, Details:&lt;br/&gt;%1</source>
+        <oldsource>Please login again, Details:&lt;br/&gt;%1</oldsource>
+        <translation type="unfinished">Bitte erneut Anmelden. Weitere Informationen:&lt;br/&gt;%1</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherBase.qml" line="124"/>
+        <source>&lt;b&gt;Cannot Access App Details&lt;/b&gt; (%1), Details:&lt;br/&gt;%2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherBase.qml" line="144"/>
+        <source>Access to the Google Play Apk Library has been rejected</source>
+        <oldsource>Access to the Google Play Library Apk Cloud has been rejected</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherBase.qml" line="192"/>
+        <source>Google Play Version Channel is behind %1 expected %2</source>
+        <oldsource>Google Play Versions Channel is behind %1 expected %2</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherBase.qml" line="214"/>
         <source>Please wait...</source>
         <translation>Bitte warten...</translation>
     </message>
@@ -355,12 +397,12 @@ missing Symbols expected to be provided by this Launcher via updates
     <message>
         <location filename="qml/LauncherChangeLog.qml" line="15"/>
         <source>Changelog</source>
-        <translation type="unfinished"></translation>
+        <translation>Änderungen</translation>
     </message>
     <message>
         <location filename="qml/LauncherChangeLog.qml" line="41"/>
         <source>Continue</source>
-        <translation type="unfinished"></translation>
+        <translation>Fortfahren</translation>
     </message>
 </context>
 <context>
@@ -368,7 +410,7 @@ missing Symbols expected to be provided by this Launcher via updates
     <message>
         <location filename="qml/LauncherLogin.qml" line="39"/>
         <source>Sign in</source>
-        <translation type="unfinished">Anmelden</translation>
+        <translation>Anmelden</translation>
     </message>
     <message>
         <location filename="qml/LauncherLogin.qml" line="49"/>
@@ -378,12 +420,12 @@ missing Symbols expected to be provided by this Launcher via updates
     <message>
         <location filename="qml/LauncherLogin.qml" line="61"/>
         <source>Sign in with Google</source>
-        <translation type="unfinished"></translation>
+        <translation>Mit Google anmelden</translation>
     </message>
     <message>
         <location filename="qml/LauncherLogin.qml" line="77"/>
         <source>Not available</source>
-        <translation type="unfinished"></translation>
+        <translation>Nicht verfügbar</translation>
     </message>
     <message>
         <location filename="qml/LauncherLogin.qml" line="77"/>
@@ -393,12 +435,12 @@ missing Symbols expected to be provided by this Launcher via updates
     <message>
         <location filename="qml/LauncherLogin.qml" line="85"/>
         <source>Get help</source>
-        <translation type="unfinished"></translation>
+        <translation>Hilfe bekommen</translation>
     </message>
     <message>
         <location filename="qml/LauncherLogin.qml" line="107"/>
         <source>Extracting apk</source>
-        <translation type="unfinished"></translation>
+        <translation>Apk Entpacken</translation>
     </message>
     <message>
         <location filename="qml/LauncherLogin.qml" line="129"/>
@@ -422,12 +464,12 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
         <translation type="vanished">Log öffnen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="144"/>
+        <location filename="qml/LauncherMain.qml" line="134"/>
         <source>Please sign in again</source>
         <translation>Bitte melde dich erneut an</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="144"/>
+        <location filename="qml/LauncherMain.qml" line="134"/>
         <source>Download and play</source>
         <translation>Herunterladen und spielen</translation>
     </message>
@@ -437,44 +479,44 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
     </message>
     <message>
         <location filename="qml/LauncherMain.qml" line="33"/>
-        <location filename="qml/LauncherMain.qml" line="144"/>
+        <location filename="qml/LauncherMain.qml" line="134"/>
         <source>Play</source>
         <translation>Spielen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="144"/>
+        <location filename="qml/LauncherMain.qml" line="134"/>
         <source>Unsupported Version</source>
         <translation>Nichtverwendbare Version</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="144"/>
+        <location filename="qml/LauncherMain.qml" line="134"/>
         <source>Ask Google Again</source>
-        <translation type="unfinished"></translation>
+        <translation>Google erneut fragen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="144"/>
+        <location filename="qml/LauncherMain.qml" line="134"/>
         <source>Game is running</source>
         <translation>Spiel läuft</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="370"/>
+        <location filename="qml/LauncherMain.qml" line="360"/>
         <source>No mcpelauncher-versiondb loaded cannot check support</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="380"/>
+        <location filename="qml/LauncherMain.qml" line="370"/>
         <source>Latest Minecraft Version %1 is a beta version, which are hidden by default (Click here for more Information)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="404"/>
+        <location filename="qml/LauncherMain.qml" line="394"/>
         <source>Latest Minecraft Version %1 compatibility is Unknown, supporting new Minecraft Versions is a feature Request (Click here for more Information)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/LauncherMain.qml" line="24"/>
-        <location filename="qml/LauncherMain.qml" line="144"/>
-        <location filename="qml/LauncherMain.qml" line="146"/>
+        <location filename="qml/LauncherMain.qml" line="134"/>
+        <location filename="qml/LauncherMain.qml" line="136"/>
         <source>Please wait...</source>
         <translation>Bitte warten...</translation>
     </message>
@@ -489,22 +531,22 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
         <translation>Entpacke Minecraft...</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="144"/>
+        <location filename="qml/LauncherMain.qml" line="134"/>
         <source>Sign in</source>
         <translation type="unfinished">Anmelden</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="199"/>
+        <location filename="qml/LauncherMain.qml" line="189"/>
         <source>Download failed</source>
         <translation>Herunterladen ist fehlgeschlagen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="208"/>
+        <location filename="qml/LauncherMain.qml" line="198"/>
         <source>Error while extracting the downloaded file(s), &lt;a href=&quot;https://github.com/minecraft-linux/mcpelauncher-ui-manifest/issues&quot;&gt;please report this error&lt;/a&gt;: %1</source>
         <translation>Fehler beim entpacken der heruntergeladenen Datei(en), &lt;a href=&quot;https://github.com/minecraft-linux/mcpelauncher-ui-manifest/issues&quot;&gt;Bitte Melde diesen Fehler auf github&lt;/a&gt;:%1</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="313"/>
+        <location filename="qml/LauncherMain.qml" line="303"/>
         <source>%1  (%2, %3)</source>
         <translation></translation>
     </message>
@@ -636,7 +678,7 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
     <message>
         <location filename="qml/LauncherSettingsDev.qml" line="134"/>
         <source>Download only the apk</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Nur die Apk Herunterladen</translation>
     </message>
 </context>
 <context>
@@ -664,8 +706,7 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
     <message>
         <location filename="qml/LauncherSettingsGeneral.qml" line="57"/>
         <source>Hide the launcher when starting the game</source>
-        <oldsource>Show log when starting the game</oldsource>
-        <translation type="unfinished">Öffne den Launcher Log beim starten des Spiels</translation>
+        <translation>Verstecke den Launcher beim starten des Spiels</translation>
     </message>
     <message>
         <location filename="qml/LauncherSettingsGeneral.qml" line="64"/>
@@ -675,17 +716,27 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
     <message>
         <location filename="qml/LauncherSettingsGeneral.qml" line="70"/>
         <source>Enable checking for updates (on opening)</source>
-        <translation type="unfinished"></translation>
+        <translation>Aktiviere die Suche nach Aktualisierungen beim start</translation>
     </message>
     <message>
         <location filename="qml/LauncherSettingsGeneral.qml" line="76"/>
         <source>Show Notification banner</source>
-        <translation type="unfinished"></translation>
+        <translation>Zeige Benachichtigungen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsGeneral.qml" line="93"/>
+        <location filename="qml/LauncherSettingsGeneral.qml" line="82"/>
+        <source>ChromeOS Mode</source>
+        <translation>ChromeOS Modus</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherSettingsGeneral.qml" line="99"/>
         <source>Open Gamepad Tool</source>
-        <translation type="unfinished"></translation>
+        <translation>Öffne den Spielekontroller Konfigurator</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherSettingsGeneral.qml" line="108"/>
+        <source>Refresh Google Play Version Channel</source>
+        <translation>Lade Google Play Versions Kanal neu</translation>
     </message>
     <message>
         <source>Enable checking for updates (startup)</source>
@@ -700,14 +751,14 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
         <translation type="vanished">Zeige Beta Version</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsGeneral.qml" line="83"/>
+        <location filename="qml/LauncherSettingsGeneral.qml" line="89"/>
         <source>Run troubleshooter</source>
         <translation>Fehlerdiagnose</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsGeneral.qml" line="88"/>
+        <location filename="qml/LauncherSettingsGeneral.qml" line="94"/>
         <source>Open GameData Folder</source>
-        <translation>Öffne den Minecraft ordner</translation>
+        <translation>Öffne den Laucnher Ordner</translation>
     </message>
     <message>
         <source>Check for Updates</source>
@@ -751,54 +802,68 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
     <message>
         <location filename="qml/LauncherSettingsStorage.qml" line="12"/>
         <source>If Qt6 fails to open the folder it doesn&apos;t report back</source>
-        <oldsource>If qt5 fails to open the folder it doesn&apos;t report back: https://doc.qt.io/qt-5/qml-qtqml-qt.html#openUrlExternally-method</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Unter umständen passiert nichts beim drücken der Buttons</translation>
     </message>
     <message>
         <location filename="qml/LauncherSettingsStorage.qml" line="24"/>
         <source>Game Directories</source>
-        <translation type="unfinished"></translation>
+        <translation>Spiele Ordner</translation>
     </message>
     <message>
         <location filename="qml/LauncherSettingsStorage.qml" line="35"/>
         <source>Open Data Root</source>
-        <translation type="unfinished"></translation>
+        <translation>Öffne den Speicherordner</translation>
     </message>
     <message>
         <location filename="qml/LauncherSettingsStorage.qml" line="40"/>
         <source>Open Worlds</source>
-        <translation type="unfinished"></translation>
+        <translation>Öffne den Weltenordner</translation>
     </message>
     <message>
         <location filename="qml/LauncherSettingsStorage.qml" line="45"/>
         <source>Open Resource Packs</source>
-        <translation type="unfinished"></translation>
+        <translation>Öffne den Ressourcenpaket Ordner</translation>
     </message>
     <message>
         <location filename="qml/LauncherSettingsStorage.qml" line="50"/>
         <source>Open Behavior Packs</source>
-        <translation type="unfinished"></translation>
+        <translation>Öffne den Verhaltenspaket Ordner</translation>
     </message>
 </context>
 <context>
     <name>LauncherSettingsVersions</name>
     <message>
-        <location filename="qml/LauncherSettingsVersions.qml" line="16"/>
+        <location filename="qml/LauncherSettingsVersions.qml" line="60"/>
+        <source>IsChromeOS</source>
+        <translation>Lade ChromeOS Versionen</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherSettingsVersions.qml" line="119"/>
+        <source>Get Download Info</source>
+        <translation>Daten zum Herunterladen anfragen</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherSettingsVersions.qml" line="163"/>
+        <source>Close</source>
+        <translation>Schließen</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherSettingsVersions.qml" line="176"/>
         <source>Delete selected</source>
         <translation>Ausgewälte löschen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsVersions.qml" line="26"/>
+        <location filename="qml/LauncherSettingsVersions.qml" line="186"/>
+        <source>Download .apk</source>
+        <translation>Apk Herunterladen</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherSettingsVersions.qml" line="193"/>
         <source>Import .apk</source>
         <translation>Apk Importieren</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsVersions.qml" line="26"/>
-        <source>&lt;s&gt;Import .apk&lt;/s&gt; ( Unable to validate ownership )</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/LauncherSettingsVersions.qml" line="33"/>
+        <location filename="qml/LauncherSettingsVersions.qml" line="200"/>
         <source>Remove Incompatible Versions</source>
         <translation>Lösche nicht unterstützte Minecraft Versionen</translation>
     </message>
@@ -861,7 +926,7 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
     <message>
         <location filename="qml/LauncherUnlock.qml" line="75"/>
         <source>Continue</source>
-        <translation type="unfinished"></translation>
+        <translation type="unfinished">Fortfahren</translation>
     </message>
 </context>
 <context>
@@ -896,6 +961,11 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
     <message>
         <location filename="qml/MinecraftNews.qml" line="18"/>
         <source>Minecraft</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qml/MinecraftNews.qml" line="152"/>
+        <source>Load more articles</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -942,29 +1012,45 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
         <translation>Fehler beim umbenennen des Versions ordners, möglicherweiße ist der Festplatten Speicher knap.</translation>
     </message>
     <message>
-        <location filename="googleapkdownloadtask.cpp" line="40"/>
         <source>To use the download feature, &lt;a href=&quot;https://play.google.com/store/apps/details?id=com.mojang.minecraftpe&quot;&gt;Minecraft: Bedrock Edition has to be purchased on the Google Play Store&lt;/a&gt;.&lt;br&gt;If you are trying to download a beta version, please make sure you are in the &lt;a href=&quot;https://play.google.com/apps/testing/com.mojang.minecraftpe&quot;&gt;Minecraft beta program on Google Play.&lt;/a&gt; and then try again after a while (joining the program might take a while).</source>
-        <translation>&lt;a href=&quot;https://play.google.com/store/apps/details?id=com.mojang.minecraftpe&quot;&gt;Minecraft: Bedrock Edition muss im Google Play Store erworben werden um diesen Launcher zu verwenden&lt;/a&gt;.&lt;br&gt;</translation>
+        <translation type="vanished">&lt;a href=&quot;https://play.google.com/store/apps/details?id=com.mojang.minecraftpe&quot;&gt;Minecraft: Bedrock Edition muss im Google Play Store erworben werden um diesen Launcher zu verwenden&lt;/a&gt;.&lt;br&gt;</translation>
     </message>
     <message>
-        <location filename="googleapkdownloadtask.cpp" line="111"/>
+        <location filename="googleapkdownloadtask.cpp" line="41"/>
+        <source>,&lt;br/&gt;you might want to try disabling ChromeOS mode to fix this</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="googleapkdownloadtask.cpp" line="41"/>
+        <source>Cannot find &lt;a href=&quot;https://play.google.com/store/apps/details?id=%1&quot;&gt;%1&lt;/a&gt; with version %2 on Google Play,&lt;br/&gt;&lt;a href=&quot;https://play.google.com/apps/testing/%1&quot;&gt;Beta Versions requires sign up&lt;/a&gt;%3</source>
+        <oldsource>Cannot find %1 with version %2 on Google Play,&lt;br/&gt;&lt;a href=&quot;https://play.google.com/apps/testing/com.mojang.minecraftpe&quot;&gt;Minecraft Beta Versions requires sign up&lt;/a&gt;%3</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="googleapkdownloadtask.cpp" line="118"/>
         <source>Downloading file failed %1</source>
         <translation>Herunterladen einer Datei fehlgeschlagen %1</translation>
     </message>
     <message>
-        <location filename="googleapkdownloadtask.cpp" line="197"/>
+        <location filename="googleapkdownloadtask.cpp" line="204"/>
         <source>Downloading file failed: Status[%1] &apos;%2&apos;</source>
         <translation>Herunterladen einer Datei ist fehlgeschlagen: Status[%1] &apos;%2&apos;</translation>
     </message>
     <message>
-        <location filename="googleapkdownloadtask.cpp" line="202"/>
+        <location filename="googleapkdownloadtask.cpp" line="209"/>
         <source>Unknown error</source>
         <translation>Unbekannter Fehler</translation>
     </message>
     <message>
-        <location filename="googleapkdownloadtask.cpp" line="202"/>
+        <location filename="googleapkdownloadtask.cpp" line="209"/>
         <source>CURL Network error: %1</source>
         <translation>CURL Netzwerk fehler: %1</translation>
+    </message>
+    <message>
+        <location filename="googleapkdownloadtask.cpp" line="235"/>
+        <location filename="googleapkdownloadtask.cpp" line="239"/>
+        <source>&lt;a href=&quot;%2&quot;&gt;%1&lt;/a&gt;: %2&lt;br/&gt;</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="supportedandroidabis.cpp" line="62"/>
@@ -1207,26 +1293,27 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
         <translation>Minecraft: Bedrock Launcher</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="124"/>
+        <location filename="qml/main.qml" line="125"/>
         <source>Connecting to Google Play failed</source>
         <translation>Verbindung zu Google Play ist fehlgeschlagen</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="55"/>
+        <location filename="qml/main.qml" line="56"/>
         <source>Please login again, Details:&lt;br/&gt;%1</source>
         <translation>Bitte erneut Anmelden. Weitere Informationen:&lt;br/&gt;%1</translation>
     </message>
     <message>
+        <location filename="qml/main.qml" line="130"/>
         <source>Launcher Error</source>
-        <translation type="vanished">Launcher Fehler</translation>
+        <translation>Launcher Fehler</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="142"/>
+        <location filename="qml/main.qml" line="148"/>
         <source>Unsupported Minecraft Version</source>
         <translation>Nicht unterstütze Minecraft Version</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="143"/>
+        <location filename="qml/main.qml" line="149"/>
         <source>The Minecraft Version you are trying to run is unsupported.&lt;br/&gt;&lt;b&gt;if you wanted to play a new Release please wait patiently for an update,&lt;br/&gt;please choose a compatible version from the profile Editor&lt;/b&gt;</source>
         <translation>Diese Minecraft Version wird nicht unterstützt. Bitte wähle eine andere Version im Profil Editor aus.</translation>
     </message>
@@ -1235,34 +1322,34 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
         <translation type="vanished">Kann das Spiel nicht starten. Bitte stellen sie sicher das alle Abhänigkeiten installiert sind.&lt;br&gt;&lt;a href=&quot;%1&quot;&gt;Drücke hier für weitere Informationen&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="150"/>
+        <location filename="qml/main.qml" line="156"/>
         <source>Could not execute the game launcher. Please make sure it&apos;s dependencies are properly installed.&lt;br&gt;&lt;a href=&quot;%1&quot;&gt;Click here for more information Linux&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="170"/>
+        <location filename="qml/main.qml" line="176"/>
         <source>Game is running</source>
         <translation>Spiel läuft bereits</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="171"/>
+        <location filename="qml/main.qml" line="177"/>
         <source>Minecraft is currently running. Would you like to forcibly close it?
 Hint: Press ignore to just close the Launcher UI</source>
         <translation>Minecraft wird gerade ausgeführt. Möchtest du es jetzt abwürgen?
 Hinweis: Drücke Ignorieren um nur dieses Fenster zu schließen</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="189"/>
+        <location filename="qml/main.qml" line="195"/>
         <source>Please restart</source>
         <translation>Bitte neustarten</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="190"/>
+        <location filename="qml/main.qml" line="196"/>
         <source>Update finished, please restart the AppImage</source>
         <translation>Aktualisierung abgeschlossen, bitte die Anwendung erneut öffnen</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="208"/>
+        <location filename="qml/main.qml" line="214"/>
         <source>The Launcher failed to sign you in
 Please login again
 %1</source>
@@ -1270,18 +1357,18 @@ Please login again
 %1</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="70"/>
+        <location filename="main.cpp" line="65"/>
         <source>Developer Mode - Enable unsafe Launcher Settings</source>
         <translation>Entwickler Modus - Aktiviert unsichere bzw. nicht getestete Launcher Einstellungen</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="74"/>
+        <location filename="main.cpp" line="69"/>
         <source>Verbose log Qt Messages to stdout</source>
         <translation>Detailierte Log ausgabe von Qt Nachrichten</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="78"/>
-        <location filename="main.cpp" line="81"/>
+        <location filename="main.cpp" line="73"/>
+        <location filename="main.cpp" line="76"/>
         <source>directly start the game launcher with the specified profile</source>
         <translation>Starte das Spiel direkt mit dem ausgewähten Profil</translation>
     </message>

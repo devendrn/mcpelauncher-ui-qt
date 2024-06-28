@@ -15,20 +15,24 @@ ColumnLayout {
        background: Rectangle {
            color: "#333"
        }
-       height: layout.height
+       height: scope.implicitHeight + 20
        width: layout.width
        modal: true
        clip: true
-
+    
+       property int currentCode: versionBox.codes[versionBox.currentIndex]
+       property var currentVersionCode: function() { return (manualgoogleLoginHelperInstance.chromeOS && (currentCode > 982000000 && currentCode < 990000000 || currentCode > 972000000 && currentCode < 980000000) ? 1000000000 : 0) + currentCode; }
 
        Overlay.modal: Rectangle {
            id: popupOverlay
            color: "#8f181818"
        }
        ColumnLayout {
+           anchors.fill: parent
            id: scope
 
            MComboBox {
+               Layout.fillWidth: true
                id: versionBox
                property var codes: []
                model: {
@@ -44,6 +48,11 @@ ColumnLayout {
                    codes = ncodes
                    return ret
                }
+
+               onActivated: {
+                    versionsCodeField.text = downloadApk.currentVersionCode().toString()
+               }
+               Component.onCompleted: versionsCodeField.text = downloadApk.currentVersionCode().toString()
            }
 
            MCheckBox {
@@ -58,6 +67,9 @@ ColumnLayout {
                singleArch: ""
                unlockkey: googleLoginHelperInstance.unlockkey
                chromeOS: isChromeOS.checked
+               onAccountInfoChanged: {
+                   versionsCodeField.text = downloadApk.currentVersionCode().toString()
+               }
            }
 
            GooglePlayApi {
@@ -77,46 +89,81 @@ ColumnLayout {
                packageName: "com.mojang.minecraftpe"
                keepApks: false
                dryrun: true
-               versionCode: versionBox.codes[versionBox.currentIndex]
+               versionCode: Number.parseInt(versionsCodeField.text)//(manualgoogleLoginHelperInstance.chromeOS ? 1000000000 : 0) + versionBox.codes[versionBox.currentIndex]
                onActiveChanged: {
+                if(manualPlayDownloadTask.active) {
+                    scope.apkUrls = "";
+                }
                }
                onDownloadInfo: function (url) {
                    scope.apkUrls = url
                }
                onError: function (err) {
-                   console.log(err)
+                   scope.apkUrls = err
                }
                onFinished: {
                    console.log("done")
                }
            }
 
-            GoogleVersionChannel {
+            /*GoogleVersionChannel {
                 id: manualplayVerChannelInstance
                 playApi: manualplayApi
-            }
+            }*/
+           MTextField {
+               id: versionsCodeField
+               Layout.fillWidth: true
+           }
 
            MButton {
                text: qsTr("Get Download Info")
                onClicked: manualPlayDownloadTask.start()
            }
 
+           Flickable {
+                id: flick
 
-           TextEdit {
-               visible: scope.apkUrls && scope.apkUrls.length > 0
-               text: "<style type=\"text/css\">a { color: lightblue; }</style>" +scope.apkUrls
-               color: "white"
-               textFormat: Text.RichText
-               readOnly: true
-               selectByMouse: true
-               onLinkActivated: Qt.openUrlExternally(link)
+                Layout.fillWidth: true; height: 100;
+                contentWidth: edit.contentWidth
+                contentHeight: edit.contentHeight
+                clip: true
 
-               MouseArea {
-                   anchors.fill: parent
-                   cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
-                   acceptedButtons: Qt.NoButton
-               }
+                function ensureVisible(r)
+                {
+                    if (contentX >= r.x)
+                        contentX = r.x;
+                    else if (contentX+width <= r.x+r.width)
+                        contentX = r.x+r.width-width;
+                    if (contentY >= r.y)
+                        contentY = r.y;
+                    else if (contentY+height <= r.y+r.height)
+                        contentY = r.y+r.height-height;
+                }
+
+                TextEdit {
+                    focus: true
+                    wrapMode: TextEdit.Wrap
+                    onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
+                    text: "<style type=\"text/css\">a { color: lightblue; }</style>" +scope.apkUrls
+                    color: "white"
+                    textFormat: Text.RichText
+                    readOnly: true
+                    selectByMouse: true
+                    onLinkActivated: Qt.openUrlExternally(link)
+
+                    MouseArea {
+                        anchors.fill: parent
+                        cursorShape: parent.hoveredLink ? Qt.PointingHandCursor : Qt.ArrowCursor
+                        acceptedButtons: Qt.NoButton
+                    }
+                }
+            }
+
+           MButton {
+               text: qsTr("Close")
+               onClicked: downloadApk.close()
            }
+
        }
     }
 
