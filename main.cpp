@@ -47,11 +47,6 @@ Q_DECLARE_METATYPE(playapi::proto::finsky::download::AndroidAppDeliveryData)
 
 int main(int argc, char *argv[])
 {
-    Encryption en;
-    auto r = en.Encrypt("test", "password");
-    r = en.Decrypt(r, "password");
-    r = en.Encrypt("dedddddddddddadhsefferfEFMEFHFEWBNKFELKBRSLFWBKNFEMLBFWFEWNFEWNEFWNSANDJDSFJNJ", "password");
-    r = en.Decrypt(r, "password");
 #ifdef LAUNCHER_INIT_PATCH
     LAUNCHER_INIT_PATCH
 #endif
