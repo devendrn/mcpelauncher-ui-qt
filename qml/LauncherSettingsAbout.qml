@@ -65,7 +65,7 @@ ColumnLayout {
     HorizontalDivider {}
 
     Text {
-        text: qsTr("This project allows you to launch Minecraft: Bedrock Edition (as in the edition w/o the Edition suffix, previously known as Minecraft: Pocket Edition). The launcher supports Linux and OS X.<br/><br/> © Copyright 2018-2022, MrARM & contributors")
+        text: qsTr("This project allows you to launch Minecraft: Bedrock Edition (as in the edition w/o the Edition suffix, previously known as Minecraft: Pocket Edition). The launcher supports Linux and OS X.<br/><br/> © Copyright 2018-2024, MrARM & contributors")
         color: "#fff"
         wrapMode: Text.WordWrap
         font.pointSize: 10
