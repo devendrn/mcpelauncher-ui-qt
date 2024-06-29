@@ -53,10 +53,6 @@ private:
         return singleArch;
     }
 
-    bool gethasEncryptedCredentials() {
-        return hasEncryptedCredentials;
-    }
-
     void loadAccount();
 
     void updateDevice();
@@ -83,6 +79,9 @@ private:
     }
 
 public:
+    bool gethasEncryptedCredentials() {
+        return hasEncryptedCredentials;
+    }
     void setChromeOS(bool isChromeOS) {
         auto shouldUpdateDevice = chromeOS != isChromeOS;
         chromeOS = isChromeOS;

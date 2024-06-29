@@ -34,6 +34,126 @@ LauncherBase {
         }
     }
 
+    property string googleLoginError: ""
+
+    Connections {
+        target: playApiInstance
+
+        onAppInfoReceived: function (app, det) {
+            googleLoginError = ""
+        }
+
+        onInitError: function (err) {
+            googleLoginError = qsTr("<b>Cannot initialize Google Play Access</b>, Details:<br/>%1").arg(err)
+        }
+
+        onAppInfoFailed: function (app, err) {
+            googleLoginError = qsTr("<b>Cannot Access App Details</b> (%1), Details:<br/>%2").arg(app).arg(err)
+        }
+    }
+
+    Rectangle {
+        Layout.alignment: Qt.AlignTop
+        Layout.fillWidth: true
+        Layout.preferredHeight: children[0].implicitHeight + 20
+        color: "#b62"
+        visible: {
+            if (!launcherSettings.showNotifications) {
+                return false
+            }
+            return googleLoginError.length > 0 || playVerChannel.licenseStatus == 2
+        }
+
+        Text {
+            width: parent.width
+            height: parent.height
+            text: {
+                return (googleLoginError || playVerChannel.licenseStatus == 2 && qsTr("Access to the Google Play Apk Library has been rejected")) + qsTr("<br/>You can try this launcher for free by enabling the trial mode")
+            }
+            color: "#fff"
+            font.pointSize: 9
+            font.bold: true
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            wrapMode: Text.Wrap
+        }
+    }
+
+    Rectangle {
+        Layout.alignment: Qt.AlignTop
+        Layout.fillWidth: true
+        Layout.preferredHeight: children[0].implicitHeight + 20
+        color: "#b62"
+        visible: {
+            if (!launcherSettings.showNotifications) {
+                return false
+            }
+            return launcherSettings.trialMode
+        }
+
+        Text {
+            width: parent.width
+            height: parent.height
+            text: {
+                return qsTr("Disable Trial Mode to launch the full version") + (playVerChannel.licenseStatus == 4 ? qsTr(", you also have to buy the trial for free on an android device/vm to download it here") : "")
+            }
+            color: "#fff"
+            font.pointSize: 9
+            font.bold: true
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            wrapMode: Text.Wrap
+        }
+    }
+
+    /* utility functions */
+    function launcherLatestVersionBase() {
+        var abis = googleLoginHelper.getAbis(launcherSettings.showUnsupported)
+        for (var i = 0; i < versionManager.archivalVersions.versions.length; i++) {
+            var ver = versionManager.archivalVersions.versions[i]
+            if (playVerChannel.latestVersionIsBeta && launcherSettings.showBetaVersions || !ver.isBeta) {
+                for (var j = 0; j < abis.length; j++) {
+                    if (ver.abi === abis[j]) {
+                        return ver
+                    }
+                }
+            }
+        }
+        if (abis.length == 0) {
+            console.log("Unsupported Device")
+        } else {
+            console.log("Bug: No version")
+        }
+        return { versionName: "Invalid", versionCode: 0 }
+    }
+
+    Rectangle {
+        Layout.alignment: Qt.AlignTop
+        Layout.fillWidth: true
+        Layout.preferredHeight: children[0].implicitHeight + 20
+        color: "#b62"
+        visible: {
+            if (!launcherSettings.showNotifications) {
+                return false
+            }
+            return launcherLatestVersionBase().versionCode > playVerChannelInstance.latestVersionCode
+        }
+
+        Text {
+            width: parent.width
+            height: parent.height
+            text: {
+                return qsTr("Google Play Version Channel is behind %1 expected %2").arg(playVerChannelInstance.latestVersion).arg(launcherLatestVersionBase().versionName)
+            }
+            color: "#fff"
+            font.pointSize: 9
+            font.bold: true
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            wrapMode: Text.Wrap
+        }
+    }
+
     Image {
         Layout.fillWidth: true
         Layout.fillHeight: true

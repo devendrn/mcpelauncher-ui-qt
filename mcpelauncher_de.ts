@@ -360,45 +360,29 @@ missing Symbols expected to be provided by this Launcher via updates
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/LauncherBase.qml" line="120"/>
         <source>&lt;b&gt;Cannot initialize Google Play Access&lt;/b&gt;, Details:&lt;br/&gt;%1</source>
         <oldsource>Please login again, Details:&lt;br/&gt;%1</oldsource>
-        <translation type="unfinished">Bitte erneut Anmelden. Weitere Informationen:&lt;br/&gt;%1</translation>
+        <translation type="obsolete">Bitte erneut Anmelden. Weitere Informationen:&lt;br/&gt;%1</translation>
     </message>
     <message>
-        <location filename="qml/LauncherBase.qml" line="124"/>
-        <source>&lt;b&gt;Cannot Access App Details&lt;/b&gt; (%1), Details:&lt;br/&gt;%2</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/LauncherBase.qml" line="144"/>
         <source>Access to the Google Play Apk Library has been rejected</source>
         <oldsource>Access to the Google Play Library Apk Cloud has been rejected</oldsource>
-        <translation>Zugriff zur Google Play Apk Bibliothek wurde verwehrt</translation>
+        <translation type="vanished">Zugriff zur Google Play Apk Bibliothek wurde verwehrt</translation>
     </message>
     <message>
-        <location filename="qml/LauncherBase.qml" line="144"/>
         <source>&lt;br/&gt;You can try this launcher for free by enabling the trial mode</source>
-        <translation>&lt;br/&gt;Du kannst den Launcher Kostenlos im Trial Modus ausprobieren</translation>
+        <translation type="vanished">&lt;br/&gt;Du kannst den Launcher Kostenlos im Trial Modus ausprobieren</translation>
     </message>
     <message>
-        <location filename="qml/LauncherBase.qml" line="171"/>
         <source>Disable Trial Mode to launch the full version</source>
-        <translation>Deaktiviere den Trial Modus um die Vollversion zu starten</translation>
+        <translation type="vanished">Deaktiviere den Trial Modus um die Vollversion zu starten</translation>
     </message>
     <message>
-        <location filename="qml/LauncherBase.qml" line="171"/>
         <source>, you also have to buy the trial for free on an android device/vm to download it here</source>
-        <translation>, jedoch ist es erforderlich die Minecraft Trial im Play Store kostenlos auf einen Android Gerät/VM zu erwerben um diese herunterzuladen</translation>
+        <translation type="vanished">, jedoch ist es erforderlich die Minecraft Trial im Play Store kostenlos auf einen Android Gerät/VM zu erwerben um diese herunterzuladen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherBase.qml" line="219"/>
-        <source>Google Play Version Channel is behind %1 expected %2</source>
-        <oldsource>Google Play Versions Channel is behind %1 expected %2</oldsource>
-        <translation type="unfinished"></translation>
-    </message>
-    <message>
-        <location filename="qml/LauncherBase.qml" line="241"/>
+        <location filename="qml/LauncherBase.qml" line="121"/>
         <source>Please wait...</source>
         <translation>Bitte warten...</translation>
     </message>
@@ -478,12 +462,12 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
         <translation type="vanished">Log öffnen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="134"/>
+        <location filename="qml/LauncherMain.qml" line="254"/>
         <source>Please sign in again</source>
         <translation>Bitte melde dich erneut an</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="134"/>
+        <location filename="qml/LauncherMain.qml" line="254"/>
         <source>Download and play</source>
         <translation>Herunterladen und spielen</translation>
     </message>
@@ -493,44 +477,79 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
     </message>
     <message>
         <location filename="qml/LauncherMain.qml" line="33"/>
-        <location filename="qml/LauncherMain.qml" line="134"/>
+        <location filename="qml/LauncherMain.qml" line="254"/>
         <source>Play</source>
         <translation>Spielen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="134"/>
+        <location filename="qml/LauncherMain.qml" line="47"/>
+        <source>&lt;b&gt;Cannot initialize Google Play Access&lt;/b&gt;, Details:&lt;br/&gt;%1</source>
+        <translation type="unfinished">Bitte erneut Anmelden. Weitere Informationen:&lt;br/&gt;%1</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherMain.qml" line="51"/>
+        <source>&lt;b&gt;Cannot Access App Details&lt;/b&gt; (%1), Details:&lt;br/&gt;%2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherMain.qml" line="71"/>
+        <source>Access to the Google Play Apk Library has been rejected</source>
+        <translation type="unfinished">Zugriff zur Google Play Apk Bibliothek wurde verwehrt</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherMain.qml" line="71"/>
+        <source>&lt;br/&gt;You can try this launcher for free by enabling the trial mode</source>
+        <translation type="unfinished">&lt;br/&gt;Du kannst den Launcher Kostenlos im Trial Modus ausprobieren</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherMain.qml" line="98"/>
+        <source>Disable Trial Mode to launch the full version</source>
+        <translation type="unfinished">Deaktiviere den Trial Modus um die Vollversion zu starten</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherMain.qml" line="98"/>
+        <source>, you also have to buy the trial for free on an android device/vm to download it here</source>
+        <translation type="unfinished">, jedoch ist es erforderlich die Minecraft Trial im Play Store kostenlos auf einen Android Gerät/VM zu erwerben um diese herunterzuladen</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherMain.qml" line="146"/>
+        <source>Google Play Version Channel is behind %1 expected %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherMain.qml" line="254"/>
         <source>Unsupported Version</source>
         <translation>Nichtverwendbare Version</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="134"/>
+        <location filename="qml/LauncherMain.qml" line="254"/>
         <source>Ask Google Again</source>
         <translation>Google erneut fragen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="134"/>
+        <location filename="qml/LauncherMain.qml" line="254"/>
         <source>Game is running</source>
         <translation>Spiel läuft</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="360"/>
+        <location filename="qml/LauncherMain.qml" line="480"/>
         <source>No mcpelauncher-versiondb loaded cannot check support</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="370"/>
+        <location filename="qml/LauncherMain.qml" line="490"/>
         <source>Latest Minecraft Version %1 is a beta version, which are hidden by default (Click here for more Information)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="394"/>
+        <location filename="qml/LauncherMain.qml" line="514"/>
         <source>Latest Minecraft Version %1 compatibility is Unknown, supporting new Minecraft Versions is a feature Request (Click here for more Information)</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="qml/LauncherMain.qml" line="24"/>
-        <location filename="qml/LauncherMain.qml" line="134"/>
-        <location filename="qml/LauncherMain.qml" line="136"/>
+        <location filename="qml/LauncherMain.qml" line="254"/>
+        <location filename="qml/LauncherMain.qml" line="256"/>
         <source>Please wait...</source>
         <translation>Bitte warten...</translation>
     </message>
@@ -545,24 +564,32 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
         <translation>Entpacke Minecraft...</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="134"/>
+        <location filename="qml/LauncherMain.qml" line="254"/>
         <source>Sign in</source>
         <translation type="unfinished">Anmelden</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="189"/>
+        <location filename="qml/LauncherMain.qml" line="309"/>
         <source>Download failed</source>
         <translation>Herunterladen ist fehlgeschlagen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="198"/>
+        <location filename="qml/LauncherMain.qml" line="318"/>
         <source>Error while extracting the downloaded file(s), &lt;a href=&quot;https://github.com/minecraft-linux/mcpelauncher-ui-manifest/issues&quot;&gt;please report this error&lt;/a&gt;: %1</source>
         <translation>Fehler beim entpacken der heruntergeladenen Datei(en), &lt;a href=&quot;https://github.com/minecraft-linux/mcpelauncher-ui-manifest/issues&quot;&gt;Bitte Melde diesen Fehler auf github&lt;/a&gt;:%1</translation>
     </message>
     <message>
-        <location filename="qml/LauncherMain.qml" line="303"/>
+        <location filename="qml/LauncherMain.qml" line="423"/>
         <source>%1  (%2, %3)</source>
         <translation></translation>
+    </message>
+</context>
+<context>
+    <name>LauncherSettings</name>
+    <message>
+        <location filename="main.cpp" line="70"/>
+        <source>Manual login</source>
+        <translation type="unfinished">Manueller Login</translation>
     </message>
 </context>
 <context>
@@ -950,21 +977,26 @@ Verhaltenspakete: %4</translation>
     <name>LauncherUnlock</name>
     <message>
         <location filename="qml/LauncherUnlock.qml" line="15"/>
-        <source>Unlock</source>
+        <source>Provide your encryption Password</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/LauncherUnlock.qml" line="40"/>
+        <location filename="qml/LauncherUnlock.qml" line="28"/>
+        <source>This is not your Google Account Password. If you don&apos;t want to type it every time you open this Launcher, &quot;continue with invalid credentials&quot;, then Open Settings, press logout and finally login without providing your own encryption Password</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherUnlock.qml" line="48"/>
         <source>Warning: Password is invalid</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/LauncherUnlock.qml" line="65"/>
+        <location filename="qml/LauncherUnlock.qml" line="80"/>
         <source>Continue with invalid Credentials</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/LauncherUnlock.qml" line="75"/>
+        <location filename="qml/LauncherUnlock.qml" line="90"/>
         <source>Continue</source>
         <translation type="unfinished">Fortfahren</translation>
     </message>
@@ -1326,6 +1358,17 @@ Verhaltenspakete: %4</translation>
     </message>
 </context>
 <context>
+    <name>googleloginwindow</name>
+    <message>
+        <source>Please provide a password to encrypt your Google Credentials, leave blank if you don&apos;t want to provide this password every time you open the Launcher then this launcher generates a password and saves it in the config</source>
+        <translation type="vanished">Bitte gebe ein Passwort ein um deine Google Anmelde Daten zu verschlüsseln, lasse es leer wenn du dein Passwort nicht bei jedem öffnen des Launchers eingeben möchtest dadurch generiert der Launcher ein Passwort welches in der Konfigurationsdatei gespeichert wird</translation>
+    </message>
+    <message>
+        <source>Manual login</source>
+        <translation type="vanished">Manueller Login</translation>
+    </message>
+</context>
+<context>
     <name>main</name>
     <message>
         <location filename="qml/main.qml" line="13"/>
@@ -1397,18 +1440,18 @@ Please login again
 %1</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="65"/>
+        <location filename="main.cpp" line="77"/>
         <source>Developer Mode - Enable unsafe Launcher Settings</source>
         <translation>Entwickler Modus - Aktiviert unsichere bzw. nicht getestete Launcher Einstellungen</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="69"/>
+        <location filename="main.cpp" line="81"/>
         <source>Verbose log Qt Messages to stdout</source>
-        <translation>Detailierte Log ausgabe von Qt Nachrichten</translation>
+        <translation>Detaillierte Log ausgabe von Qt Nachrichten</translation>
     </message>
     <message>
-        <location filename="main.cpp" line="73"/>
-        <location filename="main.cpp" line="76"/>
+        <location filename="main.cpp" line="85"/>
+        <location filename="main.cpp" line="88"/>
         <source>directly start the game launcher with the specified profile</source>
         <translation>Starte das Spiel direkt mit dem ausgewähten Profil</translation>
     </message>
