@@ -73,8 +73,7 @@ Item {
                 spacing: 15
 
                 TransparentButton {
-                    enabled: !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK
-                    text: (LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK ? qsTr("Not available") : qsTr("Use .apk")).toUpperCase()
+                    text: qsTr("Use trial .apk").toUpperCase()
                     textColor: "#0aa82f"
                     Layout.fillWidth: true
                     font.pointSize: 11
@@ -154,7 +153,10 @@ Item {
         versionManager: versionManagerInstance
         onStarted: root.extractingApk = true
         onError: root.extractingApk = false
-        onFinished: root.finished()
+        onFinished: {
+            launcherSettings.trialMode = true
+            root.finished()
+        }
 
         Connections {
             target: apkImportHelper.task

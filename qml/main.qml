@@ -26,7 +26,7 @@ Window {
         id: googleLoginHelperInstance
         includeIncompatible: launcherSettings.showUnsupported
         singleArch: launcherSettings.singleArch
-        chromeOS: launcherSettings.chromeOSMode
+        chromeOS: launcherSettings.chromeOSMode || launcherSettings.trialMode
     }
 
     VersionManager {
@@ -66,6 +66,7 @@ Window {
     GoogleVersionChannel {
         id: playVerChannelInstance
         playApi: playApi
+        trialMode: launcherSettings.trialMode
     }
 
     Component {

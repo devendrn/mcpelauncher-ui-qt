@@ -140,7 +140,34 @@ ColumnLayout {
             width: parent.width
             height: parent.height
             text: {
-                return googleLoginError || playVerChannel.licenseStatus == 2 && qsTr("Access to the Google Play Apk Library has been rejected")
+                return (googleLoginError || playVerChannel.licenseStatus == 2 && qsTr("Access to the Google Play Apk Library has been rejected")) + qsTr("<br/>You can try this launcher for free by enabling the trial mode")
+            }
+            color: "#fff"
+            font.pointSize: 9
+            font.bold: true
+            horizontalAlignment: Text.AlignHCenter
+            verticalAlignment: Text.AlignVCenter
+            wrapMode: Text.Wrap
+        }
+    }
+
+    Rectangle {
+        Layout.alignment: Qt.AlignTop
+        Layout.fillWidth: true
+        Layout.preferredHeight: children[0].implicitHeight + 20
+        color: "#b62"
+        visible: {
+            if (!launcherSettings.showNotifications) {
+                return false
+            }
+            return launcherSettings.trialMode
+        }
+
+        Text {
+            width: parent.width
+            height: parent.height
+            text: {
+                return qsTr("Disable Trial Mode to launch the full version") + (playVerChannel.licenseStatus == 4 ? qsTr(", you also have to buy the trial for free on an android device/vm to download it here") : "")
             }
             color: "#fff"
             font.pointSize: 9

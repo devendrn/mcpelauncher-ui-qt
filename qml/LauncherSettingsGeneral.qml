@@ -84,6 +84,18 @@ ColumnLayout {
         onCheckedChanged: launcherSettings.chromeOSMode = checked
     }
 
+    MCheckBox {
+        text: qsTr("Trial Mode (implies ChromeOS Mode)")
+        Component.onCompleted: checked = launcherSettings.trialMode
+        onCheckedChanged: launcherSettings.trialMode = checked
+    }
+
+    MCheckBox {
+        text: qsTr("Keep Apks in <GameData>/apks")
+        Component.onCompleted: checked = launcherSettings.keepApks
+        onCheckedChanged: launcherSettings.keepApks = checked
+    }
+
     MButton {
         Layout.topMargin: 15
         text: qsTr("Run troubleshooter")

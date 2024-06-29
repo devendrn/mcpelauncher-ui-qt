@@ -41,7 +41,7 @@ private:
 
     static bool curlDoZlibInflate(z_stream& zs, int file, char* data, size_t len, int flags);
 
-    template<class T, class U> void downloadFile(T const&dd, U cookie, std::function<void()> success, std::function<void()> error, std::shared_ptr<DownloadProgress> progress, size_t id);
+    template<class T, class U> void downloadFile(T const&dd, U cookie, std::function<void()> success, std::function<void()> error, std::shared_ptr<DownloadProgress> progress, std::string componentName, size_t id);
 public:
     explicit GoogleApkDownloadTask(QObject *parent = nullptr);
 
