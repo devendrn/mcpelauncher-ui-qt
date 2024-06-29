@@ -12,7 +12,7 @@ LauncherBase {
     headerContent: TabBar {
         background: null
         MTabButton {
-            text: qsTr("Unlock")
+            text: qsTr("Provide your encryption Password")
         }
     }
 
@@ -21,6 +21,14 @@ LauncherBase {
         Layout.fillHeight: true
         Layout.leftMargin: 10
         Layout.rightMargin: 10
+
+        Text {
+            Layout.fillWidth: true
+            padding: 10
+            text: qsTr("This is not your Google Account Password. If you don't want to type it every time you open this Launcher, \"continue with invalid credentials\", then Open Settings, press logout and finally login without providing your own encryption Password")
+            wrapMode: Text.Wrap
+            color: "white"
+        }
 
         Item {
             Layout.fillHeight: true
@@ -38,8 +46,6 @@ LauncherBase {
                 id: warningText
                 padding: 10
                 text: qsTr("Warning: Password is invalid")
-                color: labelColor
-                font.pointSize: labelFontSize
                 wrapMode: Text.WordWrap
                 width: parent.width
             }
@@ -58,6 +64,15 @@ LauncherBase {
             id: pwd
             Layout.fillWidth: true
             echoMode: TextInput.Password
+            onAccepted: {
+                googleLoginHelperInstance.unlockkey = pwd.text
+                if(googleLoginHelperInstance.account && !googleLoginHelperInstance.hasEncryptedCredentials || continueInvalidCredentials.checked) {
+                    unlockLayout.finished()
+                } else {
+                    warning.opacity = 1
+                    warningAnim.restart()
+                }
+            }
         }
 
         MCheckBox {

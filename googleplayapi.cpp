@@ -121,7 +121,9 @@ void GooglePlayApi::updateLogin() {
                 return;
             } else if (loginHelper->account() == nullptr) {
                 setStatus(GooglePlayApiStatus::NOT_READY);
-                cleanupLogin();
+                if(!loginHelper->gethasEncryptedCredentials()) {
+                    cleanupLogin();
+                }
                 return;
             } else if (checkinResult.android_id == 0) {
                 playapi::checkin_api checkin(loginHelper->getDevice());
