@@ -27,6 +27,8 @@ class LauncherSettings : public QObject {
     Q_PROPERTY(bool showNotifications READ showNotifications WRITE setShowNotifications NOTIFY settingsChanged)
     Q_PROPERTY(QString clipboard READ clipboard WRITE setClipboard NOTIFY clipboardChanged)
     Q_PROPERTY(bool chromeOSMode READ chromeOSMode WRITE setChromeOSMode NOTIFY settingsChanged)
+    Q_PROPERTY(bool keepApks READ keepApks WRITE setKeepApks NOTIFY settingsChanged)
+    Q_PROPERTY(bool trialMode READ trialMode WRITE setTrialMode NOTIFY settingsChanged)
 
 private:
     QSettings settings;
@@ -86,6 +88,12 @@ public:
 
     bool chromeOSMode() const { return settings.value("chromeOSMode", false).toBool(); }
     void setChromeOSMode(bool value) { settings.setValue("chromeOSMode", value); emit settingsChanged(); }
+
+    bool keepApks() const { return settings.value("keepApks", false).toBool(); }
+    void setKeepApks(bool value) { settings.setValue("keepApks", value); emit settingsChanged(); }
+
+    bool trialMode() const { return settings.value("trialMode", false).toBool(); }
+    void setTrialMode(bool value) { settings.setValue("trialMode", value); emit settingsChanged(); }
 
 public slots:
     void resetSettings() {

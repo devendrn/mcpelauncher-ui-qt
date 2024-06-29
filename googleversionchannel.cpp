@@ -30,11 +30,13 @@ void GoogleVersionChannel::setPlayApi(GooglePlayApi *value) {
 
 void GoogleVersionChannel::onApiReady() {
     setStatus(GoogleVersionChannelStatus::PENDING);
-    m_playApi->requestAppInfo("com.mojang.minecraftpe");
+    m_playApi->requestAppInfo(m_trialMode ? "com.mojang.minecrafttrialpe" : "com.mojang.minecraftpe");
 }
 
 void GoogleVersionChannel::onAppInfoReceived(const QString &packageName, const QString &version, int versionCode, bool isBeta) {
-    if (packageName == "com.mojang.minecraftpe") {
+    auto trialMode = m_trialMode;
+    auto pkgName = trialMode ? "com.mojang.minecrafttrialpe" : "com.mojang.minecraftpe";
+    if (packageName == pkgName) {
         m_latestVersion = version;
         m_latestVersionCode = versionCode;
         m_latestVersionIsBeta = isBeta;
@@ -44,29 +46,40 @@ void GoogleVersionChannel::onAppInfoReceived(const QString &packageName, const Q
         emit latestVersionChanged();
         licenseStatus = GoogleVersionChannelLicenceStatus::PENDING;
         setStatus(GoogleVersionChannelStatus::SUCCEDED);
-        m_playApi->validateLicense("com.mojang.minecraftpe", versionCode, [this](bool hasVerifiedLicense) {
-            if(m_playApi->getLogin()->isChromeOS() && !hasVerifiedLicense) {
+        m_playApi->validateLicense(pkgName, versionCode, [this, trialMode](bool hasVerifiedLicense) {
+            if(!trialMode && m_playApi->getLogin()->isChromeOS() && !hasVerifiedLicense) {
                 m_playApi->getLogin()->setChromeOS(false);
                 licenseStatus = GoogleVersionChannelLicenceStatus::NOT_READY;
                 setStatus(GoogleVersionChannelStatus::NOT_READY);
                 return;
             }
-            this->m_hasVerifiedLicense |= hasVerifiedLicense;
-            licenseStatus = hasVerifiedLicense ? GoogleVersionChannelLicenceStatus::SUCCEDED : GoogleVersionChannelLicenceStatus::FAILED;
-            m_settings.setValue("latest_version_id", hasVerifiedLicense ? (m_latestVersion + QChar((char)m_latestVersionCode) + QChar(m_latestVersionIsBeta)) : "");
+            if(trialMode) {
+                this->m_hasVerifiedLicense = true;
+                licenseStatus = hasVerifiedLicense ? GoogleVersionChannelLicenceStatus::SUCCEDED : GoogleVersionChannelLicenceStatus::OFFLINE;
+            } else {
+                this->m_hasVerifiedLicense |= hasVerifiedLicense;
+                licenseStatus = hasVerifiedLicense ? GoogleVersionChannelLicenceStatus::SUCCEDED : GoogleVersionChannelLicenceStatus::FAILED;
+                m_settings.setValue("latest_version_id", hasVerifiedLicense ? (m_latestVersion + QChar((char)m_latestVersionCode) + QChar(m_latestVersionIsBeta)) : "");
+            }
             statusChanged();
         });
     }
 }
 
 void GoogleVersionChannel::onAppInfoFailed(QString const& packageName, const QString &errorMessage) {
-    if(errorMessage.contains("401") || errorMessage.contains("403")) {
-        licenseStatus = GoogleVersionChannelLicenceStatus::FAILED;
-        m_hasVerifiedLicense = false;
-        m_settings.setValue("latest_version_id", "");
-    } else if(m_settings.value("latest_version_id").toString() == (m_latestVersion + QChar((char)m_latestVersionCode) + QChar(m_latestVersionIsBeta))) {
-        m_hasVerifiedLicense = true;
-        licenseStatus = GoogleVersionChannelLicenceStatus::OFFLINE;
+    auto trialMode = m_trialMode;
+    auto pkgName = trialMode ? "com.mojang.minecrafttrialpe" : "com.mojang.minecraftpe";
+    if(packageName == pkgName) {
+        if(errorMessage.contains("401") || errorMessage.contains("403")) {
+            licenseStatus = GoogleVersionChannelLicenceStatus::FAILED;
+            m_hasVerifiedLicense = false;
+            if(!trialMode) {
+                m_settings.setValue("latest_version_id", "");
+            }
+        } else if(trialMode || m_settings.value("latest_version_id").toString() == (m_latestVersion + QChar((char)m_latestVersionCode) + QChar(m_latestVersionIsBeta))) {
+            m_hasVerifiedLicense = true;
+            licenseStatus = GoogleVersionChannelLicenceStatus::OFFLINE;
+        }
+        setStatus(GoogleVersionChannelStatus::FAILED);
     }
-    setStatus(GoogleVersionChannelStatus::FAILED);
 }

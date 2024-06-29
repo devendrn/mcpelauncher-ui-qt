@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QSettings>
+#include "googleplayapi.h"
 
 class GooglePlayApi;
 
@@ -13,6 +14,7 @@ class GoogleVersionChannel : public QObject {
     Q_PROPERTY(qint32 latestVersionCode READ latestVersionCode NOTIFY latestVersionChanged)
     Q_PROPERTY(bool latestVersionIsBeta READ latestVersionIsBeta NOTIFY latestVersionChanged)
     Q_PROPERTY(GoogleVersionChannelStatus status READ getStatus NOTIFY statusChanged)
+    Q_PROPERTY(bool trialMode MEMBER m_trialMode WRITE setTrialMode NOTIFY statusChanged)
     Q_PROPERTY(bool hasVerifiedLicense MEMBER m_hasVerifiedLicense NOTIFY statusChanged)
     Q_PROPERTY(GoogleVersionChannelLicenceStatus licenseStatus READ getLicenseStatus NOTIFY statusChanged)
 
@@ -32,6 +34,7 @@ private:
     qint32 m_latestVersionCode;
     qint32 m_latestVersionIsBeta;
     bool m_hasVerifiedLicense = false;
+    bool m_trialMode = false;
     GoogleVersionChannelStatus status = GoogleVersionChannelStatus::NOT_READY;
     GoogleVersionChannelLicenceStatus licenseStatus = GoogleVersionChannelLicenceStatus::NOT_READY;
 
@@ -43,6 +46,16 @@ private:
         if (this->status != status) {
             this->status = status;
             statusChanged();
+        }
+    }
+
+    void setTrialMode(bool trialMode) {
+        if (m_trialMode != trialMode ) {
+            m_hasVerifiedLicense = trialMode;
+            m_trialMode = trialMode;
+            if (m_playApi && m_playApi->getStatus() == GooglePlayApi::GooglePlayApiStatus::SUCCEDED) {
+                onApiReady();
+            }
         }
     }
 

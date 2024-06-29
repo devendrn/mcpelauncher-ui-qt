@@ -74,7 +74,7 @@ bool GoogleApkDownloadTask::curlDoZlibInflate(z_stream &zs, int file, char *data
     return true;
 }
 
-template<class T, class U> void GoogleApkDownloadTask::downloadFile(T const&dd, U cookie, std::function<void()> success, std::function<void()> _error, std::shared_ptr<DownloadProgress> _progress, size_t id) {
+template<class T, class U> void GoogleApkDownloadTask::downloadFile(T const&dd, U cookie, std::function<void()> success, std::function<void()> _error, std::shared_ptr<DownloadProgress> _progress, std::string componentName, size_t id) {
     auto apkUrl = dd.has_gzippeddownloadurl() ? dd.gzippeddownloadurl() : dd.downloadurl();
     emit downloadInfo(QString::fromStdString(apkUrl));
     if(m_dryrun) {
@@ -83,7 +83,7 @@ template<class T, class U> void GoogleApkDownloadTask::downloadFile(T const&dd, 
     }
     auto apksdir = QDir(QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation)).filePath("mcpelauncher/apks");
     QDir().mkpath(apksdir);
-    auto file = std::make_shared<QTemporaryFile>(QDir(apksdir).filePath("temp-XXXXXX.apk"));
+    auto file = std::make_shared<QTemporaryFile>(QDir(apksdir).filePath(m_keepApks ? (m_packageName.toStdString() + "-" + componentName + "-XXXXXX.apk").data() : "temp-XXXXXX.apk"));
     if(m_keepApks) {
         file->setAutoRemove(false);
     }
@@ -269,10 +269,10 @@ void GoogleApkDownloadTask::startDownload(playapi::proto::finsky::download::Andr
     }
     size_t id = 0;
     if (!skipMainApk || dd.splitdeliverydata().empty() /* Old Minecraft versions < 1.15.y needs a full download */) {
-        downloadFile(dd, cookie, success, cleanup, progress, id++);
+        downloadFile(dd, cookie, success, cleanup, progress, "main", id++);
     }
     for(auto && data : dd.splitdeliverydata()) {
-        downloadFile(data, cookie, success, cleanup, progress, id++);
+        downloadFile(data, cookie, success, cleanup, progress, data.id(), id++);
     }
     progress->downloads = id;
 }

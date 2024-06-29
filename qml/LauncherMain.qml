@@ -165,8 +165,8 @@ LauncherBase {
     GoogleApkDownloadTask {
         id: playDownloadTask
         playApi: playApiInstance
-        packageName: "com.mojang.minecraftpe"
-        keepApks: launcherSettings.downloadOnly
+        packageName: launcherSettings.trialMode ? "com.mojang.minecrafttrialpe" : "com.mojang.minecraftpe"
+        keepApks: launcherSettings.downloadOnly || launcherSettings.keepApks
         onProgress: setProgressbarValue(progress)
         onError: function (err) {
             if (playDownloadError.visible) {
@@ -449,6 +449,6 @@ LauncherBase {
         if (launcherSettings.startHideLauncher)
             application.setVisibleInDock(false)
         var profile = profileManager.activeProfile
-        gameLauncher.start(launcherSettings.disableGameLog, profile.arch, true)
+        gameLauncher.start(launcherSettings.disableGameLog, profile.arch, !launcherSettings.trialMode)
     }
 }

@@ -165,7 +165,7 @@
 <context>
     <name>GameLauncher</name>
     <message>
-        <location filename="gamelauncher.cpp" line="175"/>
+        <location filename="gamelauncher.cpp" line="178"/>
         <source>Could not find the gamelauncher for Minecraft (%1)
 Please add the launcher &apos;%2&apos; to your &apos;PATH&apos; (environmentvariable) and restart the launcher
 </source>
@@ -173,7 +173,7 @@ Please add the launcher &apos;%2&apos; to your &apos;PATH&apos; (environmentvari
 Bitte füge es deiner &apos;PATH&apos; Umgebungsvariable hinzu und starte den Launcher neu.</translation>
     </message>
     <message>
-        <location filename="gamelauncher.cpp" line="229"/>
+        <location filename="gamelauncher.cpp" line="232"/>
         <source>Incompatible Minecraft installation, please select a different or older Version
 This Launcher is a free Open Source Software which usually fell behind official updates from Google Play
 In some cases there are missing game files,
@@ -182,25 +182,25 @@ missing Symbols expected to be provided by this Launcher via updates
         <translation>Nicht Kompatible Minecraft installation, bitte wähle eine andere oder ältere version.</translation>
     </message>
     <message>
-        <location filename="gamelauncher.cpp" line="233"/>
+        <location filename="gamelauncher.cpp" line="236"/>
         <source>Missing launcher dependencies, please install all missing libraries in their right version</source>
         <translation>Fehlende Launcher Abhängigkeiten, bitte installiere die fehlenden bibliotheken in ihrer erforderlichen Version</translation>
     </message>
     <message>
-        <location filename="gamelauncher.cpp" line="239"/>
+        <location filename="gamelauncher.cpp" line="242"/>
         <source>Process exited with unexpected exit code: %1
 </source>
         <translation>Prozess wurde mit einen unerwarteten exitcode Beendet: %1
 </translation>
     </message>
     <message>
-        <location filename="gamelauncher.cpp" line="242"/>
+        <location filename="gamelauncher.cpp" line="245"/>
         <source>Process exited normally
 </source>
         <translation>Prozess wurde normal Beendet</translation>
     </message>
     <message>
-        <location filename="gamelauncher.cpp" line="256"/>
+        <location filename="gamelauncher.cpp" line="259"/>
         <source>Your system is unable to execute the launcher</source>
         <translation>Dein System kann den Launcher nicht ausführen</translation>
     </message>
@@ -337,7 +337,7 @@ missing Symbols expected to be provided by this Launcher via updates
         <location filename="qml/LauncherBase.qml" line="29"/>
         <source>Unofficial *nix launcher for Minecraft</source>
         <oldsource>Minecraft: Unofficial *nix launcher</oldsource>
-        <translation>Inoffizielle *nix Launcher für Minecraft</translation>
+        <translation>Inoffizieller *nix Launcher für Minecraft</translation>
     </message>
     <message>
         <location filename="qml/LauncherBase.qml" line="30"/>
@@ -374,16 +374,31 @@ missing Symbols expected to be provided by this Launcher via updates
         <location filename="qml/LauncherBase.qml" line="144"/>
         <source>Access to the Google Play Apk Library has been rejected</source>
         <oldsource>Access to the Google Play Library Apk Cloud has been rejected</oldsource>
-        <translation type="unfinished"></translation>
+        <translation>Zugriff zur Google Play Apk Bibliothek wurde verwehrt</translation>
     </message>
     <message>
-        <location filename="qml/LauncherBase.qml" line="192"/>
+        <location filename="qml/LauncherBase.qml" line="144"/>
+        <source>&lt;br/&gt;You can try this launcher for free by enabling the trial mode</source>
+        <translation>&lt;br/&gt;Du kannst den Launcher Kostenlos im Trial Modus ausprobieren</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherBase.qml" line="171"/>
+        <source>Disable Trial Mode to launch the full version</source>
+        <translation>Deaktiviere den Trial Modus um die Vollversion zu starten</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherBase.qml" line="171"/>
+        <source>, you also have to buy the trial for free on an android device/vm to download it here</source>
+        <translation>, jedoch ist es erforderlich die Minecraft Trial im Play Store kostenlos auf einen Android Gerät/VM zu erwerben um diese herunterzuladen</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherBase.qml" line="219"/>
         <source>Google Play Version Channel is behind %1 expected %2</source>
         <oldsource>Google Play Versions Channel is behind %1 expected %2</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/LauncherBase.qml" line="214"/>
+        <location filename="qml/LauncherBase.qml" line="241"/>
         <source>Please wait...</source>
         <translation>Bitte warten...</translation>
     </message>
@@ -423,27 +438,26 @@ missing Symbols expected to be provided by this Launcher via updates
         <translation>Mit Google anmelden</translation>
     </message>
     <message>
-        <location filename="qml/LauncherLogin.qml" line="77"/>
-        <source>Not available</source>
-        <translation>Nicht verfügbar</translation>
-    </message>
-    <message>
-        <location filename="qml/LauncherLogin.qml" line="77"/>
-        <source>Use .apk</source>
+        <location filename="qml/LauncherLogin.qml" line="76"/>
+        <source>Use trial .apk</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/LauncherLogin.qml" line="85"/>
+        <source>Not available</source>
+        <translation type="vanished">Nicht verfügbar</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherLogin.qml" line="84"/>
         <source>Get help</source>
         <translation>Hilfe bekommen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherLogin.qml" line="107"/>
+        <location filename="qml/LauncherLogin.qml" line="106"/>
         <source>Extracting apk</source>
         <translation>Apk Entpacken</translation>
     </message>
     <message>
-        <location filename="qml/LauncherLogin.qml" line="129"/>
+        <location filename="qml/LauncherLogin.qml" line="128"/>
         <source>This is an unofficial Linux launcher for the Minecraft Bedrock codebase.
 This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
         <translation type="unfinished"></translation>
@@ -584,7 +598,8 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
     </message>
     <message>
         <location filename="qml/LauncherSettingsAbout.qml" line="68"/>
-        <source>This project allows you to launch Minecraft: Bedrock Edition (as in the edition w/o the Edition suffix, previously known as Minecraft: Pocket Edition). The launcher supports Linux and OS X.&lt;br/&gt;&lt;br/&gt; © Copyright 2018-2022, MrARM &amp; contributors</source>
+        <source>This project allows you to launch Minecraft: Bedrock Edition (as in the edition w/o the Edition suffix, previously known as Minecraft: Pocket Edition). The launcher supports Linux and OS X.&lt;br/&gt;&lt;br/&gt; © Copyright 2018-2024, MrARM &amp; contributors</source>
+        <oldsource>This project allows you to launch Minecraft: Bedrock Edition (as in the edition w/o the Edition suffix, previously known as Minecraft: Pocket Edition). The launcher supports Linux and OS X.&lt;br/&gt;&lt;br/&gt; © Copyright 2018-2022, MrARM &amp; contributors</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -729,12 +744,22 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
         <translation>ChromeOS Modus</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsGeneral.qml" line="99"/>
+        <location filename="qml/LauncherSettingsGeneral.qml" line="88"/>
+        <source>Trial Mode (implies ChromeOS Mode)</source>
+        <translation>Trial Modus</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherSettingsGeneral.qml" line="94"/>
+        <source>Keep Apks in &lt;GameData&gt;/apks</source>
+        <translation>Apks im &lt;Launcher Ordner&gt;/apks behalten</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherSettingsGeneral.qml" line="111"/>
         <source>Open Gamepad Tool</source>
         <translation>Öffne den Spielekontroller Konfigurator</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsGeneral.qml" line="108"/>
+        <location filename="qml/LauncherSettingsGeneral.qml" line="120"/>
         <source>Refresh Google Play Version Channel</source>
         <translation>Lade Google Play Versions Kanal neu</translation>
     </message>
@@ -751,14 +776,14 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
         <translation type="vanished">Zeige Beta Version</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsGeneral.qml" line="89"/>
+        <location filename="qml/LauncherSettingsGeneral.qml" line="101"/>
         <source>Run troubleshooter</source>
         <translation>Fehlerdiagnose</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsGeneral.qml" line="94"/>
+        <location filename="qml/LauncherSettingsGeneral.qml" line="106"/>
         <source>Open GameData Folder</source>
-        <translation>Öffne den Laucnher Ordner</translation>
+        <translation>Öffne den Launcher Ordner</translation>
     </message>
     <message>
         <source>Check for Updates</source>
@@ -833,37 +858,37 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
 <context>
     <name>LauncherSettingsVersions</name>
     <message>
-        <location filename="qml/LauncherSettingsVersions.qml" line="60"/>
+        <location filename="qml/LauncherSettingsVersions.qml" line="81"/>
         <source>IsChromeOS</source>
         <translation>Lade ChromeOS Versionen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsVersions.qml" line="119"/>
+        <location filename="qml/LauncherSettingsVersions.qml" line="157"/>
         <source>Get Download Info</source>
         <translation>Daten zum Herunterladen anfragen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsVersions.qml" line="163"/>
+        <location filename="qml/LauncherSettingsVersions.qml" line="202"/>
         <source>Close</source>
         <translation>Schließen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsVersions.qml" line="176"/>
+        <location filename="qml/LauncherSettingsVersions.qml" line="216"/>
         <source>Delete selected</source>
         <translation>Ausgewälte löschen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsVersions.qml" line="186"/>
+        <location filename="qml/LauncherSettingsVersions.qml" line="233"/>
         <source>Download .apk</source>
         <translation>Apk Herunterladen</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsVersions.qml" line="193"/>
+        <location filename="qml/LauncherSettingsVersions.qml" line="246"/>
         <source>Import .apk</source>
         <translation>Apk Importieren</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsVersions.qml" line="200"/>
+        <location filename="qml/LauncherSettingsVersions.qml" line="253"/>
         <source>Remove Incompatible Versions</source>
         <translation>Lösche nicht unterstützte Minecraft Versionen</translation>
     </message>
@@ -1293,7 +1318,7 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
         <translation>Minecraft: Bedrock Launcher</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="125"/>
+        <location filename="qml/main.qml" line="126"/>
         <source>Connecting to Google Play failed</source>
         <translation>Verbindung zu Google Play ist fehlgeschlagen</translation>
     </message>
@@ -1303,17 +1328,17 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
         <translation>Bitte erneut Anmelden. Weitere Informationen:&lt;br/&gt;%1</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="130"/>
+        <location filename="qml/main.qml" line="131"/>
         <source>Launcher Error</source>
         <translation>Launcher Fehler</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="148"/>
+        <location filename="qml/main.qml" line="149"/>
         <source>Unsupported Minecraft Version</source>
         <translation>Nicht unterstütze Minecraft Version</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="149"/>
+        <location filename="qml/main.qml" line="150"/>
         <source>The Minecraft Version you are trying to run is unsupported.&lt;br/&gt;&lt;b&gt;if you wanted to play a new Release please wait patiently for an update,&lt;br/&gt;please choose a compatible version from the profile Editor&lt;/b&gt;</source>
         <translation>Diese Minecraft Version wird nicht unterstützt. Bitte wähle eine andere Version im Profil Editor aus.</translation>
     </message>
@@ -1322,34 +1347,34 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
         <translation type="vanished">Kann das Spiel nicht starten. Bitte stellen sie sicher das alle Abhänigkeiten installiert sind.&lt;br&gt;&lt;a href=&quot;%1&quot;&gt;Drücke hier für weitere Informationen&lt;/a&gt;</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="156"/>
+        <location filename="qml/main.qml" line="157"/>
         <source>Could not execute the game launcher. Please make sure it&apos;s dependencies are properly installed.&lt;br&gt;&lt;a href=&quot;%1&quot;&gt;Click here for more information Linux&lt;/a&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="176"/>
+        <location filename="qml/main.qml" line="177"/>
         <source>Game is running</source>
         <translation>Spiel läuft bereits</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="177"/>
+        <location filename="qml/main.qml" line="178"/>
         <source>Minecraft is currently running. Would you like to forcibly close it?
 Hint: Press ignore to just close the Launcher UI</source>
         <translation>Minecraft wird gerade ausgeführt. Möchtest du es jetzt abwürgen?
 Hinweis: Drücke Ignorieren um nur dieses Fenster zu schließen</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="195"/>
+        <location filename="qml/main.qml" line="196"/>
         <source>Please restart</source>
         <translation>Bitte neustarten</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="196"/>
+        <location filename="qml/main.qml" line="197"/>
         <source>Update finished, please restart the AppImage</source>
         <translation>Aktualisierung abgeschlossen, bitte die Anwendung erneut öffnen</translation>
     </message>
     <message>
-        <location filename="qml/main.qml" line="214"/>
+        <location filename="qml/main.qml" line="215"/>
         <source>The Launcher failed to sign you in
 Please login again
 %1</source>

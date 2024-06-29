@@ -38,6 +38,9 @@ void GameLauncher::start(bool disableGameLog, QString arch, bool hasVerifiedLice
         args.append("--import-file-path");
         args.append(filepath);
     }
+    if (!hasVerifiedLicense) {
+        args.append("--free-only");
+    }
     if (m_profile != nullptr) {
         if (m_profile->dataDirCustom) {
             args.append("-dd");
