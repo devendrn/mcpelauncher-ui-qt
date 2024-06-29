@@ -19,9 +19,12 @@ ColumnLayout {
        width: layout.width
        modal: true
        clip: true
-    
+
        property int currentCode: versionBox.codes[versionBox.currentIndex]
-       property var currentVersionCode: function() { return (manualgoogleLoginHelperInstance.chromeOS && (currentCode > 982000000 && currentCode < 990000000 || currentCode > 972000000 && currentCode < 980000000) ? 1000000000 : 0) + currentCode; }
+
+       property bool showVersionListTrial: packageField.text == "com.mojang.minecrafttrialpe"
+       property bool showVersionList: packageField.text == "com.mojang.minecraftpe" || showVersionListTrial
+       property var currentVersionCode: function() { return (manualgoogleLoginHelperInstance.chromeOS && showVersionList && (currentCode > 982000000 && currentCode < 990000000 || currentCode > 972000000 && currentCode < 980000000) ? 1000000000 : 0) + currentCode; }
 
        Overlay.modal: Rectangle {
            id: popupOverlay
@@ -30,6 +33,16 @@ ColumnLayout {
        ColumnLayout {
            anchors.fill: parent
            id: scope
+           property var playVersion: null
+
+           MTextField {
+               id: packageField
+               Layout.fillWidth: true
+               text: "com.mojang.minecraftpe"
+               onEditingFinished: {
+                   manualplayApi.requestAppInfo(packageField.text)
+               }
+           }
 
            MComboBox {
                Layout.fillWidth: true
@@ -38,12 +51,18 @@ ColumnLayout {
                model: {
                    var ret = []
                    var ncodes = []
-                   for (var i = 0; i < versionManager.archivalVersions.versions.length; i++) {
-                       var ver = versionManager.archivalVersions.versions[i]
-                       if (playVerChannel.latestVersionIsBeta && launcherSettings.showBetaVersions || !ver.isBeta) {
-                            ret.push(ver.versionName + " (" + ver.abi + ")")
-                            ncodes.push(ver.versionCode)
-                       }
+                   if(scope.playVersion !== null) {
+                       ret.push(scope.playVersion.versionName)
+                       ncodes.push(scope.playVersion.versionCode)
+                   }
+                   if(downloadApk.showVersionList) {
+                    for (var i = 0; i < versionManager.archivalVersions.versions.length; i++) {
+                        var ver = versionManager.archivalVersions.versions[i]
+                        if ((scope.playVersion && scope.playVersion.isBeta || !ver.isBeta) && (!downloadApk.showVersionListTrial || ver.abi.indexOf("x86") !== -1)) {
+                                ret.push(ver.versionName + " (" + ver.abi + ")")
+                                ncodes.push(ver.versionCode)
+                        }
+                    }
                    }
                    codes = ncodes
                    return ret
@@ -79,6 +98,23 @@ ColumnLayout {
                onInitError: function (err) {
                    console.log("Failed " + err)
                }
+               onAppInfoReceived: function(packageName, version, versionCode, isBeta) {
+                   scope.playVersion = {
+                       versionName: version,
+                       versionCode: versionCode,
+                       isBeta: isBeta
+                   }
+                   versionsCodeField.text = downloadApk.currentVersionCode().toString()
+               }
+               onAppInfoFailed: function(packageName, err) {
+                   scope.playVersion = null
+                   versionsCodeField.text = downloadApk.currentVersionCode().toString()
+               }
+
+               onReady: {
+                   manualplayApi.requestAppInfo(packageField.text)
+               }
+
            }
 
            property var apkUrls: ""
@@ -86,7 +122,7 @@ ColumnLayout {
            GoogleApkDownloadTask {
                id: manualPlayDownloadTask
                playApi: manualplayApi
-               packageName: "com.mojang.minecraftpe"
+               packageName: packageField.text
                keepApks: false
                dryrun: true
                versionCode: Number.parseInt(versionsCodeField.text)//(manualgoogleLoginHelperInstance.chromeOS ? 1000000000 : 0) + versionBox.codes[versionBox.currentIndex]
@@ -141,6 +177,7 @@ ColumnLayout {
                 }
 
                 TextEdit {
+                    id: edit
                     focus: true
                     wrapMode: TextEdit.Wrap
                     onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
