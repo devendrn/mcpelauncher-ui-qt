@@ -57,6 +57,16 @@ int main(int argc, char *argv[])
     QCoreApplication::setApplicationName("Minecraft Linux Launcher UI");
 
     LauncherApp app(argc, argv);
+    QTranslator translator;
+    if (translator.load(QLocale(), QLatin1String("mcpelauncher"), QLatin1String("_"), QLatin1String(":/translations"))) {
+        app.installTranslator(&translator);
+    }
+#ifndef NDEBUG
+    else {
+        qDebug() << "cannot load translator " << QLocale().name() << " check content of translations.qrc";
+    }
+#endif
+
     QCommandLineParser parser;
     parser.setApplicationDescription("Minecraft Linux Launcher UI");
     parser.addPositionalArgument("file", "file or uri to open with the default profile");
@@ -100,16 +110,6 @@ int main(int argc, char *argv[])
         // Silence console
         qInstallMessageHandler([](QtMsgType type, const QMessageLogContext &context, const QString &msg) {});
     }
-
-    QTranslator translator;
-    if (translator.load(QLocale(), QLatin1String("mcpelauncher"), QLatin1String("_"), QLatin1String(":/translations"))) {
-        app.installTranslator(&translator);
-    }
-#ifndef NDEBUG
-    else {
-        qDebug() << "cannot load translator " << QLocale().name() << " check content of translations.qrc";
-    }
-#endif
 
     app.setQuitOnLastWindowClosed(false);
 #ifdef GOOGLEPLAYDOWNLOADER_USEQT
