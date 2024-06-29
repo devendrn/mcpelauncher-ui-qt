@@ -596,7 +596,7 @@ Popup {
             for (var i = 0; i < versionsmodel.count; i++) {
                 var entry = profileVersion.data[i]
                 var diff = googleLoginHelperInstance.chromeOS ? 1000000000 : 0
-                if (entry && entry.obj && (profile.versionCode ? (entry.obj.versionCode === profile.versionCode) : (entry.obj.versionCode === profile.versionCode - diff)) && profile.arch === entry.arch) {
+                if (entry && entry.obj && ((entry.obj.versionCode === profile.versionCode) || (entry.obj.versionCode === (profile.versionCode - diff))) && profile.arch === entry.arch) {
                     index = i
                     break
                 }

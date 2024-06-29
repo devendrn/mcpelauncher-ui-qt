@@ -284,7 +284,7 @@ LauncherBase {
     function findArchivalVersion(code) {
         var versions = versionManager.archivalVersions.versions
         for (var i = versions.length - 1; i >= 0; --i) {
-            if (versions[i].versionCode === code)
+            if (versions[i].versionCode === code || versions[i].versionCode === (code - 1000000000))
                 return versions[i]
         }
         return null
