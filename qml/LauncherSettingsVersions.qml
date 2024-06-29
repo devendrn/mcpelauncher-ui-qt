@@ -36,7 +36,9 @@ ColumnLayout {
             MTextField {
                 id: packageField
                 Layout.fillWidth: true
-                text: "com.mojang.minecrafttrialpe"
+                Component.onCompleted: {
+                    packageField.text = launcherSettings.trialMode ? "com.mojang.minecrafttrialpe" : "com.mojang.minecraftpe"
+                }
                 onEditingFinished: {
                     manualplayApi.requestAppInfo(packageField.text)
                 }
@@ -73,9 +75,12 @@ ColumnLayout {
             }
 
             MCheckBox {
-                    id: isChromeOS
-                    text: qsTr("IsChromeOS")
-                    Layout.bottomMargin: 10
+                id: isChromeOS
+                text: qsTr("IsChromeOS")
+                Layout.bottomMargin: 10
+                Component.onCompleted: {
+                    packageField.text = launcherSettings.chromeOSMode
+                }
             }
 
             GoogleLoginHelper {
