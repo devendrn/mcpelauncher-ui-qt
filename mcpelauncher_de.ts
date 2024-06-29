@@ -825,34 +825,49 @@ This project is not affiliated with Minecraft, Mojang or Microsoft.</source>
 <context>
     <name>LauncherSettingsStorage</name>
     <message>
-        <location filename="qml/LauncherSettingsStorage.qml" line="12"/>
+        <location filename="qml/LauncherSettingsStorage.qml" line="13"/>
         <source>If Qt6 fails to open the folder it doesn&apos;t report back</source>
         <translation>Unter umständen passiert nichts beim drücken der Buttons</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsStorage.qml" line="24"/>
+        <location filename="qml/LauncherSettingsStorage.qml" line="25"/>
         <source>Game Directories</source>
         <translation>Spiele Ordner</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsStorage.qml" line="35"/>
+        <location filename="qml/LauncherSettingsStorage.qml" line="36"/>
         <source>Open Data Root</source>
         <translation>Öffne den Speicherordner</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsStorage.qml" line="40"/>
+        <location filename="qml/LauncherSettingsStorage.qml" line="41"/>
         <source>Open Worlds</source>
         <translation>Öffne den Weltenordner</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsStorage.qml" line="45"/>
+        <location filename="qml/LauncherSettingsStorage.qml" line="46"/>
         <source>Open Resource Packs</source>
         <translation>Öffne den Ressourcenpaket Ordner</translation>
     </message>
     <message>
-        <location filename="qml/LauncherSettingsStorage.qml" line="50"/>
+        <location filename="qml/LauncherSettingsStorage.qml" line="51"/>
         <source>Open Behavior Packs</source>
         <translation>Öffne den Verhaltenspaket Ordner</translation>
+    </message>
+    <message>
+        <location filename="qml/LauncherSettingsStorage.qml" line="82"/>
+        <source>Data Root: %1
+Worlds: %2
+Resource Packs: %3
+Behavior Packs: %4</source>
+        <oldsource>Data Root: %1
+Worlds: %1%2
+Resource Packs: %2%3
+Behavior Packs: %2%4</oldsource>
+        <translation>Speicherordner: %1
+Welten: %2
+Ressourcenpakete: %3
+Verhaltenspakete: %4</translation>
     </message>
 </context>
 <context>
