@@ -84,8 +84,11 @@ private:
 
 public:
     void setChromeOS(bool isChromeOS) {
+        auto shouldUpdateDevice = chromeOS != isChromeOS;
         chromeOS = isChromeOS;
-        updateDevice();
+        if(shouldUpdateDevice) {
+            updateDevice();
+        }
     }
     bool isChromeOS() {
         return chromeOS;
