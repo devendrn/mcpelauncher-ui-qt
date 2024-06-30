@@ -50,7 +50,7 @@ private:
         return singleArch;
     }
     QString getUnlockkey() {
-        return singleArch;
+        return unlockkey;
     }
 
     void loadAccount();
