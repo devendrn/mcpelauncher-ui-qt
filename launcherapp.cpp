@@ -69,13 +69,23 @@ int LauncherApp::launchProfileFile(QString profileName, QString filePath, bool s
             shouldExit(1);
         }
     });
+    QSettings m_settings;
+    auto trialMode = m_settings.value("trialMode", false).toBool();
+    m_settings.beginGroup("googleversionchannel");
+    auto m_latestVersion = m_settings.value("latest_version").toString();
+    auto m_latestVersionCode = m_settings.value("latest_version_code").toInt();
+    auto m_latestVersionIsBeta = m_settings.value("latest_version_isbeta").toBool();
+    if(!trialMode && m_settings.value("latest_version_id").toString() != (m_latestVersion + QChar((char)m_latestVersionCode) + QChar(m_latestVersionIsBeta))) {
+        printf("Something went wrong\n");
+        shouldExit(1);
+    }
     QObject::connect(&launcher, &GameLauncher::fileStarted, [&](bool success) {
         if(success) {
             if(startEventLoop) {
                 shouldExit(success ? 0 : 1);
             }
         } else {
-            launcher.start(false, profile->arch, true, filePath);
+            launcher.start(false, profile->arch, !trialMode, filePath);
         }
     });
     launcher.setProfile(profile);
@@ -99,7 +109,7 @@ int LauncherApp::launchProfileFile(QString profileName, QString filePath, bool s
     if(filePath.length() > 0) {
         launcher.startFile(filePath);
     } else {
-        launcher.start(false, profile->arch, true);
+        launcher.start(false, profile->arch, !trialMode);
     }
     return exited ? exitCode : startEventLoop ? this->exec() : 0;
 }
