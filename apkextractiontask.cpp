@@ -67,8 +67,13 @@ void ApkExtractionTask::run() {
                 ApkInfo capkInfo = ApkInfo::fromXml(manifestParser);
                 if (!apkInfo.versionCode) {
                     apkInfo = capkInfo;
+                    if(!m_allowedPackages.empty() && !m_allowedPackages.contains(QString::fromStdString(apkInfo.package))) {
+                        throw std::runtime_error(QObject::tr("Trying to import a forbidden apk").toStdString());
+                    }
                 } else if(apkInfo.versionCode != capkInfo.versionCode) {
                     throw std::runtime_error(QObject::tr("Trying to extract multiple apks with different versionsCodes is forbidden").toStdString());
+                } else if(apkInfo.package != capkInfo.package) {
+                    throw std::runtime_error(QObject::tr("Trying to extract multiple apks with different package is forbidden").toStdString());
                 } else if(apkInfo.versionName.empty()) {
                     apkInfo.versionName = capkInfo.versionName;
                 }

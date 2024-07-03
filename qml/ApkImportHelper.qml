@@ -17,6 +17,7 @@ Item {
     property var progressBar: null
     property alias task: apkExtractionTask
     property bool allowIncompatible: false
+    property bool trialMode: launcherSettings.trialMode
 
     id: root
 
@@ -61,6 +62,13 @@ Item {
         }
 
         allowIncompatible: root.allowIncompatible
+        allowedPackages: {
+            var packages = ["com.mojang.minecrafttrialpe", "com.mojang.minecraftedu"]
+            if(!root.trialMode) {
+                packages.push("com.mojang.minecraftpe")
+            }
+            return packages
+        }
     }
 
     MessageDialog {

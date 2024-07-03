@@ -14,6 +14,10 @@ Item {
 
     signal finished
 
+    Component.onCompleted: {
+        launcherSettings.trialMode = false
+    }
+
     Image {
         anchors.fill: parent
         smooth: false
@@ -151,6 +155,7 @@ Item {
         id: apkImportHelper
         progressBar: apkExtractionProgressBar
         versionManager: versionManagerInstance
+        trialMode: true
         onStarted: root.extractingApk = true
         onError: root.extractingApk = false
         onFinished: {
