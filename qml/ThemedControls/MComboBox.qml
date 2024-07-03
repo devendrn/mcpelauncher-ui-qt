@@ -32,7 +32,7 @@ T.ComboBox {
     delegate: ItemDelegate {
         width: parent.width
         contentItem: Text {
-            text: modelData
+            text: control.textRole ? (Array.isArray(control.model) ? modelData[control.textRole] : model[control.textRole]) : modelData
             color: "#fff"
             font.pointSize: 10
             elide: Text.ElideRight
