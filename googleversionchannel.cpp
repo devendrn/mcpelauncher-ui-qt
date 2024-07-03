@@ -36,9 +36,11 @@ void GoogleVersionChannel::onApiReady() {
 }
 
 void GoogleVersionChannel::onStatusChanged() {
+    auto trialMode = m_trialMode;
     auto status = m_playApi->getStatus();
     if(status != GooglePlayApi::GooglePlayApiStatus::SUCCEDED) {
-        m_hasVerifiedLicense = false;
+        m_hasVerifiedLicense = trialMode;
+        licenseStatus = status == GooglePlayApi::GooglePlayApiStatus::FAILED ? trialMode ? GoogleVersionChannelLicenceStatus::FAILED : GoogleVersionChannelLicenceStatus::OFFLINE : GoogleVersionChannelLicenceStatus::NOT_READY;
         setStatus(status == GooglePlayApi::GooglePlayApiStatus::FAILED ? GoogleVersionChannelStatus::FAILED : GoogleVersionChannelStatus::NOT_READY);
     }
 }
