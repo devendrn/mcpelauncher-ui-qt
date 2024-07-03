@@ -248,9 +248,9 @@ ColumnLayout {
 
         MButton {
             Layout.fillWidth: true
-            text: (googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) ? qsTr("Import .apk") : "<s>" + qsTr("Import .apk") + "</s>"
+            text: (googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || LauncherSettings.trialMode || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) ? LauncherSettings.trialMode ?  qsTr("Import trial .apk") : qsTr("Import .apk") : "<s>" + qsTr("Import .apk") + "</s>"
             onClicked: apkImportWindow.pickFile()
-            enabled: (googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK)
+            enabled: (googleLoginHelper.account !== null && playVerChannel.hasVerifiedLicense || LauncherSettings.trialMode || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK)
         }
 
         MButton {
