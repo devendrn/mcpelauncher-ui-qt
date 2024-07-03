@@ -39,6 +39,7 @@ private:
     GoogleVersionChannelLicenceStatus licenseStatus = GoogleVersionChannelLicenceStatus::NOT_READY;
 
     void onApiReady();
+    void onStatusChanged();
 
     void onAppInfoReceived(QString const& packageName, QString const& version, int versionCode, bool isBeta);
     void onAppInfoFailed(QString const& packageName, const QString &errorMessage);

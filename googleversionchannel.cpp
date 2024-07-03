@@ -1,6 +1,7 @@
 #include "googleversionchannel.h"
 #include "googleplayapi.h"
 #include "googleloginhelper.h"
+#include "googleversionchannel.h"
 
 GoogleVersionChannel::GoogleVersionChannel() {
     m_settings.beginGroup("googleversionchannel");
@@ -19,6 +20,7 @@ void GoogleVersionChannel::setPlayApi(GooglePlayApi *value) {
     }
     m_playApi = value;
     if (value) {
+        connect(value, &GooglePlayApi::statusChanged, this, &GoogleVersionChannel::onStatusChanged);
         connect(value, &GooglePlayApi::ready, this, &GoogleVersionChannel::onApiReady);
         connect(value, &GooglePlayApi::appInfoReceived, this, &GoogleVersionChannel::onAppInfoReceived);
         connect(value, &GooglePlayApi::appInfoFailed, this, &GoogleVersionChannel::onAppInfoFailed);
@@ -31,6 +33,14 @@ void GoogleVersionChannel::setPlayApi(GooglePlayApi *value) {
 void GoogleVersionChannel::onApiReady() {
     setStatus(GoogleVersionChannelStatus::PENDING);
     m_playApi->requestAppInfo(m_trialMode ? "com.mojang.minecrafttrialpe" : "com.mojang.minecraftpe");
+}
+
+void GoogleVersionChannel::onStatusChanged() {
+    auto status = m_playApi->getStatus();
+    if(status != GooglePlayApi::GooglePlayApiStatus::SUCCEDED) {
+        m_hasVerifiedLicense = false;
+        setStatus(status == GooglePlayApi::GooglePlayApiStatus::FAILED ? GoogleVersionChannelStatus::FAILED : GoogleVersionChannelStatus::NOT_READY);
+    }
 }
 
 void GoogleVersionChannel::onAppInfoReceived(const QString &packageName, const QString &version, int versionCode, bool isBeta) {
