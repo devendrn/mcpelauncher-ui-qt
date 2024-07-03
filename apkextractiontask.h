@@ -13,12 +13,14 @@ class ApkExtractionTask : public QThread {
     Q_PROPERTY(bool active READ active NOTIFY activeChanged)
     Q_PROPERTY(bool allowIncompatible READ allowIncompatible WRITE SetAllowIncompatible)
     Q_PROPERTY(QString versionName READ versionName WRITE setVersionName)
+    Q_PROPERTY(QStringList allowedPackages READ allowedPackages WRITE setAllowedPackages)
 
     QMutex mutex;
     QStringList m_sources;
     VersionManager* m_versionManager;
     bool m_allowIncompatible;
     QString m_versionName;
+    QStringList m_allowedPackages;
 
     void run() override;
 
@@ -65,6 +67,15 @@ public:
     void setVersionName(QString versionName) {
         m_versionName = versionName;
     }
+
+    QStringList allowedPackages() {
+        return m_allowedPackages;
+    }
+
+    void setAllowedPackages(QStringList const& value) {
+        m_allowedPackages = value;
+    }
+
 public slots:
     bool setSourceUrls(QList<QUrl> const& urls);
     void SetAllowIncompatible(bool c) {

@@ -321,6 +321,13 @@ LauncherBase {
         onFinished: function () {
             launchGame()
         }
+        allowedPackages: {
+            var packages = ["com.mojang.minecrafttrialpe", "com.mojang.minecraftedu"]
+            if(!launcherSettings.trialMode) {
+                packages.push("com.mojang.minecraftpe")
+            }
+            return packages
+        }
     }
 
     /* utility functions */
