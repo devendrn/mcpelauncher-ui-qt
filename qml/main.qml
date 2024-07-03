@@ -52,15 +52,18 @@ Window {
         id: playApi
         login: googleLoginHelperInstance
 
-        onInitError: function (err) {
-            playDownloadError.text = qsTr("Please login again, Details:<br/>%1").arg(err)
-            playDownloadError.open()
+        property string googleLoginError: ""
+
+        onAppInfoReceived: function (app, det) {
+            playApi.googleLoginError = ""
         }
 
-        onTosApprovalRequired: function (tos, marketing) {
-            googleTosApprovalWindow.tosText = tos
-            googleTosApprovalWindow.marketingText = marketing
-            googleTosApprovalWindow.show()
+        onInitError: function (err) {
+            playApi.googleLoginError = qsTr("<b>Cannot initialize Google Play Access</b>, Details:<br/>%1").arg(err)
+        }
+
+        onAppInfoFailed: function (app, err) {
+            playApi.googleLoginError = qsTr("<b>Cannot Access App Details</b> (%1), Details:<br/>%2").arg(app).arg(err)
         }
     }
 

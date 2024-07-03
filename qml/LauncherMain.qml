@@ -34,24 +34,6 @@ LauncherBase {
         }
     }
 
-    property string googleLoginError: ""
-
-    Connections {
-        target: playApiInstance
-
-        onAppInfoReceived: function (app, det) {
-            googleLoginError = ""
-        }
-
-        onInitError: function (err) {
-            googleLoginError = qsTr("<b>Cannot initialize Google Play Access</b>, Details:<br/>%1").arg(err)
-        }
-
-        onAppInfoFailed: function (app, err) {
-            googleLoginError = qsTr("<b>Cannot Access App Details</b> (%1), Details:<br/>%2").arg(app).arg(err)
-        }
-    }
-
     Rectangle {
         Layout.alignment: Qt.AlignTop
         Layout.fillWidth: true
@@ -61,14 +43,15 @@ LauncherBase {
             if (!launcherSettings.showNotifications) {
                 return false
             }
-            return googleLoginError.length > 0 || playVerChannel.licenseStatus == 2
+            return playApiInstance.googleLoginError.length > 0 || playVerChannel.licenseStatus == 2
         }
+        z: 2
 
         Text {
             width: parent.width
             height: parent.height
             text: {
-                return (googleLoginError || playVerChannel.licenseStatus == 2 && qsTr("Access to the Google Play Apk Library has been rejected")) + qsTr("<br/>You can try this launcher for free by enabling the trial mode")
+                return (playApiInstance.googleLoginError || playVerChannel.licenseStatus == 2 && qsTr("Access to the Google Play Apk Library has been rejected")) + (!launcherSettings.trialMode && (playVerChannel.licenseStatus == 2) ? qsTr("<br/>You can try this launcher for free by enabling the trial mode") : "")
             }
             color: "#fff"
             font.pointSize: 9
@@ -90,6 +73,7 @@ LauncherBase {
             }
             return launcherSettings.trialMode
         }
+        z: 2
 
         Text {
             width: parent.width
@@ -138,6 +122,7 @@ LauncherBase {
             }
             return launcherLatestVersionBase().versionCode > playVerChannelInstance.latestVersionCode
         }
+        z: 2
 
         Text {
             width: parent.width
