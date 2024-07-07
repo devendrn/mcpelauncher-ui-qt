@@ -165,10 +165,10 @@ Item {
 
         Connections {
             target: apkImportHelper.task
-            onVersionInformationObtained: {
+            onVersionInformationObtained: function(dir, name, code) {
                 var profile = profileManagerInstance.defaultProfile
-                profile.versionType = ProfileInfo.LOCKED_NAME
-                profile.versionDirName = directory
+                profile.versionType = ProfileInfo.LOCKED_CODE
+                profile.versionCode = code
                 profile.save()
             }
         }
