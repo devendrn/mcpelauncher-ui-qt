@@ -17,7 +17,7 @@ class GoogleLoginHelper : public QObject {
     Q_PROPERTY(bool includeIncompatible READ getIncludeIncompatible WRITE setIncludeIncompatible)
     Q_PROPERTY(QString singleArch READ getSingleArch WRITE setSingleArch)
     Q_PROPERTY(bool hideLatest READ hideLatest NOTIFY accountInfoChanged)
-    Q_PROPERTY(bool hasEncryptedCredentials READ gethasEncryptedCredentials NOTIFY accountInfoChanged)
+    Q_PROPERTY(bool hasEncryptedCredentials READ getHasEncryptedCredentials NOTIFY accountInfoChanged)
     Q_PROPERTY(QString unlockkey READ getUnlockkey WRITE setUnlockkey NOTIFY accountInfoChanged)
     Q_PROPERTY(bool chromeOS MEMBER chromeOS WRITE setChromeOS)
 
@@ -79,7 +79,7 @@ private:
     }
 
 public:
-    bool gethasEncryptedCredentials() {
+    bool getHasEncryptedCredentials() {
         return hasEncryptedCredentials;
     }
     void setChromeOS(bool isChromeOS) {

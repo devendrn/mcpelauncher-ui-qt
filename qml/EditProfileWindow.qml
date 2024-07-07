@@ -172,7 +172,8 @@ Popup {
                                                                                 "name": qsTr("%1 (installed, %2)").arg(versions[i].versionName).arg(versions[i].archs[k]),
                                                                                 "versionType": ProfileInfo.LOCKED_CODE,
                                                                                 "obj": versions[i],
-                                                                                "arch": versions[i].archs[k]
+                                                                                "arch": versions[i].archs[k],
+                                                                                "preserveVersionCode": true
                                                                             })
                                                                      break
                                                                  }
@@ -645,6 +646,7 @@ Popup {
             profile.graphicsAPI = profileGraphicsAPI.currentIndex
         }
         profile.arch = ""
+        var preserveVersionCode = false
         if (profileVersion.data[profileVersion.currentIndex].obj || profileVersion.data[profileVersion.currentIndex].versionType == ProfileInfo.LATEST_GOOGLE_PLAY) {
             profile.versionType = profileVersion.data[profileVersion.currentIndex].versionType
             // fails if it is a extraversion
@@ -653,6 +655,7 @@ Popup {
             if (profile.versionType == ProfileInfo.LOCKED_CODE) {
                 profile.versionCode = profileVersion.data[profileVersion.currentIndex].obj.versionCode
                 profile.arch = profileVersion.data[profileVersion.currentIndex].arch || ""
+                preserveVersionCode = profileVersion.data[profileVersion.currentIndex].preserveVersionCode || false
             }
         }
 
@@ -666,7 +669,7 @@ Popup {
             profile.env[envs.model.get(i).key] = envs.model.get(i).value
         }
         profile.commandline = commandline.text
-        if(googleLoginHelperInstance.chromeOS && (profile.versionCode > 982000000 && profile.versionCode < 990000000 || profile.versionCode > 972000000 && profile.versionCode < 980000000)) {
+        if(!preserveVersionCode && googleLoginHelperInstance.chromeOS && (profile.versionCode > 982000000 && profile.versionCode < 990000000 || profile.versionCode > 972000000 && profile.versionCode < 980000000)) {
             profile.versionCode = profile.versionCode + 1000000000
         }
         profile.save()

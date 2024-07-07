@@ -26,6 +26,8 @@ void GoogleVersionChannel::setPlayApi(GooglePlayApi *value) {
         connect(value, &GooglePlayApi::appInfoFailed, this, &GoogleVersionChannel::onAppInfoFailed);
         if (value->getStatus() == GooglePlayApi::GooglePlayApiStatus::SUCCEDED) {
             onApiReady();
+        } else {
+            onStatusChanged();
         }
     }
 }
