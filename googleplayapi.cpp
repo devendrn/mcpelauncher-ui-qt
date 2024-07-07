@@ -120,8 +120,8 @@ void GooglePlayApi::updateLogin() {
                 emit initError(tr("<b>Please report this error</b><br>GooglePlayApi needs the loginHelper"));
                 return;
             } else if (loginHelper->account() == nullptr) {
-                setStatus(GooglePlayApiStatus::NOT_READY);
-                if(!loginHelper->gethasEncryptedCredentials()) {
+                setStatus(GooglePlayApiStatus::FAILED);
+                if(!loginHelper->getHasEncryptedCredentials()) {
                     cleanupLogin();
                 }
                 return;

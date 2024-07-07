@@ -170,6 +170,7 @@ void GoogleLoginHelper::signOut() {
     settings.remove("googlelogin");
     settings.remove("device_state");
     loginCache.clear();
+    hasEncryptedCredentials = false;
     emit accountInfoChanged();
 }
 

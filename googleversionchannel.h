@@ -56,6 +56,8 @@ private:
             m_trialMode = trialMode;
             if (m_playApi && m_playApi->getStatus() == GooglePlayApi::GooglePlayApiStatus::SUCCEDED) {
                 onApiReady();
+            } else {
+                onStatusChanged();
             }
         }
     }
