@@ -116,7 +116,7 @@ LauncherBase {
         Layout.preferredHeight: children[0].implicitHeight + 20
         color: "#b62"
         visible: {
-            if (!launcherSettings.showNotifications) {
+            if (!launcherSettings.showNotifications || googleLoginHelper.account == null) {
                 return false
             }
             return launcherLatestVersionBase().versionCode > playVerChannelInstance.latestVersionCode
@@ -236,16 +236,20 @@ LauncherBase {
             property bool canDownload: googleLoginHelper.account !== null && playVerChannel.licenseStatus == 3
 
             text: (isVersionsInitialized && (playVerChannel.licenseStatus !== 0 && playVerChannel.licenseStatus !== 1) /* Fail or Succeeded */
-                   ) ? ((playVerChannel.hasVerifiedLicense || launcherSettings.trialMode || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) && (canDownload || !needsDownload()) ? (gameLauncher.running ? qsTr("Game is running") : (checkSupport() ? (needsDownload() ? (googleLoginHelper.account !== null ? (profileManager.activeProfile.versionType === ProfileInfo.LATEST_GOOGLE_PLAY && googleLoginHelper.hideLatest ? qsTr("Please sign in again") : qsTr("Download and play")) : qsTr("Sign in")) : qsTr("Play")) : qsTr("Unsupported Version"))).toUpperCase() : qsTr("Ask Google Again")) : qsTr("Please wait...")
+                   ) ? ((playVerChannel.hasVerifiedLicense || launcherSettings.trialMode || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) && (canDownload || !needsDownload()) ? (gameLauncher.running ? qsTr("Game is running") : (checkSupport() ? (needsDownload() ? (googleLoginHelper.account !== null ? (profileManager.activeProfile.versionType === ProfileInfo.LATEST_GOOGLE_PLAY && googleLoginHelper.hideLatest ? qsTr("Please sign in again") : qsTr("Download and play")) : qsTr("Sign in")) : qsTr("Play")) : qsTr("Unsupported Version"))).toUpperCase() : googleLoginHelper.account !== null ? qsTr("Ask Google Again") :  qsTr("Sign In")) : qsTr("Please wait...")
             subText: (isVersionsInitialized && (playVerChannel.licenseStatus !== 0 && playVerChannel.licenseStatus !== 1) /* Fail or Succeeded */
                                                 ) ? ((playVerChannel.hasVerifiedLicense || !LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) ? (gameLauncher.running ? "" : (getDisplayedVersionName() ? ("Minecraft " + getDisplayedVersionName()).toUpperCase() : qsTr("Please wait..."))) : "Failed to obtain apk url") : "..."
             enabled: !gameLauncher.running && (isVersionsInitialized && (playVerChannel.licenseStatus !== 0 && playVerChannel.licenseStatus !== 1) /* Fail or Succeeded */
                                                ) && !(playDownloadTask.active || apkExtractionTask.active || updateChecker.active || !checkSupport()) && (getDisplayedVersionName())
 
             onClicked: {
-                if (googleLoginHelper.account !== null && (!playVerChannel.hasVerifiedLicense || !canDownload && needsDownload()) && LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) {
-                    playVerChannel.playApi = null
-                    playVerChannel.playApi = playApiInstance
+                if ((!playVerChannel.hasVerifiedLicense || !canDownload && needsDownload()) && LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) {
+                    if(googleLoginHelper.account !== null) {
+                        playVerChannel.playApi = null
+                        playVerChannel.playApi = playApiInstance
+                    } else {
+                        googleLoginHelper.acquireAccount(window)
+                    }
                 } else {
                     if (needsDownload()) {
                         playDownloadTask.versionCode = getDownloadVersionCode()
