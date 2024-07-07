@@ -52,13 +52,8 @@ private:
 
     void setTrialMode(bool trialMode) {
         if (m_trialMode != trialMode ) {
-            m_hasVerifiedLicense = trialMode;
             m_trialMode = trialMode;
-            if (m_playApi && m_playApi->getStatus() == GooglePlayApi::GooglePlayApiStatus::SUCCEDED) {
-                onApiReady();
-            } else {
-                onStatusChanged();
-            }
+            onStatusChanged();
         }
     }
 
