@@ -124,4 +124,14 @@ ColumnLayout {
             playVerChannel.playApi = api
         }
     }
+
+    MButton {
+        text: qsTr("Refresh Google Play Checkin")
+        onClicked: {
+            playVerChannel.playApi.cleanupLogin()
+            var login = playVerChannel.playApi.login
+            playVerChannel.playApi.login = null
+            playVerChannel.playApi.login = login
+        }
+    }
 }
