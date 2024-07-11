@@ -38,8 +38,6 @@ private:
     void loadApiInfo();
     void saveApiInfo();
 
-    void cleanupLogin();
-
     void setStatus(GooglePlayApiStatus status) {
         if (this->status != status) {
             this->status = status;
@@ -81,6 +79,8 @@ public slots:
     void setTosApproved(bool approved, bool marketing) {
         tosApprovalPromise.set_value({approved, marketing});
     }
+
+    void cleanupLogin();
 
 };
 
