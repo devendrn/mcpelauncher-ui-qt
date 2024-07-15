@@ -18,7 +18,7 @@ ColumnLayout {
     FileDialog {
         id: filePicker
         title: "Please pick the Minecraft file"
-        nameFilters: ["Minecraft (*.mcaddon,*.mcpack,*.mcstructure,*.mctemplate,*.mcworld)", "All files (*)"]
+        nameFilters: ["Minecraft (*.mcaddon *.mcpack *.mcstructure *.mctemplate *.mcworld)", "All files (*)"]
         fileMode: FileDialog.OpenFiles
 
         onAccepted: {
