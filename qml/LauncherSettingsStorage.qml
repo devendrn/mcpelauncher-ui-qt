@@ -10,7 +10,7 @@ ColumnLayout {
     spacing: 10
 
     MButton {
-        text: gameLauncher.running ?  qsTr("Import World or Pack") : qsTr("Import World or Pack (pending until launch)")
+        text: gameLauncher.running ? qsTr("Import World or Pack") : qsTr("Import World or Pack (pending until launch)")
         Layout.fillWidth: true
         onClicked: filePicker.open()
     }
@@ -26,6 +26,23 @@ ColumnLayout {
                 gameLauncher.pendingFiles.push(filePicker.currentFiles[i])
             }
             gameLauncher.importFiles()
+        }
+    }
+
+    RowLayout {
+        Layout.fillWidth: true
+
+        MTextField {
+            id: uri
+            Layout.fillWidth: true
+            text: "minecraft://"
+        }
+        MButton {
+            text: gameLauncher.running ? qsTr("Open Uri") : qsTr("Open Uri (pending until launch)")
+            onClicked: {
+                gameLauncher.pendingFiles.push(uri.text)
+                gameLauncher.importFiles()
+            }
         }
     }
 
