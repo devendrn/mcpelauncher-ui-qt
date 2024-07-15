@@ -23,8 +23,15 @@ bool LauncherApp::event(QEvent *event) {
         }
     } else if (event->type() == QEvent::FileOpen) {
         QFileOpenEvent *openEvent = static_cast<QFileOpenEvent *>(event);
-        qDebug() << "Open file" << openEvent->file();
-        launchProfileFile("", openEvent->file(), false);
+        auto url = openEvent->url();
+        qDebug() << "Open Url " << url;
+        if(url.isLocalFile()) {
+            launchProfileFile("", url.toLocalFile(), false);
+        } else if(url.isValid()) {
+            launchProfileFile("", url.toString(), false);
+        } else {
+            launchProfileFile("", openEvent->file(), false);
+        }
     }
     return QApplication::event(event);
 }
