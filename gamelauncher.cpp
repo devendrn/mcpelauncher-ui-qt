@@ -194,9 +194,8 @@ void GameLauncher::startFile(QString file) {
     fileprocess.reset(new QProcess);
     QStringList args;
     args.append(file);
-    fileprocess->setProcessChannelMode(QProcess::MergedChannels); 
-    if (m_gamelogopen)
-        logAttached();
+    fileprocess->setProcessChannelMode(QProcess::MergedChannels);
+    logAttached();
     connect(fileprocess.data(), QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), [this](int exitCode, QProcess::ExitStatus exitStatus) {
         emit fileStarted(exitCode == 0);
     });
@@ -210,7 +209,6 @@ void GameLauncher::startFile(QString file) {
     std::string launcherpath;
     if(!(launcherpath = findLauncher("mcpelauncher-client")).empty()) {
         fileprocess->start(QString::fromStdString(launcherpath), args);
-        emit stateChanged();
         return;
     } else {
         emit fileStarted(false);
