@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Layouts 1.2
 import "ThemedControls"
+import QtQuick.Dialogs 1.2
 import io.mrarm.mcpelauncher 1.0
 
 ColumnLayout {
@@ -8,14 +9,24 @@ ColumnLayout {
     width: parent.width
     spacing: 10
 
-    TextEdit {
+    MButton {
+        text: gameLauncher.running ?  qsTr("Import World or Pack") : qsTr("Import World or Pack (pending until launch)")
         Layout.fillWidth: true
-        text: qsTr("If Qt6 fails to open the folder it doesn't report back") + ": https://doc.qt.io/qt-6/qml-qtqml-qt.html#openUrlExternally-method"
-        color: "#fff"
-        font.pointSize: 10
-        readOnly: true
-        wrapMode: Text.WordWrap
-        selectByMouse: true
+        onClicked: filePicker.open()
+    }
+
+    FileDialog {
+        id: filePicker
+        title: "Please pick the Minecraft file"
+        nameFilters: ["Minecraft (*.mcaddon,*.mcpack,*.mcstructure,*.mctemplate,*.mcworld)", "All files (*)"]
+        selectMultiple: true
+
+        onAccepted: {
+            for(var i = 0; i < filePicker.fileUrls.length; i++) {
+                gameLauncher.pendingFiles.push(QmlUrlUtils.urlToLocalFile(filePicker.fileUrls[i]))
+            }
+            gameLauncher.importFiles()
+        }
     }
 
     HorizontalDivider {}
