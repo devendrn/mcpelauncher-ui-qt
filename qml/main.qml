@@ -153,25 +153,44 @@ Window {
         text: qsTr("The Minecraft Version you are trying to run is unsupported.<br/><b>if you wanted to play a new Release please wait patiently for an update,<br/>please choose a compatible version from the profile Editor</b>")
     }
 
+
+
     GameLauncher {
         id: gameLauncher
+
+        property var pendingFiles: []
+
         onLaunchFailed: {
             exited()
             showLaunchError(qsTr("Could not execute the game launcher. Please make sure it's dependencies are properly installed.<br><a href=\"%1\">Click here for more information Linux</a>").arg("https://github.com/minecraft-linux/mcpelauncher-manifest/issues/796"))
         }
         onStateChanged: {
-            if (!running)
+            if (!running) {
                 exited()
+            }
             if (crashed) {
                 application.setVisibleInDock(true)
             }
+            importFiles()
         }
+        onFileStarted: {
+            importFiles()
+        }
+
         onCorruptedInstall: {
             corruptedInstallDialog.open()
         }
         function exited() {
             application.setVisibleInDock(true)
             window.show()
+        }
+        function importFiles() {
+            if (running) {
+                if(pendingFiles.length > 0) {
+                    var file = pendingFiles.shift()
+                    startFile(file)
+                }
+            }
         }
     }
 
