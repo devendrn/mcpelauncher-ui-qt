@@ -56,6 +56,10 @@ void GameLauncher::start(bool disableGameLog, QString arch, bool hasVerifiedLice
             args.append("-tp");
             args.append(QString::number(m_profile->texturePatch == 1));
         }
+        if(m_profile->mods.size()) {
+            args.append("-m");
+            args.append(m_profile->mods.join(','));
+        }
 #ifdef __APPLE__
         if (m_profile->graphicsAPI == 1) {
             env.insert("ANGLE_DEFAULT_PLATFORM", "metal");
