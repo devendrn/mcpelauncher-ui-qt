@@ -42,6 +42,7 @@
         <file>Resources/icon-home.png</file>
         <file>Resources/icon-news.png</file>
         <file>Resources/icon-log.png</file>
+        <file>Resources/icon-mods.png</file>
         <file>qml/ThemedControls/MTabButton.qml</file>
         <file>qml/LauncherSettingsGeneral.qml</file>
         <file>qml/TroubleshooterWindow.qml</file>
@@ -50,6 +51,7 @@
         <file>qml/ApkImportHelper.qml</file>
         <file>qml/GampadTool.qml</file>
         <file>qml/GamepadInputField.qml</file>
+        <file>qml/Mods.qml</file>
         <file>LICENSE</file>
         <file>qml/LauncherUnlock.qml</file>
         <file>Resources/icon-delete.png</file>
