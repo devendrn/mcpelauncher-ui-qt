@@ -50,7 +50,7 @@ Item {
             }
 
             Text {
-                text: qsTr("To use this launcher, you must purchase Minecraft on Google Play and sign in.")
+                text: qsTr("To use this launcher, you must either purchase Minecraft Android or claim the free Minecraft Trial on Google Play and sign in.\nThe free Minecraft (ChromeOS) Trial Mode can be enabled after sign in inside Settings.")
                 wrapMode: Text.WordWrap
                 font.pointSize: 11
                 color: "#fff"
