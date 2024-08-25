@@ -89,7 +89,7 @@ Item {
                     textColor: "#0aa82f"
                     Layout.fillWidth: true
                     font.pointSize: 11
-                    onClicked: Qt.openUrlExternally("https://mcpelauncher.readthedocs.io/en/latest/index.html")
+                    onClicked: Qt.openUrlExternally("https://minecraft-linux.github.io")
                 }
             }
         }
