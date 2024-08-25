@@ -47,7 +47,7 @@ ColumnLayout {
                     "link": "https://discord.gg/TaUNBXr"
                 }, {
                     "label": qsTr("Docs"),
-                    "link": "https://mcpelauncher.readthedocs.io"
+                    "link": "https://minecraft-linux.github.io"
                 }]
             delegate: Text {
                 font.pointSize: 10
