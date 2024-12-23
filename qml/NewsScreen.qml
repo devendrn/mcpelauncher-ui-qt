@@ -8,6 +8,10 @@ ColumnLayout {
     Layout.fillHeight: true
     spacing: 0
 
+    property int articlesPage: 1
+    property bool articlesLoading: false
+    property var newsModel: ListModel {}
+
     BaseHeader {
         Layout.fillWidth: true
         title: qsTr("News")
@@ -21,7 +25,6 @@ ColumnLayout {
     }
 
     ScrollView {
-        id: scrollView
         Layout.fillWidth: true
         Layout.fillHeight: true
         contentHeight: Math.max(gridLayout.height + 2 * gridLayout.padding, availableHeight)
@@ -37,27 +40,25 @@ ColumnLayout {
             rowSpacing: padding
 
             Repeater {
-                id: newsGrid
-                model: null
-
-                Rectangle {
+                model: newsModel
+                delegate: Rectangle {
                     id: contentBox
                     Layout.minimumHeight: gridLayout.cellSize
                     Layout.fillWidth: true
                     Layout.fillHeight: true
-                    Layout.columnSpan: newsImage.ratio > 1.5 ? 2 : 1
-                    Layout.rowSpan: newsImage.ratio < 0.5 ? 2 : 1
+                    Layout.columnSpan: articleImage.ratio > 1.5 ? 2 : 1
+                    Layout.rowSpan: articleImage.ratio < 0.5 ? 2 : 1
                     color: "#222"
 
                     Image {
-                        id: newsImage
+                        id: articleImage
                         property real ratio: sourceSize.width / sourceSize.height
                         anchors.top: parent.top
                         anchors.bottom: descriptionBox.top
                         width: parent.width
                         fillMode: Image.PreserveAspectCrop
-                        source: modelData.image
                         smooth: false
+                        source: image
                     }
 
                     Rectangle {
@@ -71,9 +72,8 @@ ColumnLayout {
                             width: parent.width
                             padding: 15
                             spacing: 5
-
                             Text {
-                                text: modelData.name
+                                text: name
                                 width: parent.width - 2 * parent.padding
                                 color: "#fff"
                                 font.pointSize: 13
@@ -81,7 +81,7 @@ ColumnLayout {
                                 wrapMode: Text.WordWrap
                             }
                             Text {
-                                text: modelData.description
+                                text: description
                                 width: parent.width - 2 * parent.padding
                                 color: "#bbb"
                                 font.pointSize: 10
@@ -96,7 +96,7 @@ ColumnLayout {
 
                     states: State {
                         name: "hovered"
-                        when: mouseArea.hovered
+                        when: mouseArea.containsMouse && !mouseArea.pressed
                     }
 
                     transitions: [
@@ -124,23 +124,15 @@ ColumnLayout {
 
                     MouseArea {
                         id: mouseArea
-                        property bool hovered: false
                         cursorShape: Qt.PointingHandCursor
                         anchors.fill: parent
                         hoverEnabled: true
                         focus: true
                         activeFocusOnTab: true
-
-                        onEntered: hovered = true
-                        onExited: hovered = false
-                        onClicked: {
-                            hovered = false
-                            openArticle()
-                        }
+                        onClicked: openArticle()
                         Keys.onSpacePressed: openArticle()
-
                         function openArticle() {
-                            Qt.openUrlExternally(modelData.url)
+                            Qt.openUrlExternally(url)
                         }
                     }
                 }
@@ -151,71 +143,51 @@ ColumnLayout {
                 Layout.alignment: Qt.AlignHCenter
                 text: qsTr("Load more articles")
                 onClicked: loadNews()
-                visible: articlesCount > 0 && articlesOffset < articlesCount
+                visible: newsModel.count > 0
                 enabled: !articlesLoading
             }
         }
 
         MBusyIndicator {
             anchors.centerIn: parent
-            visible: newsGrid.model === null
+            visible: newsModel.count < 1
         }
     }
 
-    property int articlesCount: 0
-    property int articlesOffset: 0
-    property int articlesPerPage: 20
-    property bool articlesLoading: false
-
     function loadNews() {
         articlesLoading = true
-        var offset = articlesOffset
-        if (articlesCount > 0) {
-            offset += articlesPerPage
-        }
         var req = new XMLHttpRequest()
-        var url = "https://www.minecraft.net/content/minecraft-net/_jcr_content.articles.grid?tileselection=auto&tagsPath=minecraft:stockholm/news,minecraft:stockholm/guides,minecraft:stockholm/events,minecraft:stockholm/minecraft-builds,minecraft:stockholm/marketplace,minecraft:stockholm/deep-dives,minecraft:stockholm/merch,minecraft:article/culture,minecraft:article/insider,minecraft:article/merch,minecraft:article/news&propResPath=/content/minecraft-net/language-masters/en-us/jcr:content/root/generic-container/par/bleeding_page_sectio_1278766118/page-section-par/grid"
-        url += `&offset=${offset}&count=2000&pageSize=${articlesPerPage}&lang=/content/minecraft-net/language-masters/en-us`
-
-        req.open("GET", url, true)
-        req.onerror = function () {
-            console.log("Failed to load news")
+        req.open("GET", `https://www.minecraft.net/content/minecraftnet/language-masters/en-us/articles/jcr:content/root/container/image_grid_a.articles.page-${articlesPage}.json`, true)
+        req.onerror = function (error) {
+            console.error("Failed to load news:", error)
             articlesLoading = false
         }
         req.onreadystatechange = function () {
             if (req.readyState === XMLHttpRequest.DONE) {
                 if (req.status === 200) {
                     parseNewsResponse(JSON.parse(req.responseText))
-                    articlesOffset = offset
+                    articlesPage++
                 } else {
-                    req.onerror()
+                    req.onerror(req.statusText)
                 }
+                articlesLoading = false
             }
-            articlesLoading = false
         }
         req.send()
     }
 
     function parseNewsResponse(resp) {
-        articlesCount = resp.article_count
-        var entries = []
         for (var i = 0; i < resp.article_grid.length; i++) {
-            var e = resp.article_grid[i]
-            var t = e.preferred_tile || e.default_tile
-            if (!t)
-                continue
-            entries.push({
-                             "name": t.title || t.text,
-                             "description": t.sub_header,
-                             "image": "https://www.minecraft.net/" + t.image.imageURL,
-                             "url": "https://minecraft.net/" + e.article_url.substr(1)
-                         })
-            console.log(t.title)
-        }
-        if (newsGrid.model === null) {
-            newsGrid.model = entries
-        } else {
-            newsGrid.model.push(...entries)
+            const e = resp.article_grid[i]
+            const t = e.preferred_tile || e.default_tile
+            if (t) {
+                newsModel.append({
+                                     "name": t.title || t.text,
+                                     "description": t.sub_header,
+                                     "image": `https://www.minecraft.net${t.image.imageURL}`,
+                                     "url": `https://minecraft.net${e.article_url}`
+                                 })
+            }
         }
     }
 
