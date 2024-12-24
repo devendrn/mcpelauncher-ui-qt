@@ -1,189 +1,263 @@
 import QtQuick
 import QtQuick.Window
-import QtQuick.Dialogs
 import QtQuick.Layouts
 import QtQuick.Controls
 import "Components"
 import io.mrarm.mcpelauncher 1.0
 
-Window {
+ApplicationWindow {
     id: gamepadTool
     width: 500
     height: 400
-    minimumWidth: 500
-    minimumHeight: 400
+    minimumWidth: 400
+    minimumHeight: 300
     title: qsTr("Gamepad Tool")
     color: "#333"
 
-    property int margin: 10
-    property bool hasGamepad: GamepadManager.gamepads.length > 0 && control.currentIndex >= 0 && control.currentIndex < GamepadManager.gamepads.length
+    property var currentGamepad: GamepadManager.gamepads.length > 0 ? GamepadManager.gamepads[0] : null
+
+    ColumnLayout {
+        anchors.centerIn: parent
+        visible: !currentGamepad
+        MText {
+            Layout.alignment: Qt.AlignHCenter
+            text: qsTr("No Gamepads Found!")
+            font.bold: true
+            font.pointSize: 12
+        }
+        MText {
+            Layout.alignment: Qt.AlignHCenter
+            text: qsTr("Ensure the gamepad is connected correctly.")
+        }
+    }
 
     ScrollView {
+        visible: !!currentGamepad
         anchors.fill: parent
+        contentWidth: parent.width - 30
+        contentHeight: contentColumn.implicitHeight
+        horizontalPadding: 15
 
-        clip: true
         ColumnLayout {
-            spacing: 0
-            Layout.fillHeight: true
-            width: gamepadTool.width
-            Layout.fillWidth: true
+            id: contentColumn
+            spacing: 5
+            width: parent.width
 
+            MText {
+                text: qsTr("Input")
+                font.bold: true
+                Layout.topMargin: 15
+            }
             MComboBox {
                 id: control
-
-                Layout.topMargin: gamepadTool.margin
-                Layout.leftMargin: gamepadTool.margin
-                Layout.rightMargin: gamepadTool.margin
-
-                property string currentGamepad: ""
-
-                model: {
-                    var ret = []
-                    for (var i = 0; i < GamepadManager.gamepads.length; i++) {
-                        ret.push(GamepadManager.gamepads[i].name)
-                    }
-                    console.log(JSON.stringify(ret))
-                    return ret
-                }
-
-                delegate: ItemDelegate {
-                    width: parent.width
-                    height: 32
-                    text: modelData
-                    highlighted: control.highlightedIndex === index
-
-                    contentItem: Text {
-                        anchors.fill: parent
-                        anchors.leftMargin: parent.padding
-                        anchors.rightMargin: parent.padding
-                        color: "#fff"
-                        anchors.topMargin: 0
-                        text: modelData
-                        font.pointSize: 11
-                        verticalAlignment: Text.AlignVCenter
-                    }
-                }
-
                 Layout.fillWidth: true
-
+                model: GamepadManager.gamepads.map(gamepad => gamepad.name)
                 onActivated: function (index) {
-                    currentGamepad = GamepadManager.gamepads[index].guid
-                    console.log("onActivated: " + index + "/" + currentGamepad)
-                    currentIndex = index
-                    console.log(currentIndex)
+                    currentGamepad = GamepadManager.gamepads[index]
+                    console.log("onActivated: " + index + "/" + currentGamepad.guid)
                 }
-
                 onModelChanged: {
-                    for (var i = 0; i < GamepadManager.gamepads.length; i++) {
-                        if (GamepadManager.gamepads[i].guid == currentGamepad) {
-                            console.log("onModelChanged: found ")
-                            currentIndex = i
-                            break
+                    const gamepadIndex = GamepadManager.gamepads.indexOf(currentGamepad)
+                    if (gamepadIndex !== -1) {
+                        currentIndex = gamepadIndex
+                    }
+                    console.log("onModelChanged: " + gamepadIndex + currentGamepad)
+                }
+                Component.onCompleted: currentIndex = 0
+            }
+
+            RowLayout {
+                Layout.fillWidth: true
+                ColumnLayout {
+                    Layout.fillWidth: true
+                    Layout.minimumWidth: 80
+                    MText {
+                        text: qsTr("GUID")
+                        font.bold: true
+                        Layout.topMargin: 8
+                    }
+                    MTextField {
+                        Layout.fillWidth: true
+                        readOnly: true
+                        text: currentGamepad.guid
+                        color: "#888"
+                    }
+                }
+                ColumnLayout {
+                    Layout.maximumWidth: 110
+                    MText {
+                        text: qsTr("Has Mapping")
+                        font.bold: true
+                        Layout.topMargin: 8
+                    }
+                    MTextField {
+                        Layout.fillWidth: true
+                        readOnly: true
+                        color: "#888"
+                        text: currentGamepad.hasMapping ? "True" : "False"
+                    }
+                }
+            }
+
+            MText {
+                text: qsTr("Set Mapping")
+                font.bold: true
+                Layout.topMargin: 15
+            }
+            GridLayout {
+                columns: Math.floor(parent.width / 220)
+                columnSpacing: 8
+                rowSpacing: 8
+                Repeater {
+                    id: inputRepeater
+                    model: ["a", "b", "x", "y", "leftshoulder", "rightshoulder", "righttrigger", "lefttrigger", "back", "start", "leftstick", "rightstick", "guide", "dpleft", "dpdown", "dpright", "dpup", "leftx", "lefty", "rightx", "righty"]
+                    Rectangle {
+                        id: field
+                        color: "#222"
+                        border.color: "#444"
+                        Layout.fillWidth: true
+                        Layout.minimumHeight: 48
+
+                        property string name: modelData
+                        property var gamepad: currentGamepad
+                        property string key: ""
+                        property bool waiting: false
+
+                        property var oldButtons: []
+                        property var oldAxes: []
+                        property var oldHats: []
+
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.margins: 10
+                            spacing: 2
+                            MText {
+                                text: field.name.toUpperCase()
+                                Layout.fillWidth: true
+                            }
+                            MText {
+                                text: field.waiting ? qsTr("Waiting") : field.key.toUpperCase()
+                                color: field.waiting ? "#888" : "#af8"
+                                Layout.rightMargin: 5
+                            }
+                            MButton {
+                                Layout.preferredHeight: 28
+                                horizontalPadding: 4
+                                text: "..."
+                                onClicked: {
+                                    key = ""
+                                    if (waiting) {
+                                        GamepadManager.enabled = true
+                                        waiting = false
+                                        return
+                                    }
+                                    if (GamepadManager.enabled) {
+                                        GamepadManager.enabled = false
+                                        waiting = true
+
+                                        oldButtons = gamepad.buttons.slice()
+                                        oldAxes = gamepad.axes.slice()
+                                        oldHats = gamepad.hats.slice()
+
+                                        inputCaptureTimer.start()
+                                    }
+                                }
+                            }
+                        }
+
+                        Timer {
+                            id: inputCaptureTimer
+                            interval: 100
+                            repeat: true
+                            running: waiting
+                            onTriggered: {
+                                for (var i = 0; i < gamepad.buttons.length; i++) {
+                                    if (oldButtons[i] !== gamepad.buttons[i]) {
+                                        setKey("b" + i)
+                                        return
+                                    }
+                                }
+                                for (var i = 0; i < gamepad.axes.length; i++) {
+                                    if (Math.abs(oldAxes[i] - gamepad.axes[i]) > 0.5) {
+                                        setKey("a" + i)
+                                        return
+                                    }
+                                }
+                                for (var i = 0; i < gamepad.hats.length; i++) {
+                                    if (oldHats[i] !== gamepad.hats[i]) {
+                                        setKey("h" + i + "." + gamepad.hats[i])
+                                        return
+                                    }
+                                }
+                            }
+                        }
+
+                        function setKey(keyText) {
+                            GamepadManager.enabled = true
+                            waiting = false
+                            key = keyText
+                            inputCaptureTimer.stop()
                         }
                     }
-                    console.log("onModelChanged: " + currentGamepad)
-                    console.log("onModelChanged: " + currentIndex)
                 }
             }
 
-            MTextField {
-                Layout.fillWidth: true
-                Layout.leftMargin: gamepadTool.margin
-                Layout.rightMargin: gamepadTool.margin
-                readOnly: true
-                text: gamepadTool.hasGamepad ? GamepadManager.gamepads[control.currentIndex].guid : qsTr("No Gamepad")
+            MText {
+                text: qsTr("Mapping")
+                font.bold: true
+                Layout.topMargin: 15
             }
-
-            MTextField {
-                Layout.fillWidth: true
-                Layout.leftMargin: gamepadTool.margin
-                Layout.rightMargin: gamepadTool.margin
-                readOnly: true
-                text: gamepadTool.hasGamepad ? GamepadManager.gamepads[control.currentIndex].name : qsTr("No Gamepad")
-            }
-
-            Text {
-                Layout.leftMargin: gamepadTool.margin
-                Layout.rightMargin: gamepadTool.margin
-                text: "Has a gamepad Mapping? " + (gamepadTool.hasGamepad && GamepadManager.gamepads[control.currentIndex].hasMapping ? "true" : "false")
-                color: "#fff"
-            }
-
-            Repeater {
-                id: inputRepeater
-                model: ["a", "b", "x", "y", "leftshoulder", "rightshoulder", "righttrigger", "lefttrigger", "back", "start", "leftstick", "rightstick", "guide", "dpleft", "dpdown", "dpright", "dpup", "leftx", "lefty", "rightx", "righty"]
-                GamepadInputField {
-                    Layout.leftMargin: gamepadTool.margin
-                    Layout.rightMargin: gamepadTool.margin
-                    name: modelData
-                    gamepad: gamepadTool.hasGamepad ? GamepadManager.gamepads[control.currentIndex] : null
-                }
-            }
-
             MTextField {
                 id: gamepadMapping
                 Layout.fillWidth: true
-                Layout.leftMargin: gamepadTool.margin
-                Layout.rightMargin: gamepadTool.margin
+                Layout.preferredHeight: 40
                 readOnly: true
+                color: "#888"
                 text: {
-                    if (gamepadTool.hasGamepad) {
-                        var fields = []
-                        fields.push(GamepadManager.gamepads[control.currentIndex].guid)
-                        fields.push(GamepadManager.gamepads[control.currentIndex].name)
-                        for (var i = 0; i < inputRepeater.count; i++) {
-                            var key = inputRepeater.itemAt(i).key
-                            if (key && key.length > 0) {
-                                fields.push(inputRepeater.itemAt(i).name + ":" + key)
-                            }
+                    var fields = [currentGamepad.guid, currentGamepad.name]
+                    for (var i = 0; i < inputRepeater.count; i++) {
+                        const it = inputRepeater.itemAt(i)
+                        if (it.key) {
+                            fields.push(`${it.name}:${it.key}`)
                         }
-                        return fields.join(",")
                     }
-                    return qsTr("No Gamepad")
+                    return fields.join(",")
                 }
             }
 
-            MButton {
+            GridLayout {
                 Layout.fillWidth: true
-                Layout.leftMargin: gamepadTool.margin
-                Layout.rightMargin: gamepadTool.margin
-                text: qsTr("Save Mapping to current Profile")
-                enabled: gamepadTool.hasGamepad
-                onClicked: {
-                    console.log(gamepadMapping.text)
-                    console.log(QmlUrlUtils.urlToLocalFile(window.getCurrentGameDataDir()))
-                    GamepadManager.saveMapping(QmlUrlUtils.urlToLocalFile(window.getCurrentGameDataDir()), gamepadMapping.text)
-                }
-            }
-
-            MButton {
-                Layout.fillWidth: true
-                Layout.leftMargin: gamepadTool.margin
-                Layout.rightMargin: gamepadTool.margin
-                Layout.bottomMargin: gamepadTool.margin
-                text: qsTr("Save Mapping to default Data directory")
-                enabled: gamepadTool.hasGamepad
-                onClicked: {
-                    console.log(gamepadMapping.text)
-                    console.log(QmlUrlUtils.urlToLocalFile(launcherSettings.gameDataDir))
-                    GamepadManager.saveMapping(QmlUrlUtils.urlToLocalFile(launcherSettings.gameDataDir), gamepadMapping.text)
-                }
-            }
-
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.minimumHeight: pbutton.height + 10 * 2
-
-                color: "#242424"
+                Layout.bottomMargin: 15
+                columns: parent.width > 500 ? 2 : 1
                 MButton {
-                    id: pbutton
-                    anchors.right: parent.right
-                    anchors.verticalCenter: parent.verticalCenter
-                    anchors.margins: 10
-                    text: qsTr("Close")
-                    onClicked: gamepadTool.close()
+                    Layout.fillWidth: true
+                    text: qsTr("Save to current profile")
+                    onClicked: saveMapping(window.getCurrentGameDataDir())
+                }
+                MButton {
+                    Layout.fillWidth: true
+                    text: qsTr("Save to default directory")
+                    onClicked: saveMapping(launcherSettings.gameDataDir)
                 }
             }
+        }
+    }
+
+    function saveMapping(path) {
+        console.log(`Saved to ${path} : ${gamepadMapping.text}`)
+        GamepadManager.saveMapping(QmlUrlUtils.urlToLocalFile(path), gamepadMapping.text)
+    }
+
+    footer: Rectangle {
+        height: pbutton.height + 20
+        color: "#242424"
+        MButton {
+            id: pbutton
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.margins: 10
+            text: qsTr("Close")
+            onClicked: gamepadTool.close()
         }
     }
 }
