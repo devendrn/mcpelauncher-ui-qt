@@ -9,7 +9,6 @@
         <file>qml/TroubleshooterWindow.qml</file>
         <file>qml/ApkImportWindow.qml</file>
         <file>qml/ApkImportHelper.qml</file>
-        <file>qml/GamepadInputField.qml</file>
         <file>qml/BaseScreen.qml</file>
         <file>qml/LoginScreen.qml</file>
         <file>qml/ChangelogScreen.qml</file>
