@@ -13,8 +13,6 @@ ScrollView {
     // ScrollBar.vertical: ScrollBar {
     //     id: control
     //     orientation: Qt.Vertical
-        
-    
     //     contentItem: Rectangle {
     //         implicitWidth: 6
     //         implicitHeight: 100
@@ -23,14 +21,15 @@ ScrollView {
     //     }
     // }
     Component.onCompleted: {
-        ScrollBar.vertical.contentItem.color = Qt.binding(function() { return ScrollBar.vertical.pressed ? "#ffffff" : "#bfbfbf" })
-        console.log(ScrollBar.vertical.contentItem)
+        ScrollBar.vertical.contentItem.color = Qt.binding(function () {
+            return ScrollBar.vertical.pressed ? "#ffffff" : "#bfbfbf"
+        })
     }
 
     Item {
         id: item
         anchors.centerIn: parent
         width: Math.min(parent.width - 30, 760)
-        height: data[0].height
+        height: childrenRect.height
     }
 }

@@ -137,8 +137,9 @@ Window {
 
     GoogleTosApprovalWindow {
         id: googleTosApprovalWindow
-
-        onDone: playApi.setTosApproved(approved, marketing)
+        onDone: function (approved, marketing) {
+            playApi.setTosApproved(approved, marketing)
+        }
     }
 
     MessageDialog {
@@ -225,7 +226,7 @@ Window {
 
     Connections {
         target: googleLoginHelperInstance
-        onLoginError: function (err) {
+        function onLoginError(err) {
             playDownloadError.text = qsTr("The Launcher failed to sign you in\nPlease login again\n%1").arg(err)
             playDownloadError.open()
         }
@@ -233,7 +234,7 @@ Window {
 
     Connections {
         target: window
-        onClosing: {
+        function onClosing() {
             if (true) {
                 if (gameLauncher.running) {
                     close.accepted = false

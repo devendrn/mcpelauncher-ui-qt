@@ -5,7 +5,6 @@ import QtQuick.Window
 import Qt.labs.platform
 
 Window {
-
     property string tosText: "By using this application you agree to the Google Play Terms of Service."
     property string marketingText: "I agree to receive Marketing E-Mails"
 
@@ -19,7 +18,7 @@ Window {
     flags: Qt.Dialog
     title: "Google Play ToS approval"
 
-    onClosing: function () {
+    onClosing: {
         done(tosApproved, marketingApproved)
         tosApproved = false
     }
@@ -51,7 +50,7 @@ Window {
 
             Button {
                 text: "Agree"
-                onClicked: function () {
+                onClicked: {
                     tosApproved = true
                     close()
                 }
@@ -59,7 +58,7 @@ Window {
 
             Button {
                 text: "Disagree"
-                onClicked: function () {
+                onClicked: {
                     tosApproved = false
                     close()
                 }

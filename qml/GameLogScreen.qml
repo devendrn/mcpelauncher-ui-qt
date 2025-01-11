@@ -7,7 +7,6 @@ import io.mrarm.mcpelauncher 1.0
 
 ColumnLayout {
     id: layout
-    anchors.fill: parent
     spacing: 0
     property var launcher: null
 
@@ -92,13 +91,6 @@ ColumnLayout {
                 wrapMode: Text.WordWrap
                 visible: launcherSettings.showBetaVersions
             }
-
-            MouseArea {
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-            }
         }
     }
 
@@ -173,7 +165,7 @@ ColumnLayout {
 
         Connections {
             target: launcher
-            onLogAppended: {
+            function onLogAppended() {
                 if (view.ScrollBar.vertical.position + view.ScrollBar.vertical.size >= 1) {
                     console.log("bottom")
                     moveToBottom.running = true
@@ -182,7 +174,7 @@ ColumnLayout {
         }
 
         Shortcut {
-            sequence: StandardKey.Copy
+            sequences: [StandardKey.Copy]
             onActivated: {
                 var keep = selectionArea.selStartIndex <= selectionArea.selEndIndex
                 var selStartIndex = keep ? selectionArea.selStartIndex : selectionArea.selEndIndex

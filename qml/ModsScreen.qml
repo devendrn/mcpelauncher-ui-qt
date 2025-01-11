@@ -34,6 +34,7 @@ AnimatedStackLayout {
         }
 
         AnimatedStackLayout {
+            id: stackLayout
             currentIndex: tabs.currentIndex
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -42,13 +43,14 @@ AnimatedStackLayout {
                 id: scrollView
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                contentHeight: Math.max(gridLayout.height + 2 * gridLayout.padding, availableHeight)
+                contentHeight: Math.max(gridLayout.implicitHeight + 2 * gridLayout.padding, parent.height)
 
                 GridLayout {
                     id: gridLayout
-                    property int cellSize: Math.min(Math.max(500, window.height / 3), 900)
+                    property int cellSize: Math.min(Math.max(500, stackLayout.height / 3), 900)
                     property int padding: 15
-                    anchors.centerIn: parent
+                    x: padding
+                    y: padding
                     width: parent.width - padding * 2
                     columns: Math.max(Math.round(width / cellSize), 1)
                     columnSpacing: padding
@@ -67,10 +69,9 @@ AnimatedStackLayout {
                             color: "#222"
                             height: iconImage.height + 20
 
-                            Row {
+                            Item {
                                 anchors.fill: parent
                                 anchors.margins: 10
-                                spacing: 10
 
                                 Image {
                                     id: iconImage
@@ -82,7 +83,8 @@ AnimatedStackLayout {
                                 }
 
                                 Column {
-                                    anchors.left: iconImage.right + 10
+                                    anchors.left: iconImage.right
+                                    anchors.leftMargin: 10
                                     height: iconImage.height + 20
                                     width: parent.width - iconImage.width - 30
                                     spacing: 5

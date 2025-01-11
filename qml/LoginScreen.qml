@@ -26,8 +26,8 @@ Item {
     }
 
     Rectangle {
-        width: 400
-        height: container.height + 90
+        width: 420
+        height: container.implicitHeight + 70
         anchors.centerIn: parent
         radius: 4
         visible: !extractingApk
@@ -36,8 +36,9 @@ Item {
         ColumnLayout {
             id: container
             spacing: 10
+            x: 35
+            y: 35
             width: parent.width - 70
-            anchors.centerIn: parent
 
             Text {
                 text: qsTr("Sign in")
@@ -50,7 +51,7 @@ Item {
             }
 
             Text {
-                text: qsTr("To use this launcher, you must either purchase Minecraft Android or claim the free Minecraft Trial on Google Play and sign in.\nThe free Minecraft (ChromeOS) Trial Mode can be enabled after sign in inside Settings.")
+                text: qsTr("To use this launcher, you must either purchase Minecraft Android or claim the free Minecraft Trial on Google Play and sign in.\n\nThe free Minecraft (ChromeOS) Trial Mode can be enabled after sign in inside Settings.")
                 wrapMode: Text.WordWrap
                 font.pointSize: 11
                 color: "#fff"
@@ -165,7 +166,7 @@ Item {
 
         Connections {
             target: apkImportHelper.task
-            onVersionInformationObtained: function(dir, name, code) {
+            function onVersionInformationObtained(dir, name, code) {
                 var profile = profileManagerInstance.defaultProfile
                 profile.versionType = ProfileInfo.LOCKED_CODE
                 profile.versionCode = code
@@ -176,7 +177,7 @@ Item {
 
     Connections {
         target: googleLoginHelper
-        onAccountAcquireFinished: function (acc) {
+        function onAccountAcquireFinished(acc) {
             acquiringAccount = false
             if (acc)
                 root.finished()
@@ -185,7 +186,7 @@ Item {
 
     Connections {
         target: window
-        onClosing: {
+        function onClosing() {
             application.quit()
         }
     }

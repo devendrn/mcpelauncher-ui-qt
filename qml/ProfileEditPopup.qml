@@ -46,14 +46,6 @@ Popup {
             duration: 150
             easing.type: Easing.OutCubic
         }
-        NumberAnimation {
-            target: popupOverlay
-            property: "opacity"
-            from: 0.0
-            to: 1.0
-            duration: 150
-            easing.type: Easing.OutCubic
-        }
     }
 
     exit: Transition {
@@ -248,7 +240,6 @@ Popup {
                         id: dataDirCheck
                         Layout.topMargin: 10
                         text: qsTr("Data directory")
-                        font.pointSize: parent.labelFontSize
                         font.bold: true
                     }
                     RowLayout {
@@ -348,7 +339,6 @@ Popup {
                                 id: windowSizeCheck
                                 text: qsTr("Window size")
                                 font.bold: true
-                                font.pointSize: parent.labelFontSize
                             }
                             RowLayout {
                                 Layout.fillWidth: true

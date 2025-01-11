@@ -17,7 +17,7 @@ BaseScreen {
         Layout.margins: 15
         textFormat: TextEdit.RichText
         text: qsTr("<b><font color=\"#f66\">Sorry your Computer cannot run Minecraft with this Launcher</font></b>, this CPU is too old.<br/><br/>Details:<br/>%1").arg(googleLoginHelper.GetSupportReport())
-        font.pointSize: 11
+        font.pointSize: 10
         color: "#fff"
         readOnly: true
         wrapMode: Text.WordWrap

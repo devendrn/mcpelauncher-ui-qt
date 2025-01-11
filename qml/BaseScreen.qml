@@ -175,11 +175,13 @@ ColumnLayout {
         id: updateCheckerConnectorBase
         target: updateChecker
         enabled: false
-        onUpdateError: function (error) {
+        function onUpdateError(error) {
             updateCheckerConnectorBase.enabled = false
             updateError.text = error
             updateError.open()
         }
-        onProgress: downloadProgress.value = progress
+        function onProgress() {
+            downloadProgress.value = progress
+        }
     }
 }

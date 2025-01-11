@@ -146,7 +146,6 @@ BaseScreen {
         Layout.fillWidth: true
         Layout.fillHeight: true
         id: backgroundArt
-        anchors.fill: parent
         source: wallpaperFolderModel.getRandomImage()
         smooth: true
         fillMode: Image.PreserveAspectCrop

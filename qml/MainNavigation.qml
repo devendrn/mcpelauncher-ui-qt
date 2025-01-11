@@ -5,7 +5,6 @@ import "Components"
 
 RowLayout {
     spacing: 0
-    anchors.fill: parent
     property int currentIndex: 0
     property bool useWideLayout: window.width > 720
 
@@ -106,10 +105,14 @@ RowLayout {
 
     Connections {
         target: gameLauncher
-        onLogCleared: gameLog.clear()
-        onLogAppended: gameLog.append({
-                                          "display": text.substring(0, text.length - 1)
-                                      })
+        function onLogCleared() {
+            gameLog.clear()
+        }
+        function onLogAppended() {
+            gameLog.append({
+                               "display": text.substring(0, text.length - 1)
+                           })
+        }
     }
 
     Component {
