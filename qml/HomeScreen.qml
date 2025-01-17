@@ -9,23 +9,30 @@ import "Components"
 import io.mrarm.mcpelauncher 1.0
 
 BaseScreen {
+    id: rowLayout
+
     property GoogleLoginHelper googleLoginHelper
     property VersionManager versionManager
     property ProfileManager profileManager
     property GooglePlayApi playApiInstance
     property GoogleVersionChannel playVerChannel
+
     property bool isVersionsInitialized: false
-    progressbarVisible: playDownloadTask.active || apkExtractionTask.active
-    progressbarText: {
+    property bool progressbarVisible: playDownloadTask.active || apkExtractionTask.active
+    property string progressbarText: {
         if (playDownloadTask.active)
             return qsTr("Downloading Minecraft...")
         if (apkExtractionTask.active)
             return qsTr("Extracting Minecraft...")
         return qsTr("Please wait...")
     }
-
-    id: rowLayout
-    spacing: 0
+    property bool hasUpdate: false
+    property string updateDownloadUrl: ""
+    property string warnMessage: ""
+    property string warnUrl: ""
+    property var setProgressbarValue: function (value) {
+        downloadProgress.value = value
+    }
 
     headerContent: TabBar {
         background: null
@@ -34,111 +41,148 @@ BaseScreen {
         }
     }
 
-    Rectangle {
-        Layout.alignment: Qt.AlignTop
-        Layout.fillWidth: true
-        Layout.preferredHeight: children[0].implicitHeight + 20
-        color: "#b62"
-        visible: {
-            if (!launcherSettings.showNotifications) {
-                return false
-            }
-            return playApiInstance.googleLoginError.length > 0 || playVerChannel.licenseStatus == 2
-        }
-        z: 2
+    ColumnLayout {
+        visible: launcherSettings.showNotifications
+        spacing: 0
 
-        Text {
-            width: parent.width
-            height: parent.height
-            text: {
-                return (playApiInstance.googleLoginError || playVerChannel.licenseStatus == 2 && qsTr("Access to the Google Play Apk Library has been rejected")) + (!launcherSettings.trialMode && (playVerChannel.licenseStatus == 2) ? qsTr("<br/>You can try this launcher for free by enabling the trial mode") : "")
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: children[0].implicitHeight + 20
+            color: hasUpdate && !(progressbarVisible || updateChecker.active) ? "#23a" : "#a22"
+            visible: hasUpdate && !(progressbarVisible || updateChecker.active) || warnMessage.length > 0
+            Text {
+                width: parent.width
+                height: parent.height
+                text: hasUpdate && !(progressbarVisible || updateChecker.active) ? qsTr("A new version of the launcher is available. Click to download the update.") : warnMessage
+                color: "#fff"
+                font.pointSize: 9
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.Wrap
             }
-            color: "#fff"
-            font.pointSize: 9
-            font.bold: true
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            wrapMode: Text.Wrap
-        }
-    }
 
-    Rectangle {
-        Layout.alignment: Qt.AlignTop
-        Layout.fillWidth: true
-        Layout.preferredHeight: children[0].implicitHeight + 20
-        color: "#b62"
-        visible: {
-            if (!launcherSettings.showNotifications) {
-                return false
-            }
-            return launcherSettings.trialMode
-        }
-        z: 2
-
-        Text {
-            width: parent.width
-            height: parent.height
-            text: {
-                return qsTr("Disable Trial Mode to launch the full version") + (playVerChannel.licenseStatus == 4 ? qsTr(", you also have to buy the trial for free on an android device/vm to download it here") : "")
-            }
-            color: "#fff"
-            font.pointSize: 9
-            font.bold: true
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            wrapMode: Text.Wrap
-        }
-    }
-
-    /* utility functions */
-    function launcherLatestVersionBase() {
-        var abis = googleLoginHelper.getAbis(launcherSettings.showUnsupported)
-        for (var i = 0; i < versionManager.archivalVersions.versions.length; i++) {
-            var ver = versionManager.archivalVersions.versions[i]
-            if (playVerChannel.latestVersionIsBeta && launcherSettings.showBetaVersions || !ver.isBeta) {
-                for (var j = 0; j < abis.length; j++) {
-                    if (ver.abi === abis[j]) {
-                        return ver
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: hasUpdate && !(progressbarVisible || updateChecker.active) || rowLayout.warnUrl.length > 0 ? Qt.PointingHandCursor : Qt.Pointer
+                onClicked: {
+                    if (hasUpdate && !(progressbarVisible || updateChecker.active)) {
+                        if (updateDownloadUrl.length == 0) {
+                            updateCheckerConnectorBase.enabled = true
+                            updateChecker.startUpdate()
+                        } else {
+                            Qt.openUrlExternally(updateDownloadUrl)
+                        }
+                    } else if (rowLayout.warnUrl.length > 0) {
+                        Qt.openUrlExternally(rowLayout.warnUrl)
                     }
                 }
             }
         }
-        if (abis.length == 0) {
-            console.log("Unsupported Device")
-        } else {
-            console.log("Bug: No version")
-        }
-        return {
-            "versionName": "Invalid",
-            "versionCode": 0
-        }
-    }
 
-    Rectangle {
-        Layout.alignment: Qt.AlignTop
-        Layout.fillWidth: true
-        Layout.preferredHeight: children[0].implicitHeight + 20
-        color: "#b62"
-        visible: {
-            if (!launcherSettings.showNotifications || googleLoginHelper.account == null) {
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: children[0].implicitHeight + 20
+            color: "#a72"
+            visible: {
+                for (var i = 0; i < GamepadManager.gamepads.length; i++) {
+                    if (!GamepadManager.gamepads[i].hasMapping) {
+                        return true
+                    }
+                }
                 return false
             }
-            return launcherLatestVersionBase().versionCode > playVerChannelInstance.latestVersionCode
-        }
-        z: 2
 
-        Text {
-            width: parent.width
-            height: parent.height
-            text: {
-                return qsTr("Google Play Version Channel is behind %1 expected %2").arg(playVerChannelInstance.latestVersion).arg(launcherLatestVersionBase().versionName)
+            Text {
+                width: parent.width
+                height: parent.height
+                text: {
+                    var ret = []
+                    for (var i = 0; i < GamepadManager.gamepads.length; i++) {
+                        if (!GamepadManager.gamepads[i].hasMapping) {
+                            ret.push(GamepadManager.gamepads[i].name)
+                        }
+                    }
+                    if (ret.length === 1) {
+                        return qsTr("One Joystick can not be used as Gamepad Input: %1. Open Settings to configure it.").arg(ret.join(", "))
+                    }
+                    return qsTr("%1 Joysticks can not be used as Gamepad Input: %2. Open Settings to configure them.").arg(ret.length).arg(ret.join(", "))
+                }
+                color: "#fff"
+                font.pointSize: 9
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.Wrap
             }
-            color: "#fff"
-            font.pointSize: 9
-            font.bold: true
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-            wrapMode: Text.Wrap
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: children[0].implicitHeight + 20
+            color: "#b62"
+            visible: playApiInstance.googleLoginError.length > 0 || playVerChannel.licenseStatus == 2
+            z: 2
+
+            Text {
+                width: parent.width
+                height: parent.height
+                text: {
+                    return (playApiInstance.googleLoginError || playVerChannel.licenseStatus == 2 && qsTr("Access to the Google Play Apk Library has been rejected")) + (!launcherSettings.trialMode && (playVerChannel.licenseStatus == 2) ? qsTr("<br/>You can try this launcher for free by enabling the trial mode") : "")
+                }
+                color: "#fff"
+                font.pointSize: 9
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.Wrap
+            }
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: children[0].implicitHeight + 20
+            color: "#b62"
+            visible: launcherSettings.trialMode
+            z: 2
+            Text {
+                width: parent.width
+                height: parent.height
+                text: qsTr("Disable Trial Mode to launch the full version") + (playVerChannel.licenseStatus == 4 ? qsTr(", you also have to buy the trial for free on an android device/vm to download it here") : "")
+                color: "#fff"
+                font.pointSize: 9
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.Wrap
+            }
+        }
+
+        Rectangle {
+            Layout.fillWidth: true
+            Layout.preferredHeight: children[0].implicitHeight + 20
+            color: "#b62"
+            visible: {
+                if (googleLoginHelper.account == null) {
+                    return false
+                }
+                return launcherLatestVersionBase().versionCode > playVerChannelInstance.latestVersionCode
+            }
+            z: 2
+
+            Text {
+                width: parent.width
+                height: parent.height
+                text: {
+                    return qsTr("Google Play Version Channel is behind %1 expected %2").arg(playVerChannelInstance.latestVersion).arg(launcherLatestVersionBase().versionName)
+                }
+                color: "#fff"
+                font.pointSize: 9
+                font.bold: true
+                horizontalAlignment: Text.AlignHCenter
+                verticalAlignment: Text.AlignVCenter
+                wrapMode: Text.Wrap
+            }
         }
     }
 
@@ -272,6 +316,58 @@ BaseScreen {
         }
     }
 
+    MProgressBar {
+        property bool showProgressbar: progressbarVisible || updateChecker.active
+        Layout.fillWidth: true
+        id: downloadProgress
+        label: progressbarVisible ? progressbarText : qsTr("Please wait...")
+        width: parent.width
+        visible: showProgressbar || closeAnim.running
+        indeterminate: value < 0.005
+
+        states: State {
+            name: "visible"
+            when: downloadProgress.showProgressbar
+        }
+
+        transitions: [
+            Transition {
+                to: "visible"
+                NumberAnimation {
+                    target: downloadProgress
+                    property: "Layout.preferredHeight"
+                    to: 35
+                    duration: 200
+                    easing.type: Easing.OutCubic
+                }
+                NumberAnimation {
+                    target: downloadProgress
+                    property: "opacity"
+                    from: 0
+                    to: 1
+                    duration: 100
+                }
+            },
+            Transition {
+                id: closeAnim
+                to: "*"
+                NumberAnimation {
+                    target: downloadProgress
+                    property: "Layout.preferredHeight"
+                    to: 0
+                    duration: 200
+                    easing.type: Easing.OutCubic
+                }
+                NumberAnimation {
+                    target: downloadProgress
+                    property: "opacity"
+                    to: 0
+                    duration: 100
+                }
+            }
+        ]
+    }
+
     GoogleApkDownloadTask {
         id: playDownloadTask
         playApi: playApiInstance
@@ -320,7 +416,49 @@ BaseScreen {
         }
     }
 
+    MessageDialog {
+        id: updateError
+        title: "Update Error"
+    }
+
+    Connections {
+        id: updateCheckerConnectorBase
+        target: updateChecker
+        enabled: false
+        function onUpdateError(error) {
+            updateCheckerConnectorBase.enabled = false
+            updateError.text = error
+            updateError.open()
+        }
+        function onProgress() {
+            downloadProgress.value = progress
+        }
+    }
+
     /* utility functions */
+    function launcherLatestVersionBase() {
+        var abis = googleLoginHelper.getAbis(launcherSettings.showUnsupported)
+        for (var i = 0; i < versionManager.archivalVersions.versions.length; i++) {
+            var ver = versionManager.archivalVersions.versions[i]
+            if (playVerChannel.latestVersionIsBeta && launcherSettings.showBetaVersions || !ver.isBeta) {
+                for (var j = 0; j < abis.length; j++) {
+                    if (ver.abi === abis[j]) {
+                        return ver
+                    }
+                }
+            }
+        }
+        if (abis.length == 0) {
+            console.log("Unsupported Device")
+        } else {
+            console.log("Bug: No version")
+        }
+        return {
+            "versionName": "Invalid",
+            "versionCode": 0
+        }
+    }
+
     function launcherLatestVersion() {
         var abis = googleLoginHelper.getAbis(launcherSettings.showUnsupported)
         console.log("launcherLatestVersion: " + JSON.stringify(abis))
