@@ -88,8 +88,6 @@ Window {
                     stackView.push(panelMain)
                 }
             }
-            hasUpdate: window.hasUpdate
-            updateDownloadUrl: window.updateDownloadUrl
         }
     }
 
@@ -109,8 +107,6 @@ Window {
                 launcherSettings.lastVersion = LAUNCHER_VERSION_CODE
                 next()
             }
-            hasUpdate: window.hasUpdate
-            updateDownloadUrl: window.updateDownloadUrl
         }
     }
 
