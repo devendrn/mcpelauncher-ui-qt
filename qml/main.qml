@@ -38,6 +38,10 @@ Window {
         id: profileManagerInstance
     }
 
+    GamepadTool {
+        id: gamepadTool
+    }
+
     Component {
         id: panelLogin
         LoginScreen {
