@@ -138,10 +138,6 @@ ColumnLayout {
         onClicked: gamepadTool.show()
     }
 
-    GamepadTool {
-        id: gamepadTool
-    }
-
     MButton {
         text: qsTr("Refresh Google Play Version Channel")
         onClicked: {

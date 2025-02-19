@@ -34,139 +34,6 @@ BaseScreen {
         }
     }
 
-    ColumnLayout {
-        visible: launcherSettings.showNotifications
-        spacing: 0
-
-        Rectangle {
-            property bool showHasUpdate: hasUpdate && !(progressbarVisible || updateChecker.active)
-            Layout.fillWidth: true
-            Layout.preferredHeight: children[0].implicitHeight + 20
-            color: showHasUpdate ? "#23a" : "#a22"
-            visible: showHasUpdate || warnMessage.length > 0
-            Text {
-                width: parent.width
-                height: parent.height
-                text: parent.showHasUpdate ? qsTr("A new version of the launcher is available. Click to download the update.") : warnMessage
-                color: "#fff"
-                font.pointSize: 9
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                wrapMode: Text.Wrap
-            }
-
-            MouseArea {
-                anchors.fill: parent
-                cursorShape: parent.showHasUpdate || rowLayout.warnUrl.length > 0 ? Qt.PointingHandCursor : Qt.Pointer
-                onClicked: {
-                    if (parent.showHasUpdate) {
-                        if (updateDownloadUrl.length == 0) {
-                            updateCheckerConnectorBase.enabled = true
-                            updateChecker.startUpdate()
-                        } else {
-                            Qt.openUrlExternally(updateDownloadUrl)
-                        }
-                    } else if (rowLayout.warnUrl.length > 0) {
-                        Qt.openUrlExternally(rowLayout.warnUrl)
-                    }
-                }
-            }
-        }
-
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.preferredHeight: children[0].implicitHeight + 20
-            color: "#a72"
-            visible: GamepadManager.gamepads.some(gamepad => !gamepad.hasMapping)
-            Text {
-                width: parent.width
-                height: parent.height
-                text: {
-                    const ret = GamepadManager.gamepads.filter(gamepad => !gamepad.hasMapping).map(gamepad => gamepad.name)
-                    if (ret.length === 1) {
-                        return qsTr("One Joystick can not be used as Gamepad Input: %1. Open Settings to configure it.").arg(ret.join(", "))
-                    }
-                    return qsTr("%1 Joysticks can not be used as Gamepad Input: %2. Open Settings to configure them.").arg(ret.length).arg(ret.join(", "))
-                }
-                color: "#fff"
-                font.pointSize: 9
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                wrapMode: Text.Wrap
-            }
-        }
-
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.preferredHeight: children[0].implicitHeight + 20
-            color: "#b62"
-            visible: playApiInstance.googleLoginError.length > 0 || playVerChannel.licenseStatus == 2
-            z: 2
-
-            Text {
-                width: parent.width
-                height: parent.height
-                text: {
-                    var msg = playApiInstance.googleLoginError || playVerChannel.licenseStatus == 2 && qsTr("Access to the Google Play Apk Library has been rejected")
-                    if (!launcherSettings.trialMode && (playVerChannel.licenseStatus == 2))
-                        msg += qsTr("<br/>You can try this launcher for free by enabling the trial mode")
-                    return msg
-                }
-                color: "#fff"
-                font.pointSize: 9
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                wrapMode: Text.Wrap
-            }
-        }
-
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.preferredHeight: children[0].implicitHeight + 20
-            color: "#b62"
-            visible: launcherSettings.trialMode
-            z: 2
-            Text {
-                width: parent.width
-                height: parent.height
-                text: qsTr("Disable Trial Mode to launch the full version") + (playVerChannel.licenseStatus == 4 ? qsTr(", you also have to buy the trial for free on an android device/vm to download it here") : "")
-                color: "#fff"
-                font.pointSize: 9
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                wrapMode: Text.Wrap
-            }
-        }
-
-        Rectangle {
-            Layout.fillWidth: true
-            Layout.preferredHeight: children[0].implicitHeight + 20
-            color: "#b62"
-            visible: {
-                if (googleLoginHelper.account == null)
-                    return false
-                return launcherLatestVersionBase().versionCode > playVerChannelInstance.latestVersionCode
-            }
-            z: 2
-
-            Text {
-                width: parent.width
-                height: parent.height
-                text: qsTr("Google Play Version Channel is behind %1 expected %2").arg(playVerChannelInstance.latestVersion).arg(launcherLatestVersionBase().versionName)
-                color: "#fff"
-                font.pointSize: 9
-                font.bold: true
-                horizontalAlignment: Text.AlignHCenter
-                verticalAlignment: Text.AlignVCenter
-                wrapMode: Text.Wrap
-            }
-        }
-    }
-
     Image {
         Layout.fillWidth: true
         Layout.fillHeight: true
@@ -174,6 +41,7 @@ BaseScreen {
         source: wallpaperFolderModel.getRandomImage()
         smooth: true
         fillMode: Image.PreserveAspectCrop
+
         FolderListModel {
             id: wallpaperFolderModel
             nameFilters: ["*.jpg", "*.jpeg", "*.png"]
@@ -186,6 +54,95 @@ BaseScreen {
                     return "file://" + get(Math.random() * count, "filePath")
                 }
                 return "qrc:/Resources/noise.png"
+            }
+        }
+
+        Flickable {
+            height: Math.min(parent.height, contentHeight)
+            width: Math.min(parent.width - 30, 640)
+            contentWidth: width
+            contentHeight: notifyColumn.height
+            x: (parent.width - width) / 2
+            visible: launcherSettings.showNotifications
+
+            Column {
+                id: notifyColumn
+                width: parent.width
+                spacing: 10
+                topPadding: 15
+                bottomPadding: 15
+
+                NotifyBanner {
+                    color: "#832"
+                    title: qsTr("Warning")
+                    description: warnMessage
+                    actionText: rowLayout.warnUrl ? qsTr("See Wiki") : ""
+                    visible: warnMessage
+                    dismissable: false
+                    onClicked: {
+                        Qt.openUrlExternally(rowLayout.warnUrl)
+                    }
+                }
+
+                NotifyBanner {
+                    color: "#444"
+                    title: qsTr("Unconfigured Joysticks Found")
+                    description: {
+                        const ret = GamepadManager.gamepads.filter(gamepad => !gamepad.hasMapping).map(gamepad => gamepad.name)
+                        if (ret.length === 1)
+                            return qsTr("One Joystick cannot be used as Gamepad Input:\n%1.").arg(ret.join(", "))
+                        return qsTr("%1 Joysticks cannot be used as Gamepad Input:\n%2.").arg(ret.length).arg(ret.join(", "))
+                    }
+                    actionText: "Configure"
+                    visible: GamepadManager.gamepads.some(gamepad => !gamepad.hasMapping)
+                    onClicked: gamepadTool.show()
+                }
+
+                NotifyBanner {
+                    color: "#652"
+                    visible: launcherSettings.trialMode
+                    dismissable: false
+                    title: qsTr("Trial Mode Enabled")
+                    description: {
+                        const msg = qsTr("Disable trial mode from settings to launch the full version instead. ")
+                        return playVerChannel.licenseStatus == 4 ? qsTr("You must first buy \"Minecraft Trial\" on an Android device or VM to download it here. ") + msg : msg
+                    }
+                }
+
+                NotifyBanner {
+                    color: "#832"
+                    title: qsTr("Play Version is behind")
+                    description: qsTr("Google Play Version Channel is behind. Got %1. Expected %2.").arg(playVerChannelInstance.latestVersion).arg(launcherLatestVersionBase().versionName)
+                    visible: (googleLoginHelper.account !== null) && launcherLatestVersionBase().versionCode > playVerChannelInstance.latestVersionCode
+                }
+
+                NotifyBanner {
+                    visible: hasUpdate && !(progressbarVisible || updateChecker.active)
+                    title: qsTr("Update available")
+                    description: qsTr("A new version of the launcher is available.")
+                    actionText: qsTr("Download")
+                    onClicked: {
+                        if (updateDownloadUrl.length == 0) {
+                            updateCheckerConnectorBase.enabled = true
+                            updateChecker.startUpdate()
+                        } else {
+                            Qt.openUrlExternally(updateDownloadUrl)
+                        }
+                    }
+                }
+
+                NotifyBanner {
+                    color: "#832"
+                    dismissable: false
+                    title: qsTr("Error")
+                    visible: playApiInstance.googleLoginError.length > 0 || playVerChannel.licenseStatus == 2
+                    description: {
+                        var msg = playApiInstance.googleLoginError || playVerChannel.licenseStatus == 2 && qsTr("Access to the Google Play Apk Library has been rejected.")
+                        if (!launcherSettings.trialMode && (playVerChannel.licenseStatus == 2))
+                            msg += qsTr("\nYou can try this launcher for free by enabling the trial mode.")
+                        return msg
+                    }
+                }
             }
         }
     }
@@ -429,9 +386,8 @@ BaseScreen {
         onFinished: launchGame()
         allowedPackages: {
             var packages = ["com.mojang.minecrafttrialpe", "com.mojang.minecraftedu"]
-            if (!launcherSettings.trialMode) {
+            if (!launcherSettings.trialMode)
                 packages.push("com.mojang.minecraftpe")
-            }
             return packages
         }
     }
@@ -597,7 +553,7 @@ BaseScreen {
     function checkGooglePlayLatestSupport() {
         if (versionManager.archivalVersions.versions.length === 0) {
             console.log("Bug errata 1")
-            rowLayout.warnMessage = qsTr("No mcpelauncher-versiondb loaded cannot check support")
+            rowLayout.warnMessage = qsTr("mcpelauncher-versiondb not loaded. Cannot check Minecraft version compatibility.")
             rowLayout.warnUrl = ""
             return true
         }
@@ -609,7 +565,7 @@ BaseScreen {
 
         // Handle latest is beta, beta isn't enabled
         if (playVerChannel.latestVersionIsBeta && !launcherSettings.showBetaVersions) {
-            rowLayout.warnMessage = qsTr("Latest Minecraft Version %1 is a beta version, which are hidden by default (Click here for more Information)").arg(playVerChannel.latestVersion + (playVerChannel.latestVersionIsBeta ? " (beta)" : ""))
+            rowLayout.warnMessage = qsTr("Latest Minecraft Version %1 is a beta version, which is hidden by default.").arg(playVerChannel.latestVersion + (playVerChannel.latestVersionIsBeta ? " (beta)" : ""))
             rowLayout.warnUrl = "https://github.com/minecraft-linux/mcpelauncher-manifest/issues/797"
             return false
         }
@@ -633,7 +589,7 @@ BaseScreen {
             }
         }
 
-        rowLayout.warnMessage = qsTr("Latest Minecraft Version %1 compatibility is Unknown, supporting new Minecraft Versions is a feature Request (Click here for more Information)").arg(playVerChannel.latestVersion + (playVerChannel.latestVersionIsBeta ? " (beta)" : ""))
+        rowLayout.warnMessage = qsTr("Compatibility for latest Minecraft version %1 is unknown. Support for new Minecraft versions is a feature request.").arg(playVerChannel.latestVersion + (playVerChannel.latestVersionIsBeta ? " (beta)" : ""))
         rowLayout.warnUrl = "https://github.com/minecraft-linux/mcpelauncher-manifest/issues/797"
         return false
     }
