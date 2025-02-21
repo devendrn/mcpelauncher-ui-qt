@@ -20,7 +20,6 @@ Rectangle {
         x: 15
         y: 15
         width: parent.width - 30
-        spacing: 0
 
         Column {
             id: textColumn
@@ -51,16 +50,20 @@ Rectangle {
                 id: actionButton
                 text: control.actionText
                 textColor: (hovered && !pressed) ? "#fff" : parent.color
-                background: Item {}
+                background: FocusBorder {
+                    anchors.fill: parent
+                    visible: parent.visualFocus
+                }
                 font.bold: true
                 font.pointSize: 10
-                onClicked: control.clicked()
-                visible: text
                 height: parent.height
                 width: implicitContentWidth + 26
+                onClicked: control.clicked()
+                visible: text
+                padding: 0
             }
             Rectangle {
-                y: 10
+                y: 8
                 width: 2
                 height: parent.height - 16
                 visible: dismissButton.visible && actionButton.visible
@@ -70,14 +73,18 @@ Rectangle {
             }
             TransparentButton {
                 id: dismissButton
-                visible: control.dismissable
-                textColor: (hovered && !pressed) ? "#fff" : parent.color
-                background: Item {}
-                height: parent.height
-                width: 36
                 text: "⨯"
+                textColor: (hovered && !pressed) ? "#fff" : parent.color
+                background: FocusBorder {
+                    anchors.fill: parent
+                    visible: parent.visualFocus
+                }
                 font.bold: true
                 font.pointSize: 12
+                visible: control.dismissable
+                height: parent.height
+                width: 36
+                padding: 0
                 onClicked: {
                     control.visible = false
                 }
