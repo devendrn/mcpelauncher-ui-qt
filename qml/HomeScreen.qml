@@ -3,7 +3,6 @@ import QtQuick.Window
 import QtQuick.Dialogs
 import QtQuick.Layouts
 import QtQuick.Controls
-import Qt.labs.platform
 import Qt.labs.folderlistmodel
 import "Components"
 import io.mrarm.mcpelauncher 1.0
@@ -39,7 +38,7 @@ BaseScreen {
         Layout.fillHeight: true
         id: backgroundArt
         source: wallpaperFolderModel.getRandomImage()
-        smooth: true
+        smooth: sourceSize.height > 256
         fillMode: Image.PreserveAspectCrop
 
         FolderListModel {
@@ -48,12 +47,10 @@ BaseScreen {
             folder: launcherSettings.gameDataDir + "/background_art"
             showDirs: false
             showOnlyReadable: true
-
             function getRandomImage() {
-                if (count > 0) {
+                if (count > 0)
                     return "file://" + get(Math.random() * count, "filePath")
-                }
-                return "qrc:/Resources/noise.png"
+                return "qrc:/Resources/artwork0.png"
             }
         }
 
