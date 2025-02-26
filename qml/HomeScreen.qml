@@ -8,12 +8,12 @@ import "Components"
 import io.mrarm.mcpelauncher 1.0
 
 BaseScreen {
-    id: rowLayout
+    id: playScreen
 
     property GoogleLoginHelper googleLoginHelper
     property VersionManager versionManager
     property ProfileManager profileManager
-    property GooglePlayApi playApiInstance
+    property GooglePlayApi playApi
     property GoogleVersionChannel playVerChannel
 
     property bool isVersionsInitialized: false
@@ -22,9 +22,11 @@ BaseScreen {
     property string updateDownloadUrl: ""
     property string warnMessage: ""
     property string warnUrl: ""
-    property var setProgressbarValue: function (value) {
-        downloadProgress.value = value
-    }
+
+    property bool statusChecking: !isVersionsInitialized || playVerChannel.licenseStatus === 0 || playVerChannel.licenseStatus === 1
+    property string activeVersionName: getDisplayedVersionName()
+    property bool activeVersionNeedsDownload: needsDownload()
+    property bool activeVersionSupported: checkSupport()
 
     headerContent: TabBar {
         background: null
@@ -34,9 +36,9 @@ BaseScreen {
     }
 
     Image {
+        id: backgroundArt
         Layout.fillWidth: true
         Layout.fillHeight: true
-        id: backgroundArt
         source: wallpaperFolderModel.getRandomImage()
         smooth: sourceSize.height > 256
         fillMode: Image.PreserveAspectCrop
@@ -70,14 +72,89 @@ BaseScreen {
                 bottomPadding: 15
 
                 NotifyBanner {
+                    id: playStatusNotify
+
+                    function actionViewLog() {
+                        mainNavigation.updateIndex(3) // 3 = game log page
+                    }
+                    function actionSignIn() {
+                        if (googleLoginHelper.account !== null)
+                            playVerChannel.playApi = playApi
+                        else
+                            googleLoginHelper.acquireAccount(window)
+                    }
+                    function actionUnsupportedWiki() {
+                        Qt.openUrlExternally("https://github.com/minecraft-linux/mcpelauncher-manifest/issues/797")
+                    }
+                    function actionRetryCheck() {
+                        actionSignIn()
+                    }
+
+                    property var statusMsg: {
+                        if (playScreen.statusChecking)
+                            return {}
+                        if (gameLauncher.running)
+                            return {
+                                "title": qsTr("Game is running"),
+                                "description": qsTr("Exit game to edit or change profile."),
+                                "actionText": qsTr("View log"),
+                                "action": actionViewLog,
+                                "color": "#262"
+                            }
+                        if (googleLoginHelper.account === null)
+                            return {
+                                "title": qsTr("Action required"),
+                                "description": qsTr("Please sign into your Google Play account."),
+                                "actionText": qsTr("Sign in"),
+                                "action": actionSignIn
+                            }
+                        if ((!playVerChannel.hasVerifiedLicense && LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK && !launcherSettings.trialMode) || (activeVersionNeedsDownload && playVerChannel.licenseStatus !== 3))
+                            return {
+                                "title": qsTr("Can't verify license"),
+                                "description": qsTr("You should have purchased Minecraft%1 in your Google Play account to download it here. If you have used a wrong account, please sign out and sign in again.").arg(launcherSettings.trialMode ? " (Trial)" : ""),
+                                "actionText": qsTr("Retry"),
+                                "action": actionRetryCheck
+                            }
+                        if (!playScreen.activeVersionName)
+                            return {}
+                        if (!playScreen.activeVersionSupported)
+                            return {
+                                "title": qsTr("Unsupported version"),
+                                "description": qsTr("The Minecraft version you have selected for the current profile is unsupported or untested. Support for new version is a feature request."),
+                                "actionText": qsTr("See wiki"),
+                                "action": actionUnsupportedWiki
+                            }
+                        if (activeVersionNeedsDownload && profileManager.activeProfile.versionType === ProfileInfo.LATEST_GOOGLE_PLAY && googleLoginHelper.hideLatest)
+                            return {
+                                "title": qsTr("Action required"),
+                                "description": qsTr("Please sign in again into your Google Play account."),
+                                "actionText": qsTr("Sign in"),
+                                "action": actionSignIn
+                            }
+                        return {}
+                    }
+
+                    title: statusMsg.title || ""
+                    description: statusMsg.description || ""
+                    actionText: statusMsg.actionText || ""
+                    color: statusMsg.color || "#832"
+                    visible: !!statusMsg.title
+                    dismissable: false
+                    onClicked: {
+                        if (statusMsg.action)
+                            statusMsg.action()
+                    }
+                }
+
+                NotifyBanner {
                     color: "#832"
                     title: qsTr("Warning")
                     description: warnMessage
-                    actionText: rowLayout.warnUrl ? qsTr("See Wiki") : ""
+                    actionText: playScreen.warnUrl ? qsTr("See Wiki") : ""
                     visible: warnMessage
                     dismissable: false
                     onClicked: {
-                        Qt.openUrlExternally(rowLayout.warnUrl)
+                        Qt.openUrlExternally(playScreen.warnUrl)
                     }
                 }
 
@@ -98,6 +175,7 @@ BaseScreen {
                 NotifyBanner {
                     color: "#652"
                     visible: launcherSettings.trialMode
+
                     dismissable: false
                     title: qsTr("Trial Mode Enabled")
                     description: {
@@ -109,8 +187,8 @@ BaseScreen {
                 NotifyBanner {
                     color: "#832"
                     title: qsTr("Play Version is behind")
-                    description: qsTr("Google Play Version Channel is behind. Got %1. Expected %2.").arg(playVerChannelInstance.latestVersion).arg(launcherLatestVersionBase().versionName)
-                    visible: (googleLoginHelper.account !== null) && launcherLatestVersionBase().versionCode > playVerChannelInstance.latestVersionCode
+                    description: qsTr("Google Play Version Channel is behind. Got %1. Expected %2.").arg(playVerChannel.latestVersion).arg(launcherLatestVersionBase().versionName)
+                    visible: (googleLoginHelper.account !== null) && launcherLatestVersionBase().versionCode > playVerChannel.latestVersionCode
                 }
 
                 NotifyBanner {
@@ -132,9 +210,9 @@ BaseScreen {
                     color: "#832"
                     dismissable: false
                     title: qsTr("Error")
-                    visible: playApiInstance.googleLoginError.length > 0 || playVerChannel.licenseStatus == 2
+                    visible: playApi.googleLoginError.length > 0 || playVerChannel.licenseStatus == 2
                     description: {
-                        var msg = playApiInstance.googleLoginError || playVerChannel.licenseStatus == 2 && qsTr("Access to the Google Play Apk Library has been rejected.")
+                        var msg = playApi.googleLoginError || playVerChannel.licenseStatus == 2 && qsTr("Access to the Google Play Apk Library has been rejected.")
                         if (!launcherSettings.trialMode && (playVerChannel.licenseStatus == 2))
                             msg += qsTr("\nYou can try this launcher for free by enabling the trial mode.")
                         return msg
@@ -147,9 +225,9 @@ BaseScreen {
     ProfileEditPopup {
         id: profileEditPopup
         onAboutToHide: profileComboBox.onAddProfileResult(profileEditPopup.profile)
-        versionManager: rowLayout.versionManager
-        profileManager: rowLayout.profileManager
-        playVerChannel: rowLayout.playVerChannel
+        versionManager: playScreen.versionManager
+        profileManager: playScreen.profileManager
+        playVerChannel: playScreen.playVerChannel
     }
 
     Rectangle {
@@ -164,8 +242,8 @@ BaseScreen {
             x: 10
 
             ProfileComboBox {
-                property bool loaded: false
                 id: profileComboBox
+                property bool loaded: false
                 Layout.preferredWidth: 170
                 Layout.fillHeight: true
                 onAddProfileSelected: {
@@ -180,29 +258,27 @@ BaseScreen {
                     loaded = true
                 }
                 onCurrentProfileChanged: {
-                    if (loaded && currentProfile !== null) {
+                    if (loaded && currentProfile !== null)
                         profileManager.activeProfile = currentProfile
-                    }
                 }
-
-                enabled: !(playDownloadTask.active || apkExtractionTask.active || gameLauncher.running)
+                enabled: !(progressbarVisible || gameLauncher.running || googleLoginHelper.account === null)
             }
 
             MButton {
                 Layout.preferredHeight: parent.height
                 Layout.preferredWidth: parent.height
                 z: hovered ? 1 : -1
+                enabled: profileComboBox.enabled
+                onClicked: {
+                    profileEditPopup.setProfile(profileComboBox.getProfile())
+                    profileEditPopup.open()
+                }
                 Image {
                     anchors.centerIn: parent
                     source: "qrc:/Resources/icon-edit.svg"
                     height: 24
                     width: 24
                     opacity: enabled ? 1.0 : 0.3
-                }
-                enabled: !(playDownloadTask.active || apkExtractionTask.active || gameLauncher.running)
-                onClicked: {
-                    profileEditPopup.setProfile(profileComboBox.getProfile())
-                    profileEditPopup.open()
                 }
             }
         }
@@ -211,69 +287,26 @@ BaseScreen {
             id: pbutton
             x: parent.width > 700 ? (parent.width - width) / 2 : (parent.width - width - 12)
             y: 54 - height
-            width: Math.min(Math.max(Math.max(implicitWidth, 230), rowLayout.width / 4), 320)
+            width: Math.min(Math.max(Math.max(implicitWidth, 230), playScreen.width / 4), 320)
             Layout.alignment: Qt.AlignHCenter
-
-            property bool canDownload: googleLoginHelper.account !== null && playVerChannel.licenseStatus == 3
-            property bool statusChecking: !isVersionsInitialized || playVerChannel.licenseStatus === 0 || playVerChannel.licenseStatus === 1
-            property string displayedVersionName: getDisplayedVersionName()
-
             text: {
-                if (statusChecking)
+                if (playScreen.statusChecking || !playScreen.activeVersionName)
                     return ""
-
-                if (gameLauncher.running)
-                    return qsTr("Game is running").toUpperCase()
-
-                if (googleLoginHelper.account === null)
-                    return qsTr("Sign in").toUpperCase()
-
-                if (!playVerChannel.hasVerifiedLicense && LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK && !launcherSettings.trialMode)
-                    return qsTr("Ask Google Again").toUpperCase()
-
-                if (!displayedVersionName)
-                    return ""
-
-                if (!checkSupport())
-                    return qsTr("Unsupported Version").toUpperCase()
-
-                if (needsDownload()) {
-                    if (profileManager.activeProfile.versionType === ProfileInfo.LATEST_GOOGLE_PLAY && googleLoginHelper.hideLatest)
-                        return qsTr("Please sign in again").toUpperCase()
-                    return qsTr("Download and play").toUpperCase()
-                }
-
-                return qsTr("Play").toUpperCase()
+                return (playScreen.needsDownload ? qsTr("Download and play") : qsTr("Play")).toUpperCase()
             }
-
             subText: {
-                if (statusChecking)
+                if (playScreen.statusChecking)
                     return ""
-
-                if (displayedVersionName)
-                    return "Minecraft " + displayedVersionName
-
-                if (googleLoginHelper.account === null || (needsDownload() && profileManager.activeProfile.versionType === ProfileInfo.LATEST_GOOGLE_PLAY && googleLoginHelper.hideLatest))
-                    return ""
-
-                return qsTr("Please wait")
+                return playScreen.activeVersionName ? ("Minecraft " + playScreen.activeVersionName) : qsTr("Unknown")
             }
-
-            enabled: !(gameLauncher.running || statusChecking || playDownloadTask.active || apkExtractionTask.active || updateChecker.active || !checkSupport() || !displayedVersionName)
-
+            enabled: !(gameLauncher.running || playScreen.statusChecking || progressbarVisible || updateChecker.active || !playScreen.activeVersionSupported || !playScreen.activeVersionName || playStatusNotify.visible)
             onClicked: {
-                if ((!playVerChannel.hasVerifiedLicense || (!canDownload && needsDownload())) && LAUNCHER_ENABLE_GOOGLE_PLAY_LICENCE_CHECK) {
-                    if (googleLoginHelper.account !== null) {
-                        playVerChannel.playApi = playApiInstance
-                    } else {
-                        googleLoginHelper.acquireAccount(window)
-                    }
-                } else if (needsDownload()) {
+                if (playScreen.needsDownload) {
                     playDownloadTask.versionCode = getDownloadVersionCode()
                     if (playDownloadTask.versionCode === 0)
                         return
 
-                    setProgressbarValue(0)
+                    progressBar.value = 0
                     const rawname = getRawVersionsName()
                     const partialDownload = !needsFullDownload(rawname)
                     if (partialDownload)
@@ -288,7 +321,7 @@ BaseScreen {
     }
 
     MProgressBar {
-        id: downloadProgress
+        id: progressBar
         property bool showProgressbar: progressbarVisible || updateChecker.active
         Layout.fillWidth: true
         label: {
@@ -303,21 +336,21 @@ BaseScreen {
 
         states: State {
             name: "visible"
-            when: downloadProgress.showProgressbar
+            when: progressBar.showProgressbar
         }
 
         transitions: [
             Transition {
                 to: "visible"
                 NumberAnimation {
-                    target: downloadProgress
+                    target: progressBar
                     property: "Layout.preferredHeight"
                     to: 35
                     duration: 200
                     easing.type: Easing.OutCubic
                 }
                 NumberAnimation {
-                    target: downloadProgress
+                    target: progressBar
                     property: "opacity"
                     from: 0
                     to: 1
@@ -328,14 +361,14 @@ BaseScreen {
                 id: closeAnim
                 to: "*"
                 NumberAnimation {
-                    target: downloadProgress
+                    target: progressBar
                     property: "Layout.preferredHeight"
                     to: 0
                     duration: 200
                     easing.type: Easing.OutCubic
                 }
                 NumberAnimation {
-                    target: downloadProgress
+                    target: progressBar
                     property: "opacity"
                     to: 0
                     duration: 100
@@ -346,10 +379,12 @@ BaseScreen {
 
     GoogleApkDownloadTask {
         id: playDownloadTask
-        playApi: playApiInstance
+        playApi: playScreen.playApi
         packageName: launcherSettings.trialMode ? "com.mojang.minecrafttrialpe" : "com.mojang.minecraftpe"
         keepApks: launcherSettings.downloadOnly || launcherSettings.keepApks
-        onProgress: setProgressbarValue(progress)
+        onProgress: {
+            progressBar.value = progress
+        }
         onError: function (err) {
             if (playDownloadError.visible) {
                 playDownloadError.text += "\n" + err
@@ -373,8 +408,10 @@ BaseScreen {
 
     ApkExtractionTask {
         id: apkExtractionTask
-        versionManager: rowLayout.versionManager
-        onProgress: setProgressbarValue(progress)
+        versionManager: playScreen.versionManager
+        onProgress: {
+            progressBar.value = progress
+        }
         allowIncompatible: launcherSettings.showUnsupported
         onError: function (err) {
             playDownloadError.text = qsTr("Error while extracting the downloaded file(s), <a href=\"https://github.com/minecraft-linux/mcpelauncher-ui-manifest/issues\">please report this error</a>: %1").arg(err)
@@ -404,7 +441,7 @@ BaseScreen {
             updateError.open()
         }
         function onProgress() {
-            downloadProgress.value = progress
+            progressBar.value = progress
         }
     }
 
@@ -441,7 +478,7 @@ BaseScreen {
         }
         if (checkGooglePlayLatestSupport()) {
             console.log("Use play version")
-            return rowLayout.playVerChannel.latestVersionCode
+            return playScreen.playVerChannel.latestVersionCode
         } else {
             console.log("Use compat version")
             const ver = launcherLatestVersion()
@@ -498,8 +535,8 @@ BaseScreen {
         if (archiveInfo !== null && (ver === null || ver.archs.length === 1 && ver.archs[0] === archiveInfo.abi)) {
             return archiveInfo.versionName + " (" + archiveInfo.abi + ((archiveInfo.isBeta ? ", beta" : "") + ")")
         }
-        if (code === rowLayout.playVerChannel.latestVersionCode)
-            return rowLayout.playVerChannel.latestVersion + (playVerChannel.latestVersionIsBeta ? " (beta)" : "")
+        if (code === playScreen.playVerChannel.latestVersionCode)
+            return playScreen.playVerChannel.latestVersion + (playVerChannel.latestVersionIsBeta ? " (beta)" : "")
         if (ver !== null) {
             const profile = profileManager.activeProfile
             return qsTr("%1  (%2, %3)").arg(ver.versionName).arg(code).arg(profile.arch.length ? profile.arch : ver.archs.join(", "))
@@ -550,8 +587,8 @@ BaseScreen {
     function checkGooglePlayLatestSupport() {
         if (versionManager.archivalVersions.versions.length === 0) {
             console.log("Bug errata 1")
-            rowLayout.warnMessage = qsTr("mcpelauncher-versiondb not loaded. Cannot check Minecraft version compatibility.")
-            rowLayout.warnUrl = ""
+            playScreen.warnMessage = qsTr("mcpelauncher-versiondb not loaded. Cannot check Minecraft version compatibility.")
+            playScreen.warnUrl = ""
             return true
         }
 
@@ -562,8 +599,8 @@ BaseScreen {
 
         // Handle latest is beta, beta isn't enabled
         if (playVerChannel.latestVersionIsBeta && !launcherSettings.showBetaVersions) {
-            rowLayout.warnMessage = qsTr("Latest Minecraft Version %1 is a beta version, which is hidden by default.").arg(playVerChannel.latestVersion + (playVerChannel.latestVersionIsBeta ? " (beta)" : ""))
-            rowLayout.warnUrl = "https://github.com/minecraft-linux/mcpelauncher-manifest/issues/797"
+            playScreen.warnMessage = qsTr("Latest Minecraft Version %1 is a beta version, which is hidden by default.").arg(playVerChannel.latestVersion + (playVerChannel.latestVersionIsBeta ? " (beta)" : ""))
+            playScreen.warnUrl = "https://github.com/minecraft-linux/mcpelauncher-manifest/issues/797"
             return false
         }
 
@@ -579,15 +616,15 @@ BaseScreen {
         if (archiveInfo !== null) {
             if (playVerChannel.latestVersionIsBeta && (launcherSettings.showBetaVersions || launcherSettings.showUnsupported) || !archiveInfo.isBeta) {
                 if (googleLoginHelper.getAbis(launcherSettings.showUnsupported).includes(archiveInfo.abi)) {
-                    rowLayout.warnMessage = ""
-                    rowLayout.warnUrl = ""
+                    playScreen.warnMessage = ""
+                    playScreen.warnUrl = ""
                     return true
                 }
             }
         }
 
-        rowLayout.warnMessage = qsTr("Compatibility for latest Minecraft version %1 is unknown. Support for new Minecraft versions is a feature request.").arg(playVerChannel.latestVersion + (playVerChannel.latestVersionIsBeta ? " (beta)" : ""))
-        rowLayout.warnUrl = "https://github.com/minecraft-linux/mcpelauncher-manifest/issues/797"
+        playScreen.warnMessage = qsTr("Compatibility for latest Minecraft version %1 is unknown. Support for new Minecraft versions is a feature request.").arg(playVerChannel.latestVersion + (playVerChannel.latestVersionIsBeta ? " (beta)" : ""))
+        playScreen.warnUrl = "https://github.com/minecraft-linux/mcpelauncher-manifest/issues/797"
         return false
     }
 
