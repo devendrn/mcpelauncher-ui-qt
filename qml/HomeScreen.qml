@@ -78,10 +78,12 @@ BaseScreen {
                         mainNavigation.updateIndex(3) // 3 = game log page
                     }
                     function actionSignIn() {
-                        if (googleLoginHelper.account !== null)
+                        if (googleLoginHelper.account !== null) {
+                            playVerChannel.playApi = null
                             playVerChannel.playApi = playApi
-                        else
+                        } else {
                             googleLoginHelper.acquireAccount(window)
+                        }
                     }
                     function actionUnsupportedWiki() {
                         Qt.openUrlExternally("https://github.com/minecraft-linux/mcpelauncher-manifest/issues/797")
