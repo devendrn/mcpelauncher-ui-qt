@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls
 import QtQuick.Layouts
 import "Components"
 
@@ -13,17 +14,43 @@ ColumnLayout {
         property bool accountNotNull: googleLoginHelperInstance.account !== null
 
         ColumnLayout {
-            Text {
+            MText {
                 text: qsTr("Google Account")
-                color: "#fff"
                 font.bold: true
-                font.pointSize: settingsGeneralColumn.labelFontSize
             }
-            Text {
-                id: googleAccountIdLabel
-                text: googleAcountRow.accountNotNull ? googleLoginHelperInstance.account.accountIdentifier : "..."
-                color: "#fff"
-                font.pointSize: settingsGeneralColumn.labelFontSize
+            Button {
+                id: emailField
+                property int wh: fontMetrics.advanceWidth(text)
+                text: googleAcountRow.accountNotNull ? googleLoginHelperInstance.account.accountIdentifier : ""
+                enabled: text
+                hoverEnabled: true
+                implicitWidth: wh + revealText.width + 10
+                padding: 0
+                contentItem: MText {
+                    text: {
+                        const mail = parent.text
+                        if (emailField.pressed)
+                            return mail
+                        if (mail.length < 4)
+                            return "..."
+                        return mail.substring(0, 3) + "*".repeat(mail.length - 3)
+                    }
+                    MText {
+                        id: revealText
+                        x: emailField.wh + 10
+                        text: qsTr("(Press to reveal)")
+                        color: emailField.hovered ? "#aaa" : "#888"
+                        visible: emailField.enabled
+                    }
+                }
+                background: FocusBorder {
+                    anchors.fill: parent
+                    visible: parent.visualFocus
+                }
+                FontMetrics {
+                    id: fontMetrics
+                    font.pointSize: 10
+                }
             }
         }
 
@@ -46,11 +73,9 @@ ColumnLayout {
 
     HorizontalDivider {}
 
-    Text {
+    MText {
         text: qsTr("Launcher")
-        color: "#fff"
         font.bold: true
-        font.pointSize: parent.labelFontSize
     }
 
     MCheckBox {
