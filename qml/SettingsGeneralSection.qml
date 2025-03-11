@@ -98,7 +98,7 @@ ColumnLayout {
     }
 
     MCheckBox {
-        text: qsTr("Show Notification banner")
+        text: qsTr("Show all notification banners")
         Component.onCompleted: checked = launcherSettings.showNotifications
         onCheckedChanged: launcherSettings.showNotifications = checked
     }

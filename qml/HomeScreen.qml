@@ -62,7 +62,6 @@ BaseScreen {
             contentWidth: width
             contentHeight: notifyColumn.height
             x: (parent.width - width) / 2
-            visible: launcherSettings.showNotifications
 
             Column {
                 id: notifyColumn
@@ -153,7 +152,7 @@ BaseScreen {
                     title: qsTr("Warning")
                     description: warnMessage
                     actionText: playScreen.warnUrl ? qsTr("See Wiki") : ""
-                    visible: warnMessage
+                    visible: warnMessage && launcherSettings.showNotifications
                     dismissible: false
                     onClicked: {
                         Qt.openUrlExternally(playScreen.warnUrl)
@@ -170,14 +169,13 @@ BaseScreen {
                         return qsTr("%1 Joysticks cannot be used as Gamepad Input:\n%2.").arg(ret.length).arg(ret.join(", "))
                     }
                     actionText: "Configure"
-                    visible: GamepadManager.gamepads.some(gamepad => !gamepad.hasMapping)
+                    visible: GamepadManager.gamepads.some(gamepad => !gamepad.hasMapping) && launcherSettings.showNotifications
                     onClicked: gamepadTool.show()
                 }
 
                 NotifyBanner {
                     color: "#652"
-                    visible: launcherSettings.trialMode
-
+                    visible: launcherSettings.trialMode && launcherSettings.showNotifications
                     dismissible: false
                     title: qsTr("Trial Mode Enabled")
                     description: {
@@ -190,11 +188,11 @@ BaseScreen {
                     color: "#832"
                     title: qsTr("Play Version is behind")
                     description: qsTr("Google Play Version Channel is behind. Got %1. Expected %2.").arg(playVerChannel.latestVersion).arg(launcherLatestVersionBase().versionName)
-                    visible: (googleLoginHelper.account !== null) && launcherLatestVersionBase().versionCode > playVerChannel.latestVersionCode
+                    visible: (googleLoginHelper.account !== null) && launcherLatestVersionBase().versionCode > playVerChannel.latestVersionCode && launcherSettings.showNotifications
                 }
 
                 NotifyBanner {
-                    visible: hasUpdate && !(progressbarVisible || updateChecker.active)
+                    visible: hasUpdate && !(progressbarVisible || updateChecker.active) && launcherSettings.showNotifications
                     title: qsTr("Update available")
                     description: qsTr("A new version of the launcher is available.")
                     actionText: qsTr("Download")
@@ -212,7 +210,7 @@ BaseScreen {
                     color: "#832"
                     dismissible: false
                     title: qsTr("Error")
-                    visible: playApi.googleLoginError.length > 0 || playVerChannel.licenseStatus == 2
+                    visible: (playApi.googleLoginError.length > 0 || playVerChannel.licenseStatus == 2) && launcherSettings.showNotifications
                     description: {
                         var msg = playApi.googleLoginError || playVerChannel.licenseStatus == 2 && qsTr("Access to the Google Play Apk Library has been rejected.")
                         if (!launcherSettings.trialMode && (playVerChannel.licenseStatus == 2))
