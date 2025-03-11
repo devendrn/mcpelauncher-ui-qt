@@ -292,7 +292,7 @@ BaseScreen {
             text: {
                 if (playScreen.statusChecking || !playScreen.activeVersionName)
                     return ""
-                return (playScreen.needsDownload ? qsTr("Download and play") : qsTr("Play")).toUpperCase()
+                return (playScreen.activeVersionNeedsDownload ? qsTr("Download and play") : qsTr("Play")).toUpperCase()
             }
             subText: {
                 if (playScreen.statusChecking)
@@ -301,7 +301,7 @@ BaseScreen {
             }
             enabled: !(gameLauncher.running || playScreen.statusChecking || progressbarVisible || updateChecker.active || !playScreen.activeVersionSupported || !playScreen.activeVersionName || playStatusNotify.visible)
             onClicked: {
-                if (playScreen.needsDownload) {
+                if (playScreen.activeVersionNeedsDownload) {
                     playDownloadTask.versionCode = getDownloadVersionCode()
                     if (playDownloadTask.versionCode === 0)
                         return
