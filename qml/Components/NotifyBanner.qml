@@ -7,7 +7,7 @@ Rectangle {
     property string title: ""
     property string description: ""
     property string actionText: ""
-    property bool dismissable: true
+    property bool dismissible: true
     signal clicked
 
     width: parent.width
@@ -81,7 +81,7 @@ Rectangle {
                 }
                 font.bold: true
                 font.pointSize: 12
-                visible: control.dismissable
+                visible: control.dismissible
                 height: parent.height
                 width: 36
                 padding: 0

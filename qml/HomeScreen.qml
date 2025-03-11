@@ -141,7 +141,7 @@ BaseScreen {
                     actionText: statusMsg.actionText || ""
                     color: statusMsg.color || "#832"
                     visible: !!statusMsg.title
-                    dismissable: false
+                    dismissible: false
                     onClicked: {
                         if (statusMsg.action)
                             statusMsg.action()
@@ -154,7 +154,7 @@ BaseScreen {
                     description: warnMessage
                     actionText: playScreen.warnUrl ? qsTr("See Wiki") : ""
                     visible: warnMessage
-                    dismissable: false
+                    dismissible: false
                     onClicked: {
                         Qt.openUrlExternally(playScreen.warnUrl)
                     }
@@ -178,7 +178,7 @@ BaseScreen {
                     color: "#652"
                     visible: launcherSettings.trialMode
 
-                    dismissable: false
+                    dismissible: false
                     title: qsTr("Trial Mode Enabled")
                     description: {
                         const msg = qsTr("Disable trial mode from settings to launch the full version instead. ")
@@ -210,7 +210,7 @@ BaseScreen {
 
                 NotifyBanner {
                     color: "#832"
-                    dismissable: false
+                    dismissible: false
                     title: qsTr("Error")
                     visible: playApi.googleLoginError.length > 0 || playVerChannel.licenseStatus == 2
                     description: {
